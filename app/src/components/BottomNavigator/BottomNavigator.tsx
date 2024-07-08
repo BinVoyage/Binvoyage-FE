@@ -6,7 +6,7 @@ import Mypage from 'screens/Mypage';
 import HomeIcons from 'assets/HomeIcons';
 import My from 'assets/My';
 import Bins from 'assets/Bins';
-import styled from 'styled-components';
+import styled from 'styled-components/native';
 
 export default function BottomNavigator() {
   const Tab = createBottomTabNavigator<RootTabParamList>();
@@ -33,10 +33,10 @@ export default function BottomNavigator() {
             headerShown: false,
             headerStyle: [styles.header],
             tabBarIcon: () => (
-              <TouchableOpacity style={styles.button}>
+              <StyledButton>
                 <HomeIcons />
                 <Text>홈</Text>
-              </TouchableOpacity>
+              </StyledButton>
             ),
           }}
         />
@@ -47,10 +47,10 @@ export default function BottomNavigator() {
             headerShown: false,
             headerStyle: [styles.header],
             tabBarIcon: () => (
-              <TouchableOpacity style={styles.button}>
+              <StyledButton>
                 <Bins />
                 <Text>쓰레기통 찾기</Text>
-              </TouchableOpacity>
+              </StyledButton>
             ),
           }}
         />
@@ -61,10 +61,10 @@ export default function BottomNavigator() {
             headerShown: false,
             headerStyle: [styles.header],
             tabBarIcon: () => (
-              <TouchableOpacity style={styles.button}>
+              <StyledButton>
                 <My />
                 <Text>내정보</Text>
-              </TouchableOpacity>
+              </StyledButton>
             ),
           }}
         />
@@ -73,25 +73,17 @@ export default function BottomNavigator() {
   );
 }
 
+const StyledButton = styled.TouchableOpacity`
+  justify-content: center;
+  align-items: center;
+  font-size: 12px;
+`;
+
 const styles = StyleSheet.create({
-  container: {
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
   header: {
     backgroundColor: '#FFFFFF',
     elevation: 0,
     borderBottomWidth: 0,
     shadowOpacity: 0,
-  },
-  font: {
-    fontSize: 12,
-  },
-  button: {
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  tabBar: {
-    height: 200,
   },
 });
