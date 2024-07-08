@@ -3,9 +3,9 @@ import {StyleSheet, Text, TouchableOpacity} from 'react-native';
 import Home from 'screens/Home';
 import FindBin from 'screens/FindBin';
 import Mypage from 'screens/Mypage';
-import HomeIcons from 'assets/HomeIcons';
-import My from 'assets/My';
-import Bins from 'assets/Bins';
+import HomeSvg from 'assets/HomeSvg';
+import MySvg from 'assets/MySvg';
+import BinSvg from 'assets/BinSvg';
 import styled from 'styled-components/native';
 
 export default function BottomNavigator() {
@@ -34,7 +34,7 @@ export default function BottomNavigator() {
             headerStyle: [styles.header],
             tabBarIcon: () => (
               <StyledButton>
-                <HomeIcons />
+                <HomeSvg />
                 <Text>홈</Text>
               </StyledButton>
             ),
@@ -48,7 +48,7 @@ export default function BottomNavigator() {
             headerStyle: [styles.header],
             tabBarIcon: () => (
               <StyledButton>
-                <Bins />
+                <BinSvg />
                 <Text>쓰레기통 찾기</Text>
               </StyledButton>
             ),
@@ -62,7 +62,7 @@ export default function BottomNavigator() {
             headerStyle: [styles.header],
             tabBarIcon: () => (
               <StyledButton>
-                <My />
+                <MySvg />
                 <Text>내정보</Text>
               </StyledButton>
             ),

@@ -1,6 +1,6 @@
 import React from 'react';
 import Svg, {Path} from 'react-native-svg';
-export default function Bins() {
+export default function BinSvg() {
   return (
     <Svg width="25" height="24" viewBox="0 0 25 24" fill="none">
       <Path
