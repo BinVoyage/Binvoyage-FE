@@ -2,7 +2,7 @@
 type RootTabParamList = {
   Home: undefined;
   FindBin: undefined;
-  Mypage: undefined;
+  MyPage: undefined;
 };
 
 type RootStackParamList = {
