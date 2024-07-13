@@ -1,19 +1,33 @@
-import {GoogleSignin} from '@react-native-google-signin/google-signin';
+import {GoogleSignin, User} from '@react-native-google-signin/google-signin';
 import * as S from 'screens/login/Login.style';
-import {useEffect} from 'react';
+import {useEffect, useState} from 'react';
 import {GOOGLE_WEB_CLIENT_ID} from '@env';
 import GoogleSvg from 'assets/images/GoogleSvg';
 import AppleSvg from 'assets/images/AppleSvg';
 import {Palette} from 'constants/palette';
-import {TouchableOpacity} from 'react-native';
+import {Alert, TouchableOpacity} from 'react-native';
 
 export default function Login() {
+  const [userInfo, setUserInfo] = useState<User | null>(null);
+
   useEffect(() => {
     GoogleSignin.configure({
       webClientId: GOOGLE_WEB_CLIENT_ID,
       offlineAccess: false,
     });
   });
+
+  const handleGoogleLogin = async () => {
+    try {
+      await GoogleSignin.hasPlayServices();
+      const userInfo = await GoogleSignin.signIn();
+      // Alert.alert(userInfo.idToken!);
+      setUserInfo(userInfo);
+    } catch (error) {
+      Alert.alert('error');
+    }
+  };
+
   return (
     <S.Container>
       <S.Wrapper>
@@ -23,7 +37,7 @@ export default function Login() {
             <AppleSvg width="24" height="24" fill={Palette.White} />
             <S.AppleSignInText>Continue with Apple</S.AppleSignInText>
           </S.AppleSignInButton>
-          <S.GoogleSignInButton>
+          <S.GoogleSignInButton onPress={handleGoogleLogin}>
             <GoogleSvg width="25" height="24" />
             <S.GoogleSignInText>Continue with Google</S.GoogleSignInText>
           </S.GoogleSignInButton>
