@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "204702405694",
+    "project_id": "binvoyage-17c53",
+    "storage_bucket": "binvoyage-17c53.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:204702405694:android:4e8b0e3fac9accd9282d6f",
+        "android_client_info": {
+          "package_name": "com.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCE-zSAo7fIW5HfXvpud8feXn_0xoO4aus"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
