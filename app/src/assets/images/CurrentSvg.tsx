@@ -1,15 +1,15 @@
 import React from 'react';
 import Svg, {Circle, Defs, G, Path} from 'react-native-svg';
-export default function CurrentSvg() {
+export default function CurrentSvg({width, height, fill}: SvgProps) {
   return (
-    <Svg width="30" height="30" viewBox="0 0 30 30" fill="none">
+    <Svg width={width} height={height} viewBox="0 0 30 30" fill="none">
       <G id="Current location" filter="url(#filter0_d_673_6820)">
         <Circle
           id="Ellipse 987"
           cx="15"
           cy="14"
           r="11"
-          fill="#278FFF"
+          fill={fill}
           fill-opacity="0.4"
         />
         <Circle id="Ellipse 986" cx="15" cy="14" r="5" fill="#278FFF" />

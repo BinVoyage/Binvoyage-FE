@@ -1,8 +1,8 @@
 import React from 'react';
 import Svg, {Path} from 'react-native-svg';
-export default function TrashmarkSvg() {
+export default function TrashmarkSvg({width, height, fill}: SvgProps) {
   return (
-    <Svg width="24" height="32" viewBox="0 0 24 32" fill="none">
+    <Svg width={width} height={height} viewBox="0 0 24 32" fill="none">
       <Path
         id="Union"
         fill-rule="evenodd"
