@@ -1,6 +1,6 @@
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import BottomNavigator from 'components/BottomNavigator/BottomNavigator';
+import BottomNavigator from 'components/BottomNavigator';
 
 export default function StackNavigator() {
   const Stack = createNativeStackNavigator<RootStackParamList>();
