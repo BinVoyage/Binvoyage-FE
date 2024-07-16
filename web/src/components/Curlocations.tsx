@@ -1,13 +1,13 @@
 import { useMemo, useState } from "react";
 
-type CurLocations = {
+type Location = {
   latitude: number;
   longitude: number;
 };
 
 
 function CurLocation() {
-    const [location, setLocation] = useState<CurLocations | string>('');
+    const [location, setLocation] = useState<Location | string>('');
 
     useMemo(()=>{
       if (navigator.geolocation){

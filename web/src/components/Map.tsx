@@ -9,7 +9,7 @@ declare global {
 }
 
 const Map = () => {
-  const location:any = CurLocation()
+  const location:any = CurLocation();
   const mapRef = useRef<HTMLElement | null>(null);
   const initMap = () =>{
     if (typeof location != 'string' ){
