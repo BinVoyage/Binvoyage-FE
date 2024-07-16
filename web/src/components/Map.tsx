@@ -1,5 +1,5 @@
 import  { MutableRefObject, useEffect, useRef } from "react";
-import Curlocation from "./Curlocations";
+import CurLocation from "./CurLocations";
 
 declare global {
   interface Window {
@@ -9,7 +9,7 @@ declare global {
 }
 
 const Map = () => {
-  const location:any = Curlocation();
+  const location:any = CurLocation()
   const mapRef = useRef<HTMLElement | null>(null);
   const initMap = () =>{
     if (typeof location != 'string' ){

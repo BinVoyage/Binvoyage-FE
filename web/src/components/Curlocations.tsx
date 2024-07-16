@@ -1,13 +1,13 @@
 import { useMemo, useState } from "react";
 
-type CurrentLocation = {
+type Location = {
   latitude: number;
   longitude: number;
 };
 
 
-function Curlocation() {
-    const [location, setLocation] = useState<CurrentLocation | string>('');
+function CurLocation() {
+    const [location, setLocation] = useState<Location | string>('');
 
     useMemo(()=>{
       if (navigator.geolocation){
@@ -35,4 +35,4 @@ function Curlocation() {
     return ( location )
 }
 
-export default Curlocation;
+export default CurLocation;
