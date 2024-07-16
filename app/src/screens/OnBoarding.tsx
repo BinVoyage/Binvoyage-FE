@@ -1,8 +1,8 @@
 import Swiper from 'react-native-swiper';
 import {useRef} from 'react';
-import Onboarding1 from 'screens/onBoarding/OnBoarding1';
-import Onboarding2 from 'screens/onBoarding/OnBoarding2';
-import Onboarding3 from 'screens/onBoarding/OnBoarding3';
+import Onboarding1 from 'components/onBoarding/OnBoarding1';
+import Onboarding2 from 'components/onBoarding/OnBoarding2';
+import Onboarding3 from 'components/onBoarding/OnBoarding3';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 
 export default function Onboarding() {

@@ -1,4 +1,4 @@
-import * as S from 'screens/onBoarding/OnBoarding.style';
+import * as S from 'components/onBoarding/OnBoarding.style';
 
 interface Props {
   onStart: () => void;
