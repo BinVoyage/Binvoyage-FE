@@ -4,7 +4,7 @@ import {useEffect, useRef, useState} from 'react';
 import {PERMISSIONS, RESULTS, request} from 'react-native-permissions';
 import Geolocation from '@react-native-community/geolocation';
 import {mapStore} from 'store/Store';
-import {useRequest} from 'hooks/useRequest';
+// import {useRequest} from 'hooks/useRequest';
 
 export default function FindBin() {
   const {setWebViewRef} = mapStore();
@@ -12,7 +12,7 @@ export default function FindBin() {
 
   const URL =
     Platform.OS === 'android'
-      ? 'http://192.168.35.136:5173'
+      ? 'https://binvoyage-fe.netlify.app'
       : 'http://localhost:5173';
 
   // const Permission: any = useRequest();
