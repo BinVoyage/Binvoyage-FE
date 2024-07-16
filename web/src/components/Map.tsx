@@ -1,5 +1,5 @@
 import  { MutableRefObject, useEffect, useRef } from "react";
-import CurLocation from "./CurLocations";
+import CurLocation from "./CurLocation";
 
 declare global {
   interface Window {
@@ -28,7 +28,7 @@ const Map = () => {
     window.kakao.maps.load(()=>initMap());
   },[mapRef, location])
   
-    return <div id="map" style={{ width: "100vw", height: "100vh" }} />;
+    return <div id="map" style={{ width: "100vw", height: "100vh"}} />;
     
   };
   
