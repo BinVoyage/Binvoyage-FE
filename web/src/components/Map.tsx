@@ -1,7 +1,5 @@
-import React, { MutableRefObject, useEffect, useRef } from "react";
-import styled from "styled-components";
+import  { MutableRefObject, useEffect, useRef } from "react";
 import Curlocation from "./Curlocations";
-import { MarkerStore } from "../store/Store";
 
 declare global {
   interface Window {
