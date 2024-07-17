@@ -3,6 +3,8 @@ import { useMemo, useState } from "react";
 type Location = {
   latitude: number;
   longitude: number;
+  coords?:undefined;
+  address?:any;
 };
 
 
