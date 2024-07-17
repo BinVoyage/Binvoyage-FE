@@ -61,19 +61,19 @@ const Map = () => {
         if (status === window.kakao.maps.services.Status.OK) {
             // const arr ={ ...result} ;
             const ad = result[0]?.road_address;
-            const _arr = ad?.address_name;
+            const _arr = ad?.region_2depth_name + " , " + ad?.region_1depth_name;
             console.log(_arr);
         }
     }
     geocoder.coord2Address(coord.getLng(), coord.getLat(), callback);
-    geocoder.coord2RegionCode(coord.getLng(), coord.getLat(), callback);     
+    // geocoder.coord2RegionCode(coord.getLng(), coord.getLat(), callback);     
   }
   
-  useEffect(()=>{
-    getAddr(location.latitude, location.longitude);
-  })
+  // useEffect(()=>{
+  //   getAddr(location.latitude, location.longitude);
+  // })
   
-  
+  getAddr(location.latitude, location.longitude);
   
   useEffect(()=>{
     window.kakao.maps.load(()=>initMap());
