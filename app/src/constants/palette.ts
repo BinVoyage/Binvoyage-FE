@@ -16,4 +16,8 @@ export const Palette = {
   Gray4: '#9DA0A8',
   Gray5: '#5A5E6A',
   Gray6: '#3B3F4A',
+  Success: '#53BC2D',
+  Caution: '#FF9900',
+  Error: '#FF4732',
+  Info: '#7E9BFC',
 };
