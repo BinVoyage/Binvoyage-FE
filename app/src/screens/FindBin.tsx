@@ -12,8 +12,9 @@ export default function FindBin() {
 
   const URL =
     Platform.OS === 'android'
-      ? 'https://binvoyage-fe.netlify.app'
-      : 'http://localhost:5173';
+      ? 'https://binvoyage-fe.netlify.app/'
+      : // ? 'http://192.168.35.61:5173/'
+        'http://localhost:5173';
 
   // const Permission: any = useRequest();
   // 분리하기
