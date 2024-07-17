@@ -34,14 +34,21 @@ export const Label = styled.Text<{isRequired: boolean}>`
   color: ${props => (props.isRequired ? Palette.Primary : Palette.Gray4)};
 `;
 
-export const TextInput = styled.TextInput`
+export const TextInput = styled.TextInput<{isHighlight: boolean}>`
   padding: 12px;
   background: ${Palette.Gray1};
   border-radius: 12px;
   font-size: ${Typo.B3.fontSize};
   font-weight: ${Typo.B3.fontWeight};
   color: ${Palette.Black};
+  border: 1px solid ${props => (props.isHighlight ? Palette.Error : Palette.White)};
   margin-top: 69px;
+`;
+
+export const Message = styled.Text`
+  font-size: ${Typo.Label.fontSize};
+  font-weight: ${Typo.Label.fontWeight};
+  color: ${Palette.Error};
 `;
 
 export const Button = styled.TouchableOpacity<{isValid: boolean}>`
