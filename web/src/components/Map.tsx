@@ -20,7 +20,7 @@ const Map = () => {
       };
 
       // 마커 이미지
-    let imageSrc ="src/assets/Cur.svg", 
+    let imageSrc ="src/assets/Current.svg", 
     imageSize = new window.kakao.maps.Size(30, 30), 
     imageOption = {offset: new window.kakao.maps.Point(location.latitude, location.longitude)};
 
