@@ -65,3 +65,40 @@ export const ButtonText = styled.Text<{isValid: boolean}>`
   color: ${props => (props.isValid ? Palette.White : Palette.Gray4)};
   text-align: center;
 `;
+
+export const SearchBar = styled.View`
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 0px 12px;
+  background: ${Palette.Gray1} url('');
+  border-radius: 12px;
+  margin: 28px 0px 13px;
+`;
+export const SearchInput = styled.TextInput`
+  font-size: ${Typo.B3.fontSize};
+  font-weight: ${Typo.B3.fontWeight};
+  color: ${Palette.Black};
+  width: 300px;
+`;
+export const SearchList = styled.FlatList`
+  flex: 1;
+  background: ${Palette.White};
+  margin-bottom: 13px;
+`;
+
+export const SearchListItem = styled.TouchableOpacity`
+  width: 100%;
+  border: 1px solid ${Palette.Gray2};
+  border-radius: 10px;
+  padding: 12px 18px;
+  margin-bottom: 10px;
+  background: ${Palette.White};
+`;
+
+export const SearchListItemText = styled.Text`
+  font-size: ${Typo.B3.fontSize};
+  font-weight: ${Typo.B3.fontWeight};
+  color: ${Palette.Gray5};
+`;
