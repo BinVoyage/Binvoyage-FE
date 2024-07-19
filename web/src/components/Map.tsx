@@ -1,15 +1,22 @@
-import  { MutableRefObject, useEffect, useRef } from "react";
+import  { MutableRefObject, useEffect, useMemo, useRef, useState } from "react";
 import CurLocation from "./CurLocation";
+import CurrentTab from "./CurrentTab";
+// import getAddr from "./CurAdress";
+import Filter from "./Filter";
 
 declare global {
   interface Window {
     kakao: any;
+    ReactNativeWebView: {
+      postMessage: (message: string) => void;
+    };
   }
 
 }
 
 const Map = () => {
   const location:any = CurLocation();
+  // const [address, setAddress] = useState<any | string>('');
   // const address:any = CurAdress();
   const mapRef = useRef<HTMLElement | null>(null);
   const initMap = () =>{
@@ -45,41 +52,78 @@ const Map = () => {
     }
   }
 
+  let _arr: string | undefined;
 
-  
-  type Adress = {
-    address_name?:string;
-    road_address?:string;
-  }
-
-  function getAddr(lat:number,lng:number){
-    // 주소-좌표 변환 객체를 생성합니다,
+  function getAddr() {
     let geocoder = new window.kakao.maps.services.Geocoder();
-  
-    let coord = new window.kakao.maps.LatLng(lat = location.latitude, lng = location.longitude);
-    let callback = function(result:Array<any>, status:any) {
-        if (status === window.kakao.maps.services.Status.OK) {
-            // const arr ={ ...result} ;
-            const ad = result[0]?.road_address;
-            const _arr = ad?.region_2depth_name + " , " + ad?.region_1depth_name;
-            console.log(_arr);
-        }
+    let coord = new window.kakao.maps.LatLng(location.latitude, location.longitude);
+    
+    let callback = function(result: Array<any>, status: any) {
+      if (status === window.kakao.maps.services.Status.OK) {
+        const ad = result[0]?.road_address;
+        _arr = ad?.region_2depth_name + " , " + ad?.region_1depth_name;
+        console.log(_arr); // _arr의 값을 출력합니다.
+        return _arr
+      }
     }
+    
     geocoder.coord2Address(coord.getLng(), coord.getLat(), callback);
-    // geocoder.coord2RegionCode(coord.getLng(), coord.getLat(), callback);     
   }
   
-  // useEffect(()=>{
-  //   getAddr(location.latitude, location.longitude);
-  // })
+  getAddr()
+  const address:any= getAddr();
+
+  // function getAddr(){
+  //   // 주소-좌표 변환 객체를 생성합니다,
+  //   // const [address, setAddress] = useState<any | string>('');
+  //   let geocoder = new window.kakao.maps.services.Geocoder();
   
-  getAddr(location.latitude, location.longitude);
+  //   let coord = new window.kakao.maps.LatLng(location.latitude, location.longitude);
+  //   let callback = function(result:Array<any>, status:any) {
+  //       if (status === window.kakao.maps.services.Status.OK) {
+  //           const ad = result[0]?.road_address;
+  //           const _arr = ad?.region_2depth_name + " , " + ad?.region_1depth_name;
+  //           console.log(_arr);
+  //           return _arr
+            
+  //       }
+  //   }
+  //   geocoder.coord2Address(coord.getLng(), coord.getLat(), callback);
+  //   // return callback
+  //   // geocoder.coord2RegionCode(coord.getLng(), coord.getLat(), callback);     
+
+  // }
+
+
+
+
+  // useMemo(() => {
+  //   if (window.ReactNativeWebView && window.ReactNativeWebView.postMessage) {
+  //   const message = {
+  //     type: 'address',
+  //     payload: {
+  //       addressList: address
+  //     }
+  //   };
+  //   window?.ReactNativeWebView?.postMessage(JSON.stringify(message));
+  //   console.log(message)
+  // }
+  // }, [address])
+
   
   useEffect(()=>{
     window.kakao.maps.load(()=>initMap());
   },[mapRef, location])
   
-    return <div id="map" style={{ width: "100vw", height: "100vh"}} />;
+  return( 
+    <>
+  <div id="map" style={{ width: "100vw", height: "100vh"}} />
+   <CurrentTab children={address}/>
+   <Filter/>
+    {/* <Location/> */}
+  </>
+);
+  
     
   };
   

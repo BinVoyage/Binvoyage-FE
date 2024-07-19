@@ -21,7 +21,6 @@ function CurLocation() {
           latitude: position.coords.latitude,
           longitude: position.coords.longitude
         });
-        console.log(position.coords.latitude)
         console.log("위치 받기성공");
       }
     
