@@ -17,8 +17,7 @@ function App() {
     latitude: 37.5665,
     longitude: 126.978,
   };
-  const [currentLocation, setCurrentLocation] =
-    useState<CurrentLocation>(DefaultLocation);
+  const [currentLocation, setCurrentLocation] = useState<CurrentLocation>(DefaultLocation);
 
     useEffect(() => {
       const handleMessage = (event: any) => {
@@ -39,7 +38,7 @@ function App() {
 
   return (
    <div>
-    <Map latitude={location.latitude} longitude={location.longitude} />
+    <Map latitude={currentLocation.latitude} longitude={currentLocation.longitude} />
    </div>
   )
 }
