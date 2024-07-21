@@ -44,7 +44,7 @@ export default function Login() {
             <GoogleSvg width="25" height="24" />
             <S.GoogleSignInText>Continue with Google</S.GoogleSignInText>
           </S.GoogleSignInButton>
-          <S.PassSignInButton>
+          <S.PassSignInButton onPress={() => navigation.navigate('BottomNavigator')}>
             <S.PassSignInText>Continue without logging in</S.PassSignInText>
           </S.PassSignInButton>
         </S.SignInButtonWrapper>

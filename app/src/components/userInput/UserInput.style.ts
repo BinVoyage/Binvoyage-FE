@@ -2,10 +2,10 @@ import {Palette} from 'constants/palette';
 import {Typo} from 'constants/typo';
 import styled from 'styled-components/native';
 
-export const Container = styled.View`
+export const Container = styled.View<{isInputFocused?: boolean}>`
   flex: 1;
   background: ${Palette.White};
-  padding: 69px 16px 38px;
+  padding: ${props => (props.isInputFocused ? '0px' : '69px')} 16px 38px;
 `;
 
 export const Step = styled.View`
@@ -34,15 +34,15 @@ export const Label = styled.Text<{isRequired: boolean}>`
   color: ${props => (props.isRequired ? Palette.Primary : Palette.Gray4)};
 `;
 
-export const TextInput = styled.TextInput<{isHighlight: boolean}>`
-  padding: 12px;
+export const NameInput = styled.TextInput<{isHighlight: boolean; isIos: boolean}>`
+  padding: ${props => (props.isIos ? '12px' : '9px')} 12px;
   background: ${Palette.Gray1};
   border-radius: 12px;
   font-size: ${Typo.B3.fontSize};
   font-weight: ${Typo.B3.fontWeight};
   color: ${Palette.Black};
   border: 1px solid ${props => (props.isHighlight ? Palette.Error : Palette.White)};
-  margin-top: 69px;
+  margin-top: 28px;
 `;
 
 export const Message = styled.Text`
@@ -66,13 +66,13 @@ export const ButtonText = styled.Text<{isValid: boolean}>`
   text-align: center;
 `;
 
-export const SearchBar = styled.View`
+export const SearchBar = styled.View<{isIos: boolean}>`
   flex-direction: row;
   align-items: center;
   gap: 10px;
   width: 100%;
-  padding: 0px 12px;
-  background: ${Palette.Gray1} url('');
+  padding: ${props => (props.isIos ? '10px' : '0px')} 12px;
+  background: ${Palette.Gray1};
   border-radius: 12px;
   margin: 28px 0px 13px;
 `;
@@ -86,19 +86,20 @@ export const SearchList = styled.FlatList`
   flex: 1;
   background: ${Palette.White};
   margin-bottom: 13px;
+  /* min-height: 280px; */
 `;
 
-export const SearchListItem = styled.TouchableOpacity`
+export const SearchListItem = styled.TouchableOpacity<{isSelected: boolean}>`
   width: 100%;
-  border: 1px solid ${Palette.Gray2};
+  border: 1px solid ${props => (props.isSelected ? Palette.Primary : Palette.Gray2)};
   border-radius: 10px;
   padding: 12px 18px;
   margin-bottom: 10px;
-  background: ${Palette.White};
+  background: ${props => (props.isSelected ? Palette.P100 : Palette.White)};
 `;
 
-export const SearchListItemText = styled.Text`
+export const SearchListItemText = styled.Text<{isSelected: boolean}>`
   font-size: ${Typo.B3.fontSize};
   font-weight: ${Typo.B3.fontWeight};
-  color: ${Palette.Gray5};
+  color: ${props => (props.isSelected ? Palette.Primary : Palette.Gray5)};
 `;
