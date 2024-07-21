@@ -1,8 +1,8 @@
 import {styled} from 'styled-components';
 import TrashmarkSvg from '../assets/TrashmarkSvg';
-import  { MutableRefObject, useEffect, useMemo, useRef, useState } from "react";
-import CurLocation from "./CurLocation";
-import getAddr from "./CurAdress";
+// import  { MutableRefObject, useEffect, useMemo, useRef, useState } from "react";
+// import CurLocation from "./CurLocation";
+// import getAddr from "./CurAdress";
 
 type TabProps = {
   children?:React.ReactNode;

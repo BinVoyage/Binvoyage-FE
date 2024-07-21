@@ -1,5 +1,5 @@
-import { useMemo, useState } from "react";
-import CurLocation from "./CurLocation";
+// import { useMemo, useState } from "react";
+// import CurLocation from "./CurLocation";
 
 declare global {
     interface Window {
