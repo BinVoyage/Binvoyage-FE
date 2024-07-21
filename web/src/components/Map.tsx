@@ -85,7 +85,6 @@ const Map = ({ latitude, longitude }: CurrentLocation) => {
   // getAddr()
   const address:typeof _arr= getAddr();
 
-
 // type CurrentAddress ={
 //   arr?: any,
 // }
@@ -141,8 +140,8 @@ const Map = ({ latitude, longitude }: CurrentLocation) => {
   return( 
     <>
   <div id="map" style={{ width: "100vw", height: "100vh"}} />
-  ? <CurrentTab children={address?._arr}/>
-  : <CurrentTab children={"현위치 주소 undefined"}/>
+  ? <CurrentTab children={_arr}/>
+  : <CurrentTab children={"현위치 주소 출력 안됨"}/>
    <Filter/>
     {/* <Location/> */}
   </>
