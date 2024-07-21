@@ -14,7 +14,13 @@ declare global {
 
 }
 
-const Map = () => {
+
+type CurrentLocation = {
+  latitude: number;
+  longitude: number;
+};
+
+const Map = ({ latitude, longitude }: CurrentLocation) => {
   const location:any = CurLocation();
   // const [address, setAddress] = useState<any | string>('');
   // const address:any = CurAdress();
@@ -23,40 +29,43 @@ const Map = () => {
     if (typeof location != 'string' ){
       const container = document.getElementById('map');
       const options = {
-        center: new window.kakao.maps.LatLng(location.latitude, location.longitude),
+        center: new window.kakao.maps.LatLng(latitude, longitude),
         level: 2
       };
 
 
-      // 마커 이미지
+      // 현위치 마커 이미지
     let imageSrc ="src/assets/Current.svg", 
     imageSize = new window.kakao.maps.Size(30, 30), 
-    imageOption = {offset: new window.kakao.maps.Point(location.latitude, location.longitude)};
+    imageOption = {offset: new window.kakao.maps.Point(latitude, longitude)};
 
     let markerImage = new window.kakao.maps.MarkerImage(imageSrc, imageSize, imageOption)
       let markerPosition = new window.kakao.maps.LatLng(
-        location.latitude,
-        location.longitude,
+        latitude,
+        longitude,
       );
   
-      // 마커를 생성
+      // 현위치 마커를 생성
       let marker = new window.kakao.maps.Marker({
         position: markerPosition,
         image: markerImage,
       });
 
 
-      var map = new window.kakao.maps.Map(container as HTMLElement, options);
+      const map = new window.kakao.maps.Map(container as HTMLElement, options);
       (mapRef as MutableRefObject<any>).current = map;
       marker.setMap(map);
     }
   }
 
+
+
+
   let _arr: string | undefined;
 
   function getAddr() {
     let geocoder = new window.kakao.maps.services.Geocoder();
-    let coord = new window.kakao.maps.LatLng(location.latitude, location.longitude);
+    let coord = new window.kakao.maps.LatLng(latitude, longitude);
     
     let callback = function(result: Array<any>, status: any) {
       if (status === window.kakao.maps.services.Status.OK) {
@@ -73,47 +82,28 @@ const Map = () => {
   getAddr()
   const address:any= getAddr();
 
-  // function getAddr(){
-  //   // 주소-좌표 변환 객체를 생성합니다,
-  //   // const [address, setAddress] = useState<any | string>('');
-  //   let geocoder = new window.kakao.maps.services.Geocoder();
-  
-  //   let coord = new window.kakao.maps.LatLng(location.latitude, location.longitude);
-  //   let callback = function(result:Array<any>, status:any) {
-  //       if (status === window.kakao.maps.services.Status.OK) {
-  //           const ad = result[0]?.road_address;
-  //           const _arr = ad?.region_2depth_name + " , " + ad?.region_1depth_name;
-  //           console.log(_arr);
-  //           return _arr
-            
-  //       }
-  //   }
-  //   geocoder.coord2Address(coord.getLng(), coord.getLat(), callback);
-  //   // return callback
-  //   // geocoder.coord2RegionCode(coord.getLng(), coord.getLat(), callback);     
-
-  // }
 
 
 
 
-  // useMemo(() => {
-  //   if (window.ReactNativeWebView && window.ReactNativeWebView.postMessage) {
-  //   const message = {
-  //     type: 'address',
-  //     payload: {
-  //       addressList: address
-  //     }
-  //   };
-  //   window?.ReactNativeWebView?.postMessage(JSON.stringify(message));
-  //   console.log(message)
-  // }
-  // }, [address])
+
+  useMemo(() => {
+    if (window.ReactNativeWebView && window.ReactNativeWebView.postMessage) {
+    const message = {
+      type: 'address',
+      payload: {
+        addressList: address
+      }
+    };
+    window?.ReactNativeWebView?.postMessage(JSON.stringify(message));
+    console.log(message)
+  }
+  }, [address])
 
   
   useEffect(()=>{
     window.kakao.maps.load(()=>initMap());
-  },[mapRef, location])
+  },[latitude, longitude])
   
   return( 
     <>

@@ -26,7 +26,7 @@ export default function Filter() {
         color:"black",
       }}
     >
-      <CurrentBox>Recently Visited</CurrentBox>
+      <RecentBox>Recently Visited</RecentBox>
       <RecycleBox>recycling</RecycleBox>
       <TrashBox>Trash</TrashBox>
     </div>
@@ -34,7 +34,7 @@ export default function Filter() {
   );
 }
 
-const CurrentBox = styled.section`
+const RecentBox = styled.section`
  margin-left: 8px;
  margin-bottom:10px;
  margin-top:10px;

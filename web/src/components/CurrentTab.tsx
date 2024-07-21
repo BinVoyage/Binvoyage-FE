@@ -6,13 +6,10 @@ import getAddr from "./CurAdress";
 
 type TabProps = {
   children?:React.ReactNode;
+  address?:string;
 }
 
-export default function CurrentTab({children}:TabProps) {
-  const location:any = CurLocation();
-  const address:any = getAddr()
-
-
+export default function CurrentTab({address}:TabProps) {
 
   return (
   
@@ -38,7 +35,7 @@ export default function CurrentTab({children}:TabProps) {
     >
       <CurrentBox>
       <TrashmarkSvg width="24" height="24" />
-      {children}
+      {address}
     </CurrentBox>
     </div>
 
