@@ -61,7 +61,7 @@ const Map = ({ latitude, longitude }: CurrentLocation) => {
 
 
 
-  let _arr: string | undefined | any;
+  let _arr: string | undefined | null | any;
 
   function getAddr() {
     let geocoder = new window.kakao.maps.services.Geocoder();
@@ -72,7 +72,10 @@ const Map = ({ latitude, longitude }: CurrentLocation) => {
         const ad = result[0]?.road_address;
         _arr = ad?.region_2depth_name + " , " + ad?.region_1depth_name;
         console.log(_arr); // _arr의 값을 출력합니다.
-        return _arr
+        if(typeof _arr == 'string'){
+          return _arr
+        }
+        
       }
     }
     
@@ -80,7 +83,7 @@ const Map = ({ latitude, longitude }: CurrentLocation) => {
   }
   
   // getAddr()
-  const address:any= getAddr();
+  const address:typeof _arr= getAddr();
 
 
 // type CurrentAddress ={
@@ -138,7 +141,8 @@ const Map = ({ latitude, longitude }: CurrentLocation) => {
   return( 
     <>
   <div id="map" style={{ width: "100vw", height: "100vh"}} />
-   <CurrentTab children={address?._arr}/>
+  ? <CurrentTab children={address?._arr}/>
+  : <CurrentTab children={"현위치 주소 undefined"}/>
    <Filter/>
     {/* <Location/> */}
   </>

@@ -44,8 +44,8 @@ export default function CurrentTab({children}:TabProps) {
 
 const CurrentBox = styled.section`
  margin-left: 12px;
- margin-bottom:10px;
- margin-top:10px;
+ margin-bottom:8px;
+ margin-top:6px;
 `
 
 // const styles = StyleSheet.create({
