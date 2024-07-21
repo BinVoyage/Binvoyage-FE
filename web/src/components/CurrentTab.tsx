@@ -9,7 +9,7 @@ type TabProps = {
   address?:string;
 }
 
-export default function CurrentTab({address}:TabProps) {
+export default function CurrentTab({children}:TabProps) {
 
   return (
   
@@ -35,7 +35,7 @@ export default function CurrentTab({address}:TabProps) {
     >
       <CurrentBox>
       <TrashmarkSvg width="24" height="24" />
-      {address}
+      {children}
     </CurrentBox>
     </div>
 
