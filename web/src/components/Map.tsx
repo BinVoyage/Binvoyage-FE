@@ -1,14 +1,16 @@
 import  { MutableRefObject, useEffect, useMemo, useRef } from "react";
-import CurLocation from "./CurLocation";
 import CurrentTab from "./CurrentTab";
-// import getAddr from "./CurAdress";
 import Filter from "./Filter";
+import { trashpositions,recyclepositions } from "./Places";
+import TrashmarkSvg from "../assets/TrashmarkSvg";
 
 declare global {
   interface Window {
     kakao: any;
+    i:number;
     ReactNativeWebView: {
       postMessage: (message: string) => void;
+
     };
   }
 
@@ -21,12 +23,9 @@ type CurrentLocation = {
 };
 
 const Map = ({ latitude, longitude }: CurrentLocation) => {
-  const location:any = CurLocation();
-  // const [address, setAddress] = useState<any | string>('');
-  // const address:any = CurAdress();
   const mapRef = useRef<HTMLElement | null>(null);
   const initMap = () =>{
-    if (typeof location != 'string' ){
+    // if (typeof location != 'string' ){
       const container = document.getElementById('map');
       const options = {
         center: new window.kakao.maps.LatLng(latitude, longitude),
@@ -35,27 +34,57 @@ const Map = ({ latitude, longitude }: CurrentLocation) => {
 
 
       // 현위치 마커 이미지
-    let imageSrc ="src/assets/Current.svg", 
+    let currentimageSrc ="src/assets/Current.svg", 
     imageSize = new window.kakao.maps.Size(30, 30), 
     imageOption = {offset: new window.kakao.maps.Point(latitude, longitude)};
 
-    let markerImage = new window.kakao.maps.MarkerImage(imageSrc, imageSize, imageOption)
-      let markerPosition = new window.kakao.maps.LatLng(
+    let currentImage = new window.kakao.maps.MarkerImage(currentimageSrc, imageSize, imageOption)
+      let currentPosition = new window.kakao.maps.LatLng(
         latitude,
         longitude,
       );
   
       // 현위치 마커를 생성
-      let marker = new window.kakao.maps.Marker({
-        position: markerPosition,
-        image: markerImage,
+      let currentmarker = new window.kakao.maps.Marker({
+        position: currentPosition,
+        image: currentImage,
       });
 
+    
+   // 쓰레기 마커 
+   let trashimageSrc = "src/assets/trashmark.svg";
 
-      const map = new window.kakao.maps.Map(container as HTMLElement, options);
+   const settrashMarkers = (map: any) => {
+    trashpositions.forEach((obj) => {
+      new window.kakao.maps.Marker({
+        map: map,
+        position: obj,
+        image: new window.kakao.maps.MarkerImage(trashimageSrc, imageSize, imageOption),
+      })
+    })
+  }
+
+let recycleimageSrc = "src/assets/recyclemark.svg";
+
+const setrecycleMarkers = (maps: any) => {
+  recyclepositions.forEach((obj) => {
+    new window.kakao.maps.Marker({
+      map: maps,
+      position: obj,
+      image: new window.kakao.maps.MarkerImage(recycleimageSrc, imageSize, imageOption),
+    })
+  })
+}
+
+
+
+const map = new window.kakao.maps.Map(container as HTMLElement, options);
       (mapRef as MutableRefObject<any>).current = map;
-      marker.setMap(map);
-    }
+      currentmarker.setMap(map);
+      // trashmarker.setMap(map);
+      settrashMarkers(map);
+      setrecycleMarkers(map);
+    // }
   }
 
 
@@ -109,8 +138,7 @@ const Map = ({ latitude, longitude }: CurrentLocation) => {
   return( 
     <>
   <div id="map" style={{ width: "100vw", height: "100vh"}} />
-  ? <CurrentTab children={address?._arr}/>
-  : <CurrentTab children={"현위치 주소 출력 안됨"}/>
+   <CurrentTab children={"현위치 주소 출력 안됨"}/>
    <Filter/>
     {/* <Location/> */}
   </>
