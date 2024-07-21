@@ -93,7 +93,7 @@ const Map = ({ latitude, longitude }: CurrentLocation) => {
     const message = {
       type: 'address',
       payload: {
-        addressList: address
+        address: address
       }
     };
     window?.ReactNativeWebView?.postMessage(JSON.stringify(message));

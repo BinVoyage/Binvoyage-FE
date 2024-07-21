@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import Map from "./components/Map"
 import { MarkerStore } from "./store/Store"
-import CurLocation from "./components/CurLocation";
 
 type CurrentLocation = {
   latitude: number;
@@ -10,7 +9,6 @@ type CurrentLocation = {
 
 
 function App() {
-  const location:any = CurLocation();
   const markerList = MarkerStore(state => state.markers);
 
   const DefaultLocation: CurrentLocation = {
@@ -32,7 +30,10 @@ function App() {
       };
       if (navigator.userAgent.match(/Android/i)) {
         document.addEventListener("message", handleMessage);
-      } 
+      } else if (navigator.userAgent.match(/iPhone|iPad|iPod/i)) {
+        window.removeEventListener("message", handleMessage);
+      }
+      
   
     }, [markerList]);
 
