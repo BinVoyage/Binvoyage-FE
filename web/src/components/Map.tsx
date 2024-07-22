@@ -7,6 +7,7 @@ import TrashmarkSvg from "../assets/TrashmarkSvg";
 declare global {
   interface Window {
     kakao: any;
+    Polyline:any;
     i:number;
     ReactNativeWebView: {
       postMessage: (message: string) => void;
@@ -54,25 +55,53 @@ const Map = ({ latitude, longitude }: CurrentLocation) => {
    // 쓰레기 마커 
    let trashimageSrc = "src/assets/trashmark.svg";
 
-   const settrashMarkers = (map: any) => {
+   const settrashMarkers = (maps: any) => {
     trashpositions.forEach((obj) => {
+      const trashLocation = obj;
+
       new window.kakao.maps.Marker({
-        map: map,
+        map: maps,
         position: obj,
         image: new window.kakao.maps.MarkerImage(trashimageSrc, imageSize, imageOption),
       })
+  
+      const poly = new window.kakao.maps.Polyline({
+        path: [currentCenter, trashLocation],
+      });
+  
+      const trashdistance = poly.getLength();
+      if ( trashdistance < 2000) {
+        console.log(trashLocation,"그냥 쓰레기통 거리:", trashdistance)
+      }
     })
   }
+
+
+const currentCenter = new window.kakao.maps.LatLng(
+  latitude, longitude
+);
 
 let recycleimageSrc = "src/assets/recyclemark.svg";
 
 const setrecycleMarkers = (maps: any) => {
   recyclepositions.forEach((obj) => {
+    const binLocation = obj;
+
     new window.kakao.maps.Marker({
       map: maps,
       position: obj,
       image: new window.kakao.maps.MarkerImage(recycleimageSrc, imageSize, imageOption),
     })
+
+    const poly = new window.kakao.maps.Polyline({
+      path: [currentCenter, binLocation],
+    });
+
+    const recycledistance = poly.getLength();
+    if (recycledistance < 2000) {
+      console.log(binLocation,"재활용 쓰레기통 거리:",recycledistance)
+    }
+
   })
 }
 
@@ -112,8 +141,6 @@ const map = new window.kakao.maps.Map(container as HTMLElement, options);
   }
   
   const address:typeof _arr= getAddr();
-
-
 
 
 

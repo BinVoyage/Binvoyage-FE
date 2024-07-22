@@ -1,7 +1,8 @@
 declare global {
     interface Window {
       kakao: any;
-       latng: string | number 
+       latng: string | number;
+       maps:any;
     }
   
   }
