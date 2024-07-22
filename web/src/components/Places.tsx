@@ -6,23 +6,22 @@ declare global {
     }
   
   }
-
-
+  
 export const trashpositions:any[] = [
     new window.kakao.maps.LatLng(37.54397760413326, 127.12560598299282),
-    new window.kakao.maps.LatLng(37.566260945449876, 126.97791951616115),
-    new window.kakao.maps.LatLng(37.56702223797818, 126.97765895245408),
-    new window.kakao.maps.LatLng(37.56687338712348, 126.97669404669486),
-    new window.kakao.maps.LatLng(37.57277691088021, 126.99162889124305),
+    new window.kakao.maps.LatLng(37.5663174209601, 126.977829174031),
+    new window.kakao.maps.LatLng(37.5674198878673, 126.977873671097),
+    new window.kakao.maps.LatLng(37.5668837502225, 126.976702419575),
+    new window.kakao.maps.LatLng(37.570889038138, 126.988250180457),
 ];
 
 
 export const recyclepositions:any[] = [
     new window.kakao.maps.LatLng(37.544265748, 127.12577054318095),
-    new window.kakao.maps.LatLng(37.546471707410376, 127.12072166777807),
+    new window.kakao.maps.LatLng(37.5698677620456, 126.977657083792),
     new window.kakao.maps.LatLng(37.54397678904881, 127.12845751143172),
     new window.kakao.maps.LatLng(37.56833564799876, 126.97879048871715),
-    new window.kakao.maps.LatLng(37.56704766133646, 126.98138292564235),
+    new window.kakao.maps.LatLng(37.5500236743432, 127.124404356441),
 ];
 
 

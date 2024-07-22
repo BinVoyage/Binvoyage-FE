@@ -29,7 +29,7 @@ function App() {
         }
       };
       if (navigator.userAgent.match(/Android/i)) {
-        document.addEventListener("message", handleMessage);
+        document.addEventListener("message", handleMessage,true);
       } else if (navigator.userAgent.match(/iPhone|iPad|iPod/i)) {
         window.removeEventListener("message", handleMessage);
       }
