@@ -5,17 +5,7 @@ module.exports = {
       'module-resolver',
       {
         root: ['./src'],
-        extensions: [
-          '.ios.ts',
-          '.android.ts',
-          '.ts',
-          '.ios.tsx',
-          '.android.tsx',
-          '.tsx',
-          '.jsx',
-          '.js',
-          '.json',
-        ],
+        extensions: ['.ios.ts', '.android.ts', '.ts', '.ios.tsx', '.android.tsx', '.tsx', '.jsx', '.js', '.json'],
       },
     ],
     [
@@ -25,5 +15,6 @@ module.exports = {
         path: '.env',
       },
     ],
+    ['react-native-reanimated/plugin'],
   ],
 };

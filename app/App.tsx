@@ -1,17 +1,21 @@
-import {SafeAreaView} from 'react-native';
+import {SafeAreaView, StyleSheet} from 'react-native';
 import StackNavigator from 'components/StackNavigator';
-import styled from 'styled-components';
+import {GestureHandlerRootView} from 'react-native-gesture-handler';
 
 function App(): React.JSX.Element {
   return (
-    <StyledSafeAreaView>
-      <StackNavigator />
-    </StyledSafeAreaView>
+    <GestureHandlerRootView style={styles.flex1}>
+      <SafeAreaView style={styles.flex1}>
+        <StackNavigator />
+      </SafeAreaView>
+    </GestureHandlerRootView>
   );
 }
 
-const StyledSafeAreaView = styled(SafeAreaView)`
-  flex: 1;
-`;
+const styles = StyleSheet.create({
+  flex1: {
+    flex:1
+  }
+})
 
 export default App;
