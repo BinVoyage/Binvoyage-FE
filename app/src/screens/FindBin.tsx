@@ -4,15 +4,14 @@ import {useEffect, useRef, useState} from 'react';
 import {PERMISSIONS, RESULTS, request} from 'react-native-permissions';
 import Geolocation from '@react-native-community/geolocation';
 import {mapStore} from 'store/Store';
-// import {useRequest} from 'hooks/useRequest';
 
 export default function FindBin() {
-  const {setWebViewRef} = mapStore();
+  const {setWebViewRef, setAddressList} = mapStore();
   const webViewRef = useRef<WebView>(null);
 
   const URL =
     Platform.OS === 'android'
-      ? 'https://binvoyage-fe.netlify.app'
+      ? 'http://192.168.35.143:5173'
       : 'http://localhost:5173';
 
   // const Permission: any = useRequest();
@@ -22,6 +21,8 @@ export default function FindBin() {
     let result;
     if (Platform.OS === 'android') {
       result = await request(PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION);
+    } else if (Platform.OS === 'ios') {
+      result = await request(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE);
     }
     if (result === RESULTS.GRANTED) {
       const Ids = Geolocation.watchPosition(
@@ -72,6 +73,9 @@ export default function FindBin() {
   const handleMessage = (e: WebViewMessageEvent) => {
     try {
       const data = JSON.parse(e.nativeEvent.data);
+      if (data.type === 'address') {
+        setAddressList(data.payload.addressList);
+      }
     } catch (err) {
       console.log('error');
     }
