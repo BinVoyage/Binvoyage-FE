@@ -21,6 +21,8 @@ export default function FindBin() {
     let result;
     if (Platform.OS === 'android') {
       result = await request(PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION);
+    } else if (Platform.OS === 'ios') {
+      result = await request(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE);
     }
     if (result === RESULTS.GRANTED) {
       const Ids = Geolocation.watchPosition(
