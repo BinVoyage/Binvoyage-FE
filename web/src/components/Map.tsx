@@ -2,13 +2,11 @@ import  { MutableRefObject, useEffect, useMemo, useRef, useState } from "react";
 import CurrentTab from "./CurrentTab";
 import Filter from "./Filter";
 import { trashpositions,recyclepositions } from "./Places";
-import TrashmarkSvg from "../assets/TrashmarkSvg";
 
 declare global {
   interface Window {
     kakao: any;
     Polyline:any;
-    i:number;
     ReactNativeWebView: {
       postMessage: (message: string) => void;
 
@@ -24,6 +22,7 @@ type CurrentLocation = {
 };
 
 const Map = ({ latitude, longitude }: CurrentLocation) => {
+  const [save,setSave] = useState<string| null | undefined>('')
   const mapRef = useRef<HTMLElement | null>(null);
   const initMap = () =>{
     // if (typeof location != 'string' ){
@@ -64,7 +63,7 @@ const Map = ({ latitude, longitude }: CurrentLocation) => {
     trashpositions.forEach(async (obj) => {
       const trashLocation = obj;
 
-      const p = await printAddr();
+      const trashes = await printAddr();
 
       function printAddr(): Promise<string | undefined | null> {
         return new Promise((resolve, reject) => {
@@ -75,12 +74,10 @@ const Map = ({ latitude, longitude }: CurrentLocation) => {
             if (status === window.kakao.maps.services.Status.OK) {
               const ad = result[0]?.road_address;
               const _arr = ad?.address_name;
-              // setAd(_arr)
               resolve(_arr); 
             } else {
               reject("Failed to get address"); 
             }
-            // return (ads)
           }
           
           geocoder.coord2Address(coord.getLng(), coord.getLat(), callback);
@@ -99,12 +96,10 @@ const Map = ({ latitude, longitude }: CurrentLocation) => {
   
       const trashdistance = poly.getLength();
       if (trashdistance < 2000) {
-        console.log("그냥 :",p,"그냥 쓰레기통 거리:", trashdistance)
+        console.log("그냥 :",trashes,", 그냥 쓰레기통 거리:", trashdistance)
       }
     })
   }
-
-
 
 
 
@@ -115,7 +110,7 @@ const setrecycleMarkers = (maps: any) => {
   recyclepositions.forEach(async (obj) => {
     const binLocation = obj;
 
-    const r = await printAddr();
+    const recycles = await printAddr();
 
     function printAddr(): Promise<string | undefined | null> {
       return new Promise((resolve, reject) => {
@@ -126,12 +121,10 @@ const setrecycleMarkers = (maps: any) => {
           if (status === window.kakao.maps.services.Status.OK) {
             const ad = result[0]?.road_address;
             const _arr = ad?.address_name;
-            // setAd(_arr)
             resolve(_arr); 
           } else {
             reject("Failed to get address"); 
           }
-          // return (ads)
         }
         
         geocoder.coord2Address(coord.getLng(), coord.getLat(), callback);
@@ -150,7 +143,7 @@ const setrecycleMarkers = (maps: any) => {
 
     const recycledistance = poly.getLength();
     if (recycledistance < 2000) {
-      console.log("재활용 :",r,",",recycledistance)
+      console.log("재활용 :",recycles,",",recycledistance)
     }
 
   })
@@ -161,62 +154,46 @@ const setrecycleMarkers = (maps: any) => {
 const map = new window.kakao.maps.Map(container as HTMLElement, options);
       (mapRef as MutableRefObject<any>).current = map;
       currentmarker.setMap(map);
-      // trashmarker.setMap(map);
       settrashMarkers(map);
       setrecycleMarkers(map);
-    // }
   }
 
-// const setAdress = async () =>{
-//   const add = await printAddr();
 
-//   function printAddr(): Promise<string | undefined | null> {
-//     return new Promise((resolve, reject) => {
-//       let geocoder = new window.kakao.maps.services.Geocoder();
-//       let coord = new window.kakao.maps.LatLng(latitude, longitude);;
-      
-//       let callback = function(result: Array<any>, status: any) {
-//         if (status === window.kakao.maps.services.Status.OK) {
-//           const ad = result[0]?.road_address;
-//           const _arr = ad?.address_name;
-//           // setAd(_arr)
-//           resolve(_arr); 
-//         } else {
-//           reject("Failed to get address"); 
-//         }
-//         // return (ads)
-//       }
-      
-//       geocoder.coord2Address(coord.getLng(), coord.getLat(), callback);
-//     });
-//   }
-
-// }
-    
-
-  let _arr: string | undefined | null | any;
   
-  function getAddr() {
-    let geocoder = new window.kakao.maps.services.Geocoder();
-    let coord = new window.kakao.maps.LatLng(latitude, longitude);
-    
-    let callback = function(result: Array<any>, status: any) {
-      if (status === window.kakao.maps.services.Status.OK) {
-        const ad = result[0]?.road_address;
-        _arr = ad?.region_2depth_name + " , " + ad?.region_1depth_name;
-        // console.log(_arr); 
-        if(typeof _arr == 'string'){
-          return _arr
+  function getAddr(): Promise<string | undefined | null> {
+    return new Promise((resolve, reject) => {
+      let geocoder = new window.kakao.maps.services.Geocoder();
+      let coord = new window.kakao.maps.LatLng(latitude, longitude);
+      
+      let callback = function(result: Array<any>, status: any) {
+        if (status === window.kakao.maps.services.Status.OK) {
+          const ad = result[0]?.road_address;
+          const _arr = ad?.region_2depth_name + " , " + ad?.region_1depth_name;
+          resolve(_arr); 
+        } else {
+          reject("Failed to get address"); 
         }
-        
       }
-    }
-    
-    geocoder.coord2Address(coord.getLng(), coord.getLat(), callback);
+      
+      geocoder.coord2Address(coord.getLng(), coord.getLat(), callback);
+    });
   }
-  
-  const address:any= getAddr();
 
+  useEffect(() => {
+    getAddr()
+      .then((response) => {
+        setSave(response);
+      })
+      .catch((error) => {
+        console.log(error)
+      });
+  }, [save]);
+
+
+
+
+
+  const address:any= getAddr();
 
 
   useMemo(() => {
@@ -240,7 +217,7 @@ const map = new window.kakao.maps.Map(container as HTMLElement, options);
   return( 
     <>
   <div id="map" style={{ width: "100vw", height: "100vh"}} />
-   <CurrentTab children={"현위치 주소 출력 안됨"}/>
+   <CurrentTab children={save}/>
    <Filter/>
     {/* <Location/> */}
   </>

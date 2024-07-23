@@ -1,5 +1,5 @@
 import {styled} from 'styled-components';
-import TrashmarkSvg from '../assets/TrashmarkSvg';
+import CurrentTabSvg from '../assets/CurrenttabSvg';
 // import  { MutableRefObject, useEffect, useMemo, useRef, useState } from "react";
 // import CurLocation from "./CurLocation";
 // import getAddr from "./CurAdress";
@@ -34,7 +34,7 @@ export default function CurrentTab({children}:TabProps) {
       }}
     >
       <CurrentBox>
-      <TrashmarkSvg width="24" height="24" />
+      <CurrentTabSvg width="24" height="24" />
       {children}
     </CurrentBox>
     </div>

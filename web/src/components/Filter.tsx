@@ -1,8 +1,6 @@
 import {styled} from 'styled-components';
-// import TrashmarkSvg from '../assets/TrashmarkSvg';
-// import  { MutableRefObject, useEffect, useMemo, useRef, useState } from "react";
-// import CurLocation from "./CurLocation";
-// import getAddr from "./CurAdress";
+import TrashRoundSvg from '../assets/TrashRoundSvg';
+import RecycleRoundSvg from '../assets/RecycleRoundSvg';
 
 
 export default function Filter() {
@@ -27,17 +25,27 @@ export default function Filter() {
       }}
     >
       <RecentBox>Recently Visited</RecentBox>
-      <RecycleBox>recycling</RecycleBox>
-      <TrashBox>Trash</TrashBox>
+      <RecycleBox>
+        <RecycleRoundSvg width="26px" height="26px"/>
+        recycling
+        </RecycleBox>
+      <TrashBox>
+        <TrashRoundSvg width="26px" height="26px"/>
+        Trash
+        </TrashBox>
     </div>
     // </div>
   );
 }
 
 const RecentBox = styled.section`
- margin-left: 8px;
- margin-bottom:10px;
- margin-top:10px;
+ display: inline-flex;
+height: 30px;
+margin: 8px 10px;
+justify-content: center;
+align-items: center;
+gap: 4px;
+flex-shrink: 0;
  background-color: white;
  width: 141px;
  height: 30px;
@@ -50,9 +58,6 @@ const RecentBox = styled.section`
 
 
 const RecycleBox = styled.section`
- margin-left: 12px;
- margin-bottom:10px;
- margin-top:10px;
  background-color: white;
  width: 101px;
  height: 30px;
@@ -60,19 +65,29 @@ const RecycleBox = styled.section`
  text-align: center;
  font-size: 14px;
  box-shadow: 0px 2px 6px 0px #00000033;
- padding-top: 4px;
+ display: inline-flex;
+ height: 30px;
+ margin: 8px 10px 8px 2px;
+ justify-content: center;
+ align-items: center;
+ gap: 4px;
+ flex-shrink: 0;
 `
 
+
 const TrashBox = styled.section`
- margin-left: 12px;
- margin-bottom:10px;
- margin-top:10px;
- background-color: white;
+background-color: white;
  width: 76px;
  height: 30px;
  border-radius: 22px;
  text-align: center;
  font-size: 14px;
  box-shadow: 0px 2px 6px 0px #00000033;
- padding-top: 4px;
+ display: inline-flex;
+ height: 30px;
+ margin: 8px 10px 8px 2px;
+ justify-content: center;
+ align-items: center;
+ gap: 4px;
+ flex-shrink: 0;
 `

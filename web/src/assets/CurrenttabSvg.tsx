@@ -1,5 +1,5 @@
 import { SvgProps } from '../types/types';
-export default function TrashmarkSvg({width, height}: SvgProps) {
+export default function CurrentTabSvg({width, height}: SvgProps) {
   return (
     <svg width={width} height={height} viewBox="0 0 24 32" fill="none">
       <path
