@@ -35,7 +35,7 @@ const Map = ({ latitude, longitude }: CurrentLocation) => {
 
 
       // 현위치 마커 이미지
-    let currentimageSrc ="src/assets/Current.svg", 
+    let currentimageSrc ="image/Current.svg", 
     imageSize = new window.kakao.maps.Size(30, 30), 
     imageOption = {offset: new window.kakao.maps.Point(latitude, longitude)};
 
@@ -58,7 +58,7 @@ const Map = ({ latitude, longitude }: CurrentLocation) => {
 
 
    // 쓰레기 마커 
-   let trashimageSrc = "src/assets/trashmark.svg";
+   let trashimageSrc = "image/trashmark.svg";
 
    const settrashMarkers = (maps: any) => {
     trashpositions.forEach(async (obj) => {
@@ -105,7 +105,7 @@ const Map = ({ latitude, longitude }: CurrentLocation) => {
 
 
 // 재활용 쓰레기통
-let recycleimageSrc = "src/assets/recyclemark.svg";
+let recycleimageSrc = "image/recyclemark.svg";
 
 const setrecycleMarkers = (maps: any) => {
   recyclepositions.forEach(async (obj) => {
