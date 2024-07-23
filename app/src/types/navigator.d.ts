@@ -7,4 +7,7 @@ type RootTabParamList = {
 
 type RootStackParamList = {
   BottomNavigator: undefined;
+  Login: undefined;
+  OnBoarding: undefined;
+  UserInput: undefined;
 };

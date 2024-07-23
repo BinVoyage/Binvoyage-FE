@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "204702405694",
+    "project_id": "binvoyage-17c53",
+    "storage_bucket": "binvoyage-17c53.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:204702405694:android:4e8b0e3fac9accd9282d6f",
+        "android_client_info": {
+          "package_name": "com.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "204702405694-r3ve6275j1le6qbg4cs4nvstsfdkid93.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCE-zSAo7fIW5HfXvpud8feXn_0xoO4aus"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "204702405694-r3ve6275j1le6qbg4cs4nvstsfdkid93.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "204702405694-4qgjcrc6s1008h8v7ucipe6spgejenue.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "org.reactjs.native.example.app"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
