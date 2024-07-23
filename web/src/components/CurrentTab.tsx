@@ -44,48 +44,7 @@ export default function CurrentTab({children}:TabProps) {
 
 const CurrentBox = styled.section`
  margin-left: 12px;
- margin-bottom:8px;
- margin-top:6px;
+ margin-bottom:10px;
+ margin-top:10px;
+ display: flex;
 `
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     alignItems: 'center',
-//     paddingTop: 20,
-//   },
-//   input: {
-//     width: '80%',
-//     height: 56,
-//     padding: 16,
-//     borderWidth: 1,
-//     backgroundColor: '#ffffff',
-//     borderColor: '#ffffff',
-//     marginBottom: 16,
-//     borderRadius: 30,
-//   },
-// });
-
-// const Wrapper = styled.SafeAreaView`
-//   margin-top: 56px;
-//   color: white;
-// `;
-
-// const CurrentBox = styled.div`
-//   margin-top: 56px;
-//   position: 'absolute';
-//   /* display: flex; */
-//   z-index: 1000;
-//   margin-left: 12px;
-//   padding: 10px 12px;
-//   align-items: center;
-//   gap: 10px;
-//   flex-shrink: 0;
-//   align-items: left;
-//   align-content: space-between;
-//   border-radius: 10px;
-//   background-color: white;
-//   width: 334px;
-//   height: 44px;
-//   box-shadow: 0px 2px 6px 0px;
-// `;

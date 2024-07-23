@@ -35,27 +35,3 @@ declare global {
     geocoder.coord2Address(coord.getLng(), coord.getLat(), callback);
   }
    export default getAddr
-
-
-  //  let _arr: string | undefined | null | any;
-  
-  //  function getAddr() {
-  //    let geocoder = new window.kakao.maps.services.Geocoder();
-  //    let coord = new window.kakao.maps.LatLng(latitude, longitude);
-     
-  //    let callback = function(result: Array<any>, status: any) {
-  //      if (status === window.kakao.maps.services.Status.OK) {
-  //        const ad = result[0]?.road_address;
-  //        _arr = ad?.region_2depth_name + " , " + ad?.region_1depth_name;
-  //        console.log(_arr); 
-  //        if(typeof _arr == 'string'){
-  //          return _arr
-  //        }
-         
-  //      }
-  //    }
-     
-  //    geocoder.coord2Address(coord.getLng(), coord.getLat(), callback);
-  //  }
-   
-  //  const address:typeof _arr= getAddr();

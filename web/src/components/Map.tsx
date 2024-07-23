@@ -2,6 +2,7 @@ import  { MutableRefObject, useEffect, useMemo, useRef, useState } from "react";
 import CurrentTab from "./CurrentTab";
 import Filter from "./Filter";
 import { trashpositions,recyclepositions } from "./Places";
+import Location from "./Locations";
 
 declare global {
   interface Window {
@@ -171,7 +172,7 @@ const map = new window.kakao.maps.Map(container as HTMLElement, options);
           const _arr = ad?.region_2depth_name + " , " + ad?.region_1depth_name;
           resolve(_arr); 
         } else {
-          reject("Failed to get address"); 
+          reject("주소를 가져오는데 실패했습니다."); 
         }
       }
       
@@ -179,6 +180,7 @@ const map = new window.kakao.maps.Map(container as HTMLElement, options);
     });
   }
 
+  // getAddr로 가져온 주소 화면 출력
   useEffect(() => {
     getAddr()
       .then((response) => {
@@ -188,8 +190,6 @@ const map = new window.kakao.maps.Map(container as HTMLElement, options);
         console.log(error)
       });
   }, [save]);
-
-
 
 
 
@@ -219,7 +219,7 @@ const map = new window.kakao.maps.Map(container as HTMLElement, options);
   <div id="map" style={{ width: "100vw", height: "100vh"}} />
    <CurrentTab children={save}/>
    <Filter/>
-    {/* <Location/> */}
+    <Location/>
   </>
 );
   
