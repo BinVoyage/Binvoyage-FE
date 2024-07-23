@@ -22,7 +22,7 @@ export default function Location() {
         border:"none",
         outline:"none",
       }}>
-      <img src="src/assets/Location.svg" alt="현재 위치" />
+      <img src="image/Location.svg" alt="현재 위치" />
     </button>
     // </Buttons>
   );
