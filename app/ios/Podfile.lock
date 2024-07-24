@@ -1069,6 +1069,8 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
+  - react-native-geolocation-service (5.3.1):
+    - React
   - react-native-safe-area-context (4.10.7):
     - React-Core
   - react-native-webview (13.10.4):
@@ -1359,7 +1361,7 @@ PODS:
     - React-Core
   - RNPermissions (4.1.5):
     - React-Core
-  - RNReanimated (3.13.0):
+  - RNReanimated (3.14.0):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -1444,6 +1446,7 @@ DEPENDENCIES:
   - React-logger (from `../node_modules/react-native/ReactCommon/logger`)
   - React-Mapbuffer (from `../node_modules/react-native/ReactCommon`)
   - "react-native-geolocation (from `../node_modules/@react-native-community/geolocation`)"
+  - react-native-geolocation-service (from `../node_modules/react-native-geolocation-service`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
   - react-native-webview (from `../node_modules/react-native-webview`)
   - React-nativeconfig (from `../node_modules/react-native/ReactCommon`)
@@ -1565,6 +1568,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon"
   react-native-geolocation:
     :path: "../node_modules/@react-native-community/geolocation"
+  react-native-geolocation-service:
+    :path: "../node_modules/react-native-geolocation-service"
   react-native-safe-area-context:
     :path: "../node_modules/react-native-safe-area-context"
   react-native-webview:
@@ -1685,6 +1690,7 @@ SPEC CHECKSUMS:
   React-logger: fa92ba4d3a5d39ac450f59be2a3cec7b099f0304
   React-Mapbuffer: 70da5955150a58732e9336a0c7e71cd49e909f25
   react-native-geolocation: 3d05370e569784e95cd8a4f75713c9ab42b0f038
+  react-native-geolocation-service: 608e1da71a1ac31b4de64d9ef2815f697978c55b
   react-native-safe-area-context: 422017db8bcabbada9ad607d010996c56713234c
   react-native-webview: daf081f1a2c9e5ebcd2bd819b3e6a8ee6a631d97
   React-nativeconfig: 84806b820491db30175afbf027e99e8415dc63f0
@@ -1717,13 +1723,13 @@ SPEC CHECKSUMS:
   RNFBAuth: 9be3cd8b0f9083b06da34d52c146e66605d2ee74
   RNGestureHandler: 5538c370587d7e757667b9283ca867dd7635f154
   RNGoogleSignin: 08dc4ba7eac2096c7fecfe109f0950fa4683c803
-  RNPermissions: 294531ede5a64d1528463e88fffef05675842042
-  RNReanimated: 308bcd09703f16e26367dfd0c2bba43fc296aa47
+  RNPermissions: a4c964f030841f35d918ab3248df9dec9db5f44d
+  RNReanimated: f6b214732ff303cb815ac81b26bbfd2070b69f43
   RNScreens: fd2722bcc59f36a629205af8cc7b48e4bc0d09f5
   RNSVG: a48668fd382115bc89761ce291a81c4ca5f2fd2e
   SocketRocket: abac6f5de4d4d62d24e11868d7a2f427e0ef940d
   Yoga: bd92064a0d558be92786820514d74fc4dddd1233
 
-PODFILE CHECKSUM: 806f418de7fe600249f1fec8eb7d5901895486a5
+PODFILE CHECKSUM: 8444b305fd48907023caaa65f8064a5fd1f48083
 
 COCOAPODS: 1.15.2

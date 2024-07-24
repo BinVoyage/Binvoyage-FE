@@ -50,4 +50,10 @@ target 'app' do
       # :ccache_enabled => true
     )
   end
+
+  setup_permissions([
+    'LocationAccuracy',
+    'LocationAlways',
+    'LocationWhenInUse',
+  ]);
 end
