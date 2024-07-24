@@ -7,6 +7,7 @@ import {mapStore} from 'store/Store';
 
 export default function FindBin() {
   const {setWebViewRef, setAddressList} = mapStore();
+  const [save, setSave] = useState('');
   const webViewRef = useRef<WebView>(null);
 
   const URL = Platform.OS === 'android' ? 'http://192.168.35.143:5173' : 'http://localhost:5173';
@@ -70,6 +71,9 @@ export default function FindBin() {
       if (data.type === 'address') {
         setAddressList(data.payload.addressList);
       }
+      if (data.type === 'save') {
+        setSave(data.payload.save);
+      }
     } catch (err) {
       console.log('error');
     }
@@ -77,7 +81,9 @@ export default function FindBin() {
 
   return (
     <View style={styles.container}>
-      <WebView ref={webViewRef} style={styles.webview} source={{uri: URL}} javaScriptEnabled={true} onMessage={handleMessage} />
+      <WebView ref={webViewRef} style={styles.webview} source={{uri: URL}} javaScriptEnabled={true} onMessage={handleMessage}>
+        <View>{save}</View>
+      </WebView>
     </View>
   );
 }
@@ -87,6 +93,9 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   webview: {
+    flex: 1,
+  },
+  View: {
     flex: 1,
   },
 });
