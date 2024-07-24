@@ -1,13 +1,16 @@
+import { NavigationProp, useNavigation } from '@react-navigation/native';
 import ArrowNextSvg from 'assets/images/ArrowNextSvg';
 import HomeTrashSvg from 'assets/images/HomeTrashSvg';
 import { Palette } from 'constants/palette';
 import * as S from 'screens/home/Home.style';
 
 export default function Home() {
+  const navigation = useNavigation<NavigationProp<RootTabParamList>>();
+
   return (
     <S.Container>
       <S.HeaderTitle>Julia, Start your BinVoyage!</S.HeaderTitle>
-      <S.Bridge>
+      <S.Bridge onPress={() => navigation.navigate('FindBin')}>
         <S.BridgeIconWrapper source={require('assets/images/icon-trash-wrapper.png')} resizeMode='cover'>
           <HomeTrashSvg width="40" height="66" />
         </S.BridgeIconWrapper>
