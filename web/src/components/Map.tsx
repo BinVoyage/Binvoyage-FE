@@ -25,7 +25,7 @@ type CurrentLocation = {
 
 const Map = ({ latitude, longitude }: CurrentLocation) => {
   const [save,setSave] = useState<string| null | undefined>('')
-  const [gets,setGets] = useState<string| null | undefined>('')
+  // const [gets,setGets] = useState<string| null | undefined>('')
   const mapRef = useRef<HTMLElement | null>(null);
   const initMap = () =>{
     // if (typeof location != 'string' ){
@@ -104,10 +104,10 @@ const Map = ({ latitude, longitude }: CurrentLocation) => {
     })
   }
 
-type Bins = {
-  bin_id:number;
-  id:number;
-}
+// type Bins = {
+//   bin_id:number;
+//   id:number;
+// }
 
 
 
