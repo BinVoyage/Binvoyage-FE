@@ -54,18 +54,26 @@ export const Body = styled.View`
   background: ${Palette.White};
 `;
 
+export const AcceptAllWrapper = styled.View`
+  flex-direction: row;
+  gap: 6px;
+  align-items: center;
+  padding: 11px 10px;
+  background: ${Palette.Gray2};
+  border-radius: 8px;
+`;
+
+export const TextAcceptAll = styled.Text`
+  font-size: ${Typo.B1.fontSize};
+  font-weight: ${Typo.B1.fontWeight};
+  color: ${Palette.Black};
+`;
+
 export const AgreementWrapper = styled.View`
   flex-direction: row;
   gap: 6px;
   align-items: center;
   padding: 18px 0px;
-`;
-
-export const CheckBox = styled.TouchableOpacity`
-  width: 24px;
-  height: 24px;
-  background: ${Palette.Gray3};
-  border-radius: 8px;
 `;
 
 export const TextWrapper = styled.View`
@@ -79,11 +87,13 @@ export const TextAgreement = styled.Text`
   font-size: ${Typo.B3.fontSize};
   font-weight: ${Typo.B3.fontWeight};
   color: ${Palette.Gray6};
+  white-space: normal;
 `;
 export const TextRequired = styled.Text`
   font-size: ${Typo.B3.fontSize};
   font-weight: ${Typo.B3.fontWeight};
   color: ${Palette.Primary};
+  white-space: normal;
 `;
 
 export const TextAgreementLink = styled.Text`
@@ -92,6 +102,7 @@ export const TextAgreementLink = styled.Text`
   color: ${Palette.Primary};
   text-decoration: underline;
   text-decoration-color: ${Palette.Primary};
+  white-space: normal;
 `;
 
 export const Button = styled.TouchableOpacity<{isValid: boolean}>`
