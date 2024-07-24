@@ -1,6 +1,5 @@
-import BottomSheet, {BottomSheetView} from '@gorhom/bottom-sheet';
-import {useEffect, useMemo, useRef, useState} from 'react';
-import {Text, TouchableOpacity, View} from 'react-native';
+import {useEffect, useState} from 'react';
+import {TouchableOpacity} from 'react-native';
 import * as S from 'components/terms/Terms.style';
 import CheckBoxSvg from 'assets/images/CheckBoxSvg';
 import { Palette } from 'constants/palette';
