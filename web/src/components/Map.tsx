@@ -3,6 +3,7 @@ import CurrentTab from "./CurrentTab";
 import Filter from "./Filter";
 import { trashpositions,recyclepositions } from "./Places";
 import Location from "./Locations";
+import axios from "axios";
 
 declare global {
   interface Window {
@@ -24,6 +25,7 @@ type CurrentLocation = {
 
 const Map = ({ latitude, longitude }: CurrentLocation) => {
   const [save,setSave] = useState<string| null | undefined>('')
+  const [gets,setGets] = useState<string| null | undefined>('')
   const mapRef = useRef<HTMLElement | null>(null);
   const initMap = () =>{
     // if (typeof location != 'string' ){
@@ -101,6 +103,28 @@ const Map = ({ latitude, longitude }: CurrentLocation) => {
       }
     })
   }
+
+type Bins = {
+  bin_id:number;
+  id:number;
+}
+
+
+
+ 
+  const getData = async () => {
+    const response = await axios.get(`api/bin/search?lat=${latitude}&lng=${longitude}&radius=2000`);
+    console.log(response)
+    console.log(response.data?.data.bin_list);
+  };
+
+getData()
+
+
+
+
+
+  
 
 
 
@@ -201,7 +225,8 @@ const map = new window.kakao.maps.Map(container as HTMLElement, options);
     const message = {
       type: 'address',
       payload: {
-        address: address
+        address: address,
+        save:save,
       }
     };
     window?.ReactNativeWebView?.postMessage(JSON.stringify(message));

@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import {Palette} from 'constants/palette';
 import {Typo} from 'constants/typo';
 import styled from 'styled-components/native';
