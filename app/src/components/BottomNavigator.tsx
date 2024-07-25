@@ -7,6 +7,7 @@ import MySvg from 'assets/images/MySvg';
 import BinSvg from 'assets/images/BinSvg';
 import {Palette} from 'constants/palette';
 import {StyleSheet} from 'react-native';
+import HomeNavigator from './HomeNavigator';
 
 export default function BottomNavigator() {
   const Tab = createBottomTabNavigator<RootTabParamList>();
@@ -19,8 +20,8 @@ export default function BottomNavigator() {
           tabBarItemStyle: styles.tabBarItem,
         }}>
         <Tab.Screen
-          name="Home"
-          component={Home}
+          name="HomeNavigator"
+          component={HomeNavigator}
           options={{
             headerShown: false,
             tabBarLabel: 'HOME',

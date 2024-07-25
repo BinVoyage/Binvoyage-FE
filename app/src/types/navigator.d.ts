@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 type RootTabParamList = {
-  Home: undefined;
+  HomeNavigator: undefined;
   FindBin: undefined;
   MyPage: undefined;
 };
@@ -10,4 +10,9 @@ type RootStackParamList = {
   Login: undefined;
   OnBoarding: undefined;
   UserInput: undefined;
+};
+
+type RootHomeParamList = {
+  Home: undefined;
+  PassPort: undefined;
 };
