@@ -4,24 +4,20 @@ import {useEffect, useRef, useState} from 'react';
 import {PERMISSIONS, RESULTS, request} from 'react-native-permissions';
 import Geolocation from '@react-native-community/geolocation';
 import {mapStore} from 'store/Store';
-// import {useRequest} from 'hooks/useRequest';
 
 export default function FindBin() {
-  const {setWebViewRef} = mapStore();
+  const {setWebViewRef, setAddressList} = mapStore();
+  const [save, setSave] = useState('');
   const webViewRef = useRef<WebView>(null);
 
-  const URL =
-    Platform.OS === 'android'
-      ? 'https://binvoyage-fe.netlify.app'
-      : 'http://localhost:5173';
-
-  // const Permission: any = useRequest();
-  // 분리하기
+  const URL = Platform.OS === 'android' ? 'http://192.168.35.143:5173' : 'http://localhost:5173';
 
   const requestPermission = async () => {
     let result;
     if (Platform.OS === 'android') {
       result = await request(PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION);
+    } else if (Platform.OS === 'ios') {
+      result = await request(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE);
     }
     if (result === RESULTS.GRANTED) {
       const Ids = Geolocation.watchPosition(
@@ -72,6 +68,12 @@ export default function FindBin() {
   const handleMessage = (e: WebViewMessageEvent) => {
     try {
       const data = JSON.parse(e.nativeEvent.data);
+      if (data.type === 'address') {
+        setAddressList(data.payload.addressList);
+      }
+      if (data.type === 'save') {
+        setSave(data.payload.save);
+      }
     } catch (err) {
       console.log('error');
     }
@@ -79,13 +81,9 @@ export default function FindBin() {
 
   return (
     <View style={styles.container}>
-      <WebView
-        ref={webViewRef}
-        style={styles.webview}
-        source={{uri: URL}}
-        javaScriptEnabled={true}
-        onMessage={handleMessage}
-      />
+      <WebView ref={webViewRef} style={styles.webview} source={{uri: URL}} javaScriptEnabled={true} onMessage={handleMessage}>
+        <View>{save}</View>
+      </WebView>
     </View>
   );
 }
@@ -95,6 +93,9 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   webview: {
+    flex: 1,
+  },
+  View: {
     flex: 1,
   },
 });
