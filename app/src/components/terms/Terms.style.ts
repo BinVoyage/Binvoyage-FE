@@ -1,3 +1,4 @@
+import DefaultText from 'components/DefaultText';
 import {Palette} from 'constants/palette';
 import {Typo} from 'constants/typo';
 import styled from 'styled-components/native';
@@ -35,14 +36,14 @@ export const Indicator = styled.View`
   background: ${Palette.Gray2};
 `;
 
-export const Title = styled.Text`
+export const Title = styled(DefaultText)`
   font-size: ${Typo.Title1.fontSize};
   font-weight: ${Typo.Title1.fontWeight};
   color: ${Palette.Black};
   margin: 19px 0px 4px;
 `;
 
-export const Description = styled.Text`
+export const Description = styled(DefaultText)`
   font-size: ${Typo.B3.fontSize};
   font-weight: ${Typo.B3.fontWeight};
   color: ${Palette.Gray5};
@@ -63,7 +64,7 @@ export const AcceptAllWrapper = styled.View`
   border-radius: 8px;
 `;
 
-export const TextAcceptAll = styled.Text`
+export const TextAcceptAll = styled(DefaultText)`
   font-size: ${Typo.B1.fontSize};
   font-weight: ${Typo.B1.fontWeight};
   color: ${Palette.Black};
@@ -83,20 +84,20 @@ export const TextWrapper = styled.View`
   align-items: center;
 `;
 
-export const TextAgreement = styled.Text`
+export const TextAgreement = styled(DefaultText)`
   font-size: ${Typo.B3.fontSize};
   font-weight: ${Typo.B3.fontWeight};
   color: ${Palette.Gray6};
   white-space: normal;
 `;
-export const TextRequired = styled.Text`
+export const TextRequired = styled(DefaultText)`
   font-size: ${Typo.B3.fontSize};
   font-weight: ${Typo.B3.fontWeight};
   color: ${Palette.Primary};
   white-space: normal;
 `;
 
-export const TextAgreementLink = styled.Text`
+export const TextAgreementLink = styled(DefaultText)`
   font-size: ${Typo.B3.fontSize};
   font-weight: ${Typo.B3.fontWeight};
   color: ${Palette.Primary};
@@ -113,7 +114,7 @@ export const Button = styled.TouchableOpacity<{isValid: boolean}>`
   margin-top: auto;
 `;
 
-export const ButtonText = styled.Text<{isValid: boolean}>`
+export const ButtonText = styled(DefaultText)<{isValid: boolean}>`
   font-size: ${Typo.Button1.fontSize};
   font-weight: ${Typo.Button1.fontWeight};
   color: ${props => (props.isValid ? Palette.White : Palette.Gray4)};

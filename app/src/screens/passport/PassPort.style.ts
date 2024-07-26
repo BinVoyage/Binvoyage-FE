@@ -1,3 +1,4 @@
+import DefaultText from 'components/DefaultText';
 import {Palette} from 'constants/palette';
 import {Typo} from 'constants/typo';
 import styled from 'styled-components/native';
@@ -22,7 +23,7 @@ export const ArrowPrevWrapper = styled.TouchableOpacity`
   align-items: centerd;
 `;
 
-export const Title = styled.Text`
+export const Title = styled(DefaultText)`
   font-size: ${Typo.Title2.fontSize};
   font-weight: ${Typo.Title2.fontWeight};
   color: ${Palette.Black};
