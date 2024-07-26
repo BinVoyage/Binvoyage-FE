@@ -11,31 +11,12 @@ export default function PassPort() {
   const navigation = useNavigation<NavigationProp<RootHomeParamList>>();
 
   const dummy = [
-    {
-      page: 1,
-      count: 5,
-      stamp_list: [],
-    },
-    {
-      page: 2,
-      count: 0,
-      stamp_list: [],
-    },
-    {
-      page: 3,
-      count: 0,
-      stamp_list: [],
-    },
-    {
-      page: 4,
-      count: 0,
-      stamp_list: [],
-    },
-    {
-      page: 5,
-      count: 0,
-      stamp_list: [],
-    },
+    {"id": 1},
+    {"id": 2},
+    {"id": 3},
+    {"id": 4},
+    {"id": 5},
+    {"id": 0},
   ];
 
   return (
@@ -54,8 +35,8 @@ export default function PassPort() {
             <S.Pagination>{Array.from({length: total}).map((_, i) => (i === index ? <S.CurrentDot key={i} /> : <S.Dot key={i} />))}</S.Pagination>
           );
         }}>
-        {dummy.map((page, index) => (
-          <PassPortPage />
+        {Array.from({length: 5}).map((page, index) => (
+          <PassPortPage key={index} stampList={dummy}/>
         ))}
       </Swiper>
     </S.Container>
