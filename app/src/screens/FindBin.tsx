@@ -10,7 +10,7 @@ export default function FindBin() {
   const [save, setSave] = useState('');
   const webViewRef = useRef<WebView>(null);
 
-  const URL = Platform.OS === 'android' ? 'http://192.168.35.143:5173' : 'http://localhost:5173';
+  const URL = 'https://binvoyage-fe.netlify.app/';
 
   const requestPermission = async () => {
     let result;
