@@ -1,4 +1,4 @@
-/* eslint-disable prettier/prettier */
+import DefaultText from 'components/DefaultText';
 import {Palette} from 'constants/palette';
 import {Typo} from 'constants/typo';
 import styled from 'styled-components/native';
@@ -14,7 +14,7 @@ export const Wrapper = styled.View`
   justify-content: space-between;
 `;
 
-export const Title = styled.Text`
+export const Title = styled(DefaultText)`
   font-size: ${Typo.Title1.fontSize};
   font-weight: ${Typo.Title1.fontWeight};
   color: ${Palette.Black};
@@ -37,7 +37,7 @@ export const GoogleSignInButton = styled.TouchableOpacity`
   border-radius: 10px;
 `;
 
-export const GoogleSignInText = styled.Text`
+export const GoogleSignInText = styled(DefaultText)`
   font-size: ${Typo.Button1.fontSize};
   font-weight: ${Typo.Button1.fontWeight};
   color: ${Palette.Black};
@@ -55,7 +55,7 @@ export const AppleSignInButton = styled.TouchableOpacity`
   border-radius: 10px;
 `;
 
-export const AppleSignInText = styled.Text`
+export const AppleSignInText = styled(DefaultText)`
   font-size: ${Typo.Button1.fontSize};
   font-weight: ${Typo.Button1.fontWeight};
   color: ${Palette.White};
@@ -73,7 +73,7 @@ export const PassSignInButton = styled.TouchableOpacity`
   border-radius: 10px;
 `;
 
-export const PassSignInText = styled.Text`
+export const PassSignInText = styled(DefaultText)`
   font-size: ${Typo.Button1.fontSize};
   font-weight: ${Typo.Button1.fontWeight};
   color: ${Palette.White};
@@ -86,13 +86,13 @@ export const TextFooterWrapper = styled.View`
   justify-content: center;
 `;
 
-export const TextFooter = styled.Text`
+export const TextFooter = styled(DefaultText)`
   font-size: ${Typo.Label.fontSize};
   font-weight: ${Typo.Label.fontWeight};
   color: ${Palette.Gray6};
 `;
 
-export const TextFooterLink = styled.Text`
+export const TextFooterLink = styled(DefaultText)`
   font-size: ${Typo.Label.fontSize};
   font-weight: ${Typo.Label.fontWeight};
   color: ${Palette.Primary};

@@ -39,4 +39,4 @@ export const Typo = {
     fontSize: '12px',
     fontWeight: '500',
   },
-}
+};

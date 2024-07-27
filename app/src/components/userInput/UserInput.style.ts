@@ -1,3 +1,4 @@
+import DefaultText from 'components/DefaultText';
 import {Palette} from 'constants/palette';
 import {Typo} from 'constants/typo';
 import styled from 'styled-components/native';
@@ -15,20 +16,20 @@ export const Step = styled.View`
   align-self: flex-start;
 `;
 
-export const StepText = styled.Text`
+export const StepText = styled(DefaultText)`
   font-size: ${Typo.B3.fontSize};
   font-weight: ${Typo.B3.fontWeight};
   color: ${Palette.Primary};
 `;
 
-export const Title = styled.Text`
+export const Title = styled(DefaultText)`
   font-size: ${Typo.Title1.fontSize};
   font-weight: ${Typo.Title1.fontWeight};
   color: ${Palette.Black};
   margin: 6px 0px;
 `;
 
-export const Label = styled.Text<{isRequired: boolean}>`
+export const Label = styled(DefaultText)<{isRequired: boolean}>`
   font-size: ${Typo.B3.fontSize};
   font-weight: ${Typo.B3.fontWeight};
   color: ${props => (props.isRequired ? Palette.Primary : Palette.Gray4)};
@@ -45,7 +46,7 @@ export const NameInput = styled.TextInput<{isHighlight: boolean; isIos: boolean}
   margin-top: 28px;
 `;
 
-export const Message = styled.Text`
+export const Message = styled(DefaultText)`
   font-size: ${Typo.Label.fontSize};
   font-weight: ${Typo.Label.fontWeight};
   color: ${Palette.Error};
@@ -59,7 +60,7 @@ export const Button = styled.TouchableOpacity<{isValid: boolean}>`
   margin-top: auto;
 `;
 
-export const ButtonText = styled.Text<{isValid: boolean}>`
+export const ButtonText = styled(DefaultText)<{isValid: boolean}>`
   font-size: ${Typo.Button1.fontSize};
   font-weight: ${Typo.Button1.fontWeight};
   color: ${props => (props.isValid ? Palette.White : Palette.Gray4)};
@@ -98,7 +99,7 @@ export const SearchListItem = styled.TouchableOpacity<{isSelected: boolean}>`
   background: ${props => (props.isSelected ? Palette.P100 : Palette.White)};
 `;
 
-export const SearchListItemText = styled.Text<{isSelected: boolean}>`
+export const SearchListItemText = styled(DefaultText)<{isSelected: boolean}>`
   font-size: ${Typo.B3.fontSize};
   font-weight: ${Typo.B3.fontWeight};
   color: ${props => (props.isSelected ? Palette.Primary : Palette.Gray5)};

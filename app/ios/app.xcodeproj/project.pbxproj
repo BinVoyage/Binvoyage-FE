@@ -19,6 +19,8 @@
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		E8798EADA5BE4739988DAA7F /* Pretendard-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = D04D2CCEAADE44A6A02E88EA /* Pretendard-Medium.otf */; };
 		E91614805DC34AF8B13E1820 /* Pretendard-SemiBold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 97B2C0E2DDBA471BA1CA7894 /* Pretendard-SemiBold.otf */; };
+		6B6FEAE2C82B4032BA8405D9 /* PTSerif-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B19616ABF0D14DAB85DCA65D /* PTSerif-Bold.ttf */; };
+		68E62FF4868848D3A1DE9B26 /* PTSerif-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8C82ECCA6D044356ABB80A4F /* PTSerif-Italic.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -55,6 +57,8 @@
 		97B2C0E2DDBA471BA1CA7894 /* Pretendard-SemiBold.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Pretendard-SemiBold.otf"; path = "../src/assets/fonts/Pretendard-SemiBold.otf"; sourceTree = "<group>"; };
 		D04D2CCEAADE44A6A02E88EA /* Pretendard-Medium.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Pretendard-Medium.otf"; path = "../src/assets/fonts/Pretendard-Medium.otf"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
+		B19616ABF0D14DAB85DCA65D /* PTSerif-Bold.ttf */ = {isa = PBXFileReference; name = "PTSerif-Bold.ttf"; path = "../src/assets/fonts/PTSerif-Bold.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		8C82ECCA6D044356ABB80A4F /* PTSerif-Italic.ttf */ = {isa = PBXFileReference; name = "PTSerif-Italic.ttf"; path = "../src/assets/fonts/PTSerif-Italic.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -126,6 +130,8 @@
 				026F8465D9A1443AB556A85A /* Pretendard-Bold.otf */,
 				D04D2CCEAADE44A6A02E88EA /* Pretendard-Medium.otf */,
 				97B2C0E2DDBA471BA1CA7894 /* Pretendard-SemiBold.otf */,
+				B19616ABF0D14DAB85DCA65D /* PTSerif-Bold.ttf */,
+				8C82ECCA6D044356ABB80A4F /* PTSerif-Italic.ttf */,
 			);
 			name = Resources;
 			path = "";
@@ -275,6 +281,8 @@
 				16BB8FE47FEC4B57B78E7B1B /* Pretendard-Bold.otf in Resources */,
 				E8798EADA5BE4739988DAA7F /* Pretendard-Medium.otf in Resources */,
 				E91614805DC34AF8B13E1820 /* Pretendard-SemiBold.otf in Resources */,
+				6B6FEAE2C82B4032BA8405D9 /* PTSerif-Bold.ttf in Resources */,
+				68E62FF4868848D3A1DE9B26 /* PTSerif-Italic.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

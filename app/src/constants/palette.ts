@@ -9,7 +9,7 @@ export const Palette = {
   Secondary2: '#FF6C7E',
   Secondary3: '#6FDFD5',
   White: '#ffffff',
-  Black: '#000000',
+  Black: '#212121',
   Gray1: '#EFF1F4',
   Gray2: '#E4E6EA',
   Gray3: '#BEC1C7',
