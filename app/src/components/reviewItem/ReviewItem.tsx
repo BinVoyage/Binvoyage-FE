@@ -1,6 +1,7 @@
 import * as S from 'components/reviewItem/ReviewItem.style';
 import SirenSvg from 'assets/images/SirenSvg';
-import { Palette } from 'constants/palette';
+import {Palette} from 'constants/palette';
+import {TouchableOpacity} from 'react-native';
 
 interface Props {
   date: string;
@@ -14,7 +15,9 @@ export default function ReviewItem({date, author, content, isLast}: Props) {
     <S.Container isLast={isLast}>
       <S.RowWrapper>
         <S.TextDate>{date}</S.TextDate>
-        <SirenSvg width='18' height='18' fill={Palette.Gray4}/>
+        <TouchableOpacity>
+          <SirenSvg width="18" height="18" fill={Palette.Gray4} />
+        </TouchableOpacity>
       </S.RowWrapper>
       <S.TextAuthor>{author}</S.TextAuthor>
       <S.TextContent>{content}</S.TextContent>

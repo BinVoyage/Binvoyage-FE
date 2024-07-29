@@ -10,10 +10,17 @@ type RootStackParamList = {
   Login: undefined;
   OnBoarding: undefined;
   UserInput: undefined;
-  BinDetail: undefined;
+  BinDetailNavigator: undefined;
 };
 
 type RootHomeParamList = {
   Home: undefined;
   PassPort: undefined;
+};
+
+type RootBinDetailParamList = {
+  BinDetail: undefined;
+  FeedBackList: undefined;
+  ReportFeedBack: undefined;
+  ReportWrongInfo: undefined;
 };
