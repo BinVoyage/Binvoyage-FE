@@ -2,9 +2,15 @@ import ArrowDownSvg from 'assets/images/ArrowDownSvg';
 import ArrowNextSvg from 'assets/images/ArrowNextSvg';
 import BinSvg from 'assets/images/BinSvg';
 import FootPrintSvg from 'assets/images/FootPrintSvg';
+import ReviewItem from 'components/reviewItem/ReviewItem';
 import {Palette} from 'constants/palette';
-import {ScrollView, Text, TouchableOpacity} from 'react-native';
+import {ScrollView, Text, TouchableOpacity, View} from 'react-native';
 import * as S from 'screens/binDetail/BinDetail.style';
+
+const dummyReviews = [
+  {id: 0, date: '2024-07-29', author: 'sunho', content: 'hihihihihihihihihihih'},
+  {id: 1, date: '2024-07-28', author: 'lee', content: 'hihihihihihihihihihih'},
+];
 
 export default function BinDetail() {
   return (
@@ -75,10 +81,25 @@ export default function BinDetail() {
               </S.VisitDescription>
             </S.RowWrapper>
           </S.DetailWrapper>
-          <S.DetailWrapper>
+          <S.DetailWrapper style={{paddingBottom: 0}}>
             <S.DetailTitle>
               After-visit feedback <Text style={{color: Palette.Primary}}>23</Text>
             </S.DetailTitle>
+            <View style={{marginTop: 18, marginBottom: 30}}>
+              {dummyReviews.map((review, index) => (
+                <ReviewItem
+                  key={review.id}
+                  date={review.date}
+                  author={review.author}
+                  content={review.content}
+                  isLast={index === dummyReviews.length - 1 ? true : false}
+                />
+              ))}
+            </View>
+            <S.SeeAllWrapper>
+              <S.TextSeeAll>See All</S.TextSeeAll>
+              <ArrowDownSvg width='24' height='24' fill={Palette.Gray4}/>
+            </S.SeeAllWrapper>
           </S.DetailWrapper>
         </S.GrayContainer>
       </ScrollView>

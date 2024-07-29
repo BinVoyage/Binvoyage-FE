@@ -20,8 +20,7 @@ export const TopContainer = styled.View`
 export const ArrowDownWrapper = styled.TouchableOpacity`
   width: 24px;
   height: 24px;
-  margin-left: auto;
-  margin-right: 16px;
+  margin: 8px 16px 8px auto;
 `;
 
 export const TopLabel = styled.View`
@@ -155,6 +154,22 @@ export const TextDate = styled(DefaultText)`
   color: ${Palette.Gray4};
   margin-right: 8px;
 `;
+
+export const SeeAllWrapper = styled.TouchableOpacity`
+  flex-direction: row;
+  padding: 11px 0px;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  border-top-width: 1px;
+  border-top-color: ${Palette.Gray2};
+`
+
+export const TextSeeAll = styled(DefaultText)`
+  font-size: ${Typo.B3.fontSize};
+  font-weight: ${Typo.B3.fontWeight};
+  color: ${Palette.Gray5};
+`
 
 export const BtnContainer = styled.View`
   flex-direction: row;
