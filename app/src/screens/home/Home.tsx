@@ -34,7 +34,7 @@ export default function Home() {
             <S.IconPassPort source={require('assets/images/icon-passport.png')} resizeMode="contain" />
           </S.PassPort>
         </S.PassPortBg>
-        <S.Button>
+        <S.Button onPress={() => navigation2.navigate('NewTrash')}>
           <S.ButtonText>Find any new bin? Let us know!</S.ButtonText>
         </S.Button>
       </S.Body>

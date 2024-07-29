@@ -15,4 +15,5 @@ type RootStackParamList = {
 type RootHomeParamList = {
   Home: undefined;
   PassPort: undefined;
+  NewTrash: undefined;
 };
