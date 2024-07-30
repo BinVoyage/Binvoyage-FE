@@ -46,7 +46,13 @@ export default function FeedbackList() {
         showsVerticalScrollIndicator={false}
         keyExtractor={item => item.feedback_id.toString()}
         renderItem={({item, index}) => (
-          <ReviewItem date={item.registration_dt} author={item.user_name} content={item.content} isLast={index === feedbackList.length - 1} />
+          <ReviewItem
+            feedbackId={item.feedback_id}
+            date={item.registration_dt}
+            author={item.user_name}
+            content={item.content}
+            isLast={index === feedbackList.length - 1}
+          />
         )}
       />
       <TouchableOpacity onPress={scrollToTop}>

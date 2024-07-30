@@ -33,6 +33,7 @@
     "react-native-svg": "^15.3.0",
     "react-native-svg-transformer": "^1.4.0",
     "react-native-swiper": "^1.6.0",
+    "react-native-toast-message": "^2.2.0",
     "react-native-webview": "^13.10.4",
     "styled-components": "^6.1.11",
     "zustand": "^4.5.4"
