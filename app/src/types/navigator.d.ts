@@ -21,6 +21,6 @@ type RootHomeParamList = {
 type RootBinDetailParamList = {
   BinDetail: undefined;
   FeedbackList: undefined;
-  ReportFeedback: undefined;
+  ReportFeedback: { date: string; author: string; content: string };
   ReportWrongInfo: undefined;
 };

@@ -2,6 +2,7 @@ import * as S from 'components/reviewItem/ReviewItem.style';
 import SirenSvg from 'assets/images/SirenSvg';
 import {Palette} from 'constants/palette';
 import {TouchableOpacity} from 'react-native';
+import { NavigationProp, useNavigation } from '@react-navigation/native';
 
 interface Props {
   date: string;
@@ -11,11 +12,13 @@ interface Props {
 }
 
 export default function ReviewItem({date, author, content, isLast}: Props) {
+  const navigation = useNavigation<NavigationProp<RootBinDetailParamList>>();
+  
   return (
     <S.Container isLast={isLast}>
       <S.RowWrapper>
         <S.TextDate>{date}</S.TextDate>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate('ReportFeedback', {date, author, content})}>
           <SirenSvg width="18" height="18" fill={Palette.Gray4} />
         </TouchableOpacity>
       </S.RowWrapper>
