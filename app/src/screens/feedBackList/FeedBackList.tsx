@@ -5,9 +5,9 @@ import ReviewItem from 'components/reviewItem/ReviewItem';
 import {Palette} from 'constants/palette';
 import {useEffect, useRef, useState} from 'react';
 import {FlatList, Text, TouchableOpacity} from 'react-native';
-import * as S from 'screens/feedBackList/FeedBackList.style';
+import * as S from 'screens/feedbackList/FeedbackList.style';
 
-export default function FeedBackList() {
+export default function FeedbackList() {
   const navigation = useNavigation<NavigationProp<RootBinDetailParamList>>();
   const [feedbackList, setFeedbackList] = useState<Feedback[]>([]);
   const scrollViewRef = useRef<FlatList>(null);
@@ -43,6 +43,7 @@ export default function FeedBackList() {
       <FlatList
         ref={scrollViewRef}
         data={feedbackList}
+        showsVerticalScrollIndicator={false}
         keyExtractor={item => item.feedback_id.toString()}
         renderItem={({item, index}) => (
           <ReviewItem date={item.registration_dt} author={item.user_name} content={item.content} isLast={index === feedbackList.length - 1} />

@@ -27,7 +27,7 @@ export default function BinDetail() {
       }
     };
 
-    const getFeedBackData = async () => {
+    const getFeedbackData = async () => {
       try {
         const response = await api.get<FeedbackResponse>('/bin/feedback/1');
         setFeedbackList(response.data.data.feedback_list);
@@ -38,7 +38,7 @@ export default function BinDetail() {
     };
 
     getBinData();
-    getFeedBackData();
+    getFeedbackData();
   }, []);
 
   return (
@@ -122,7 +122,7 @@ export default function BinDetail() {
                 />
               ))}
             </View>
-            <S.SeeAllWrapper onPress={() => navigation.navigate('FeedBackList')}>
+            <S.SeeAllWrapper onPress={() => navigation.navigate('FeedbackList')}>
               <S.TextSeeAll>See All</S.TextSeeAll>
               <ArrowDownSvg width="24" height="24" fill={Palette.Gray4} />
             </S.SeeAllWrapper>
