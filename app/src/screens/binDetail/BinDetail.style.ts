@@ -92,7 +92,7 @@ export const DetailWrapper = styled.View`
 export const TextLocationPrimary = styled(DefaultText)`
   font-size: ${Typo.B4.fontSize};
   font-weight: ${Typo.B4.fontWeight};
-  color: ${Palette.Primary};
+  color: ${Palette.P400};
   margin-right: 5px;
 `;
 export const LabelLocation = styled.View`

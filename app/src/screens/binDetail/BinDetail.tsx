@@ -64,7 +64,7 @@ export default function BinDetail() {
                 <S.TextInfo1>100m</S.TextInfo1>
               </S.RowWrapper>
             </S.RowWrapper>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() => navigation.navigate('ReportWrongInfo')}>
               <S.RowWrapper>
                 <S.TextWrongInfo>Wrong Info?</S.TextWrongInfo>
                 <ArrowNextSvg width="14" height="14" fill={Palette.Primary} />
