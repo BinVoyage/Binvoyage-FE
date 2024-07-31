@@ -9,7 +9,7 @@ interface Props {
   author: string;
   content: string;
   isLast: boolean;
-  feedbackId: string;
+  feedbackId: number;
 }
 
 export default function ReviewItem({date, author, content, feedbackId, isLast}: Props) {

@@ -115,6 +115,7 @@ export default function BinDetail() {
               {feedbackList.map((item, index) => (
                 <ReviewItem
                   key={item.feedback_id}
+                  feedbackId={item.feedback_id}
                   date={formatDate(item.registration_dt)}
                   author={item.user_name}
                   content={item.content}
