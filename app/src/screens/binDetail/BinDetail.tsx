@@ -64,7 +64,17 @@ export default function BinDetail() {
                 <S.TextInfo1>100m</S.TextInfo1>
               </S.RowWrapper>
             </S.RowWrapper>
-            <TouchableOpacity onPress={() => navigation.navigate('ReportWrongInfo')}>
+            <TouchableOpacity
+              onPress={() =>
+                navigation.navigate('ReportWrongInfo', {
+                  bin_id: binData?.bin_id ?? -1,
+                  type_name: binData?.type_name ?? '',
+                  location_type_name: binData?.location_type_name ?? '',
+                  address: binData?.address ?? '',
+                  detail: binData?.detail ?? '',
+                  image: binData?.image ?? '',
+                })
+              }>
               <S.RowWrapper>
                 <S.TextWrongInfo>Wrong Info?</S.TextWrongInfo>
                 <ArrowNextSvg width="14" height="14" fill={Palette.Primary} />

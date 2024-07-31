@@ -1,8 +1,8 @@
-import DefaultText from "components/DefaultText";
-import { Palette } from "constants/palette";
-import { Typo } from "constants/typo";
-import { Dimensions } from "react-native";
-import styled from "styled-components/native";
+import DefaultText from 'components/DefaultText';
+import {Palette} from 'constants/palette';
+import {Typo} from 'constants/typo';
+import {Dimensions} from 'react-native';
+import styled from 'styled-components/native';
 
 const screenWidth = Dimensions.get('window').width;
 const width = screenWidth - 32;
@@ -54,7 +54,7 @@ export const AddressWrapper = styled.View`
   background: ${Palette.White};
   margin-top: 14px;
   align-self: center;
-`
+`;
 
 export const ImageArea = styled.ImageBackground`
   width: ${width}px;
@@ -93,4 +93,35 @@ export const TextLocationContents = styled(DefaultText)`
   font-weight: ${Typo.B1.fontWeight};
   color: ${Palette.Black};
   margin-top: 2px;
+`;
+
+export const SelectWrapper = styled.View<{isLast: boolean}>`
+  flex-direction: row;
+  gap: 6px;
+  align-items: center;
+  padding-bottom: ${props => (props.isLast ? '0px' : '12px')};
+  border-bottom-width: ${props => (props.isLast ? '0px' : '1px')};
+  border-bottom-color: ${Palette.Gray2};
+  margin-bottom: ${props => (props.isLast ? '0px' : '12px')};
+`;
+
+export const TextReportType = styled(DefaultText)`
+  font-size: ${Typo.B3.fontSize};
+  font-weight: ${Typo.B3.fontWeight};
+  color: ${Palette.Gray5};
+`;
+
+export const Button = styled.TouchableOpacity<{isValid: boolean}>`
+  width: 100%;
+  padding: 16px 30px;
+  border-radius: 10px;
+  background: ${props => (props.isValid ? Palette.Primary : Palette.Gray3)};
+  margin-top: auto;
+`;
+
+export const ButtonText = styled(DefaultText)<{isValid: boolean}>`
+  font-size: ${Typo.Button1.fontSize};
+  font-weight: ${Typo.Button1.fontWeight};
+  color: ${props => (props.isValid ? Palette.White : Palette.Gray4)};
+  text-align: center;
 `;
