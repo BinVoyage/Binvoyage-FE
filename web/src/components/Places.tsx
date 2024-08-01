@@ -7,7 +7,7 @@ declare global {
   
   }
   
-export const trashpositions:any[] = [
+export const trashPositions:any[] = [
     new window.kakao.maps.LatLng(37.54397760413326, 127.12560598299282),
     new window.kakao.maps.LatLng(37.5663174209601, 126.977829174031),
     new window.kakao.maps.LatLng(37.5674198878673, 126.977873671097),
@@ -16,7 +16,7 @@ export const trashpositions:any[] = [
 ];
 
 
-export const recyclepositions:any[] = [
+export const recyclePositions:any[] = [
     new window.kakao.maps.LatLng(37.544265748, 127.12577054318095),
     new window.kakao.maps.LatLng(37.5698677620456, 126.977657083792),
     new window.kakao.maps.LatLng(37.54397678904881, 127.12845751143172),
