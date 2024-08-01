@@ -20,7 +20,7 @@ export const ArrowPrevWrapper = styled.TouchableOpacity`
   width: 24px;
   height: 24px;
   justify-content: center;
-  align-items: centerd;
+  align-items: center;
 `;
 
 export const Title = styled(DefaultText)`
