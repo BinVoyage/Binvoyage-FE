@@ -38,11 +38,26 @@ export const RowWrapper = styled.View`
   align-items: center;
 `;
 
+export const FilterWrapperNoIcon = styled.TouchableOpacity<{isSelected: boolean; isTrash: boolean}>`
+  padding: 6px 10px;
+  background: ${props => (props.isSelected ? (props.isTrash ? Palette.Secondary2 : Palette.Primary) : Palette.White)};
+  border-radius: 22px;
+  gap: 4px;
+  shadow-color: rgba(0, 0, 0, 0.2);
+  shadow-offset: 0px 2px;
+  shadow-opacity: 1;
+  shadow-radius: 6px;
+  elevation: 3;
+`;
+
 export const FilterWrapper = styled.TouchableOpacity<{isSelected: boolean; isTrash: boolean}>`
-  padding: 5px 10px;
+  padding: 2px 10px 2px 2px;
   background: ${props => (props.isSelected ? (props.isTrash ? Palette.Secondary2 : Palette.Primary) : Palette.White)};
   border-radius: 22px;
   flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 4px;
   shadow-color: rgba(0, 0, 0, 0.2);
   shadow-offset: 0px 2px;
   shadow-opacity: 1;

@@ -6,6 +6,9 @@ import Geolocation from '@react-native-community/geolocation';
 import * as S from 'screens/FindBin/FindBin.style';
 import LocationSvg from 'assets/images/LocationSvg';
 import {Palette} from 'constants/palette';
+import RecyclingFilterSvg from 'assets/images/RecyclingFilterSvg';
+import TrashFilterSvg from 'assets/images/TrashFilterSvg';
+import {Image} from 'react-native';
 
 export default function FindBin() {
   const webViewRef = useRef<WebView>(null);
@@ -134,13 +137,15 @@ export default function FindBin() {
           <S.LocationText>{currentAddress || 'loading...'}</S.LocationText>
         </S.LocationWrapper>
         <S.RowWrapper>
-          <S.FilterWrapper onPress={() => handleFilter(0)} isSelected={filterMode === 0} isTrash={false}>
+          <S.FilterWrapperNoIcon onPress={() => handleFilter(0)} isSelected={filterMode === 0} isTrash={false}>
             <S.FilterText isSelected={filterMode === 0}>Recently visited</S.FilterText>
-          </S.FilterWrapper>
+          </S.FilterWrapperNoIcon>
           <S.FilterWrapper onPress={() => handleFilter(2)} isSelected={filterMode === 2} isTrash={false}>
+            <RecyclingFilterSvg width="26" height="26" fill={Palette.Primary} />
             <S.FilterText isSelected={filterMode === 2}>Recycling</S.FilterText>
           </S.FilterWrapper>
           <S.FilterWrapper onPress={() => handleFilter(1)} isSelected={filterMode === 1} isTrash={true}>
+            <TrashFilterSvg width="26" height="26" fill={Palette.Secondary2} />
             <S.FilterText isSelected={filterMode === 1}>Trash</S.FilterText>
           </S.FilterWrapper>
         </S.RowWrapper>
