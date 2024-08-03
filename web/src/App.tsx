@@ -21,10 +21,30 @@ function App() {
         const message = JSON.parse(event.data);
 
         if (message.type === "location") {
+          const { latitude, longitude } = message.payload;
+
           setCurrentLocation({
-            latitude: message.payload.latitude,
-            longitude: message.payload.longitude,
+            latitude: latitude,
+            longitude: longitude
           });
+
+          const geocoder = new window.kakao.maps.services.Geocoder();
+          const coord = new window.kakao.maps.LatLng(latitude, longitude);
+
+          geocoder.coord2RegionCode(coord.getLng(), coord.getLat(), (result:any, status:any) => {
+            if (status === window.kakao.maps.services.Status.OK) {
+              const address = result[0]?.address_name || '';
+              const slicedAddress = address.split(' ').slice(0, 2).join(' ');
+              window.ReactNativeWebView.postMessage(JSON.stringify({
+                type: 'address',
+                payload: {
+                  address: slicedAddress,
+                },
+              }));
+            }
+          });
+      
+
         } else if (message.type === "filter") {
           setFilterMode(message.payload.filterMode);
         }

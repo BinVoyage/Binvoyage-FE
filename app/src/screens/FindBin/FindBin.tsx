@@ -3,20 +3,20 @@ import {WebView, WebViewMessageEvent} from 'react-native-webview';
 import {useEffect, useRef, useState} from 'react';
 import {PERMISSIONS, RESULTS, request} from 'react-native-permissions';
 import Geolocation from '@react-native-community/geolocation';
-import {mapStore} from 'store/Store';
 import * as S from 'screens/FindBin/FindBin.style';
 import LocationSvg from 'assets/images/LocationSvg';
 import {Palette} from 'constants/palette';
 
 export default function FindBin() {
-  const {setWebViewRef, setAddressList} = mapStore();
-  const [save, setSave] = useState('');
   const webViewRef = useRef<WebView>(null);
   const [filterMode, setFilterMode] = useState<number>(-1);
+  const [currentAddress, setCurrentAddress] = useState<string>('');
+  const [watcherId, setWatcherId] = useState<number | null>(null); // Watcher ID를 저장할 상태
+  const [isWebViewLoaded, setIsWebViewLoaded] = useState(false); // WebView 로드 상태
 
   const URL = 'http://localhost:5173';
 
-  const requestPermission = async () => {
+  const requestPermissionAndSendLocation = async () => {
     let result;
     if (Platform.OS === 'android') {
       result = await request(PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION);
@@ -35,8 +35,13 @@ export default function FindBin() {
             },
           };
 
-          if (webViewRef.current) {
-            webViewRef.current.postMessage(JSON.stringify(message));
+          console.log('Sending message:', JSON.stringify(message)); // 메시지 전송 확인
+
+          if (isWebViewLoaded && webViewRef.current) {
+            setTimeout(() => {
+              // 지연을 주고 메시지 전송
+              webViewRef.current?.postMessage(JSON.stringify(message));
+            }, 100); // 0.1초 지연
           }
         },
         error => {
@@ -49,34 +54,23 @@ export default function FindBin() {
       Alert.alert('위치 권한이 필요합니다!', '위치 권한을 켜주세요!', [
         {
           text: 'OK',
-          onPress: () => requestPermission(),
+          onPress: () => requestPermissionAndSendLocation(),
         },
       ]);
     }
   };
 
   useEffect(() => {
-    setWebViewRef(webViewRef);
-  }, [webViewRef]);
-
-  useEffect(() => {
-    const Ids = requestPermission();
-
-    return () => {
-      if (typeof Ids === 'number') {
-        Geolocation.clearWatch(Ids);
-      }
-    };
-  }, []);
+    if (isWebViewLoaded) {
+      requestPermissionAndSendLocation(); // WebView가 로드된 후에 위치 권한 요청 및 위치 정보 전송을 시작
+    }
+  }, [isWebViewLoaded]);
 
   const handleMessage = (e: WebViewMessageEvent) => {
     try {
       const data = JSON.parse(e.nativeEvent.data);
       if (data.type === 'address') {
-        setAddressList(data.payload.addressList);
-      }
-      if (data.type === 'save') {
-        setSave(data.payload.save);
+        setCurrentAddress(data.payload.address);
       }
     } catch (err) {
       console.log('error');
@@ -112,15 +106,32 @@ export default function FindBin() {
     sendMessageToWebView(mode);
   };
 
+  useEffect(() => {
+    // 컴포넌트 언마운트 시 Watcher 중지
+    return () => {
+      if (watcherId !== null) {
+        Geolocation.clearWatch(watcherId);
+      }
+    };
+  }, [watcherId]);
+
   return (
     <View style={styles.container}>
-      <WebView ref={webViewRef} style={styles.webview} source={{uri: URL}} javaScriptEnabled={true} onMessage={handleMessage}>
-        <View>{save}</View>
-      </WebView>
+      <WebView
+        ref={webViewRef}
+        style={styles.webview}
+        source={{uri: URL}}
+        javaScriptEnabled={true}
+        onMessage={handleMessage}
+        onLoad={() => {
+          console.log('WebView loaded');
+          setIsWebViewLoaded(true); // WebView 로드 상태를 true로 설정
+        }}
+      />
       <S.ItemWrapper>
         <S.LocationWrapper>
           <LocationSvg width="24" height="24" fill={Palette.Primary} />
-          <S.LocationText>Seongbuk-gu, Seoul</S.LocationText>
+          <S.LocationText>{currentAddress || 'loading...'}</S.LocationText>
         </S.LocationWrapper>
         <S.RowWrapper>
           <S.FilterWrapper onPress={() => handleFilter(0)} isSelected={filterMode === 0} isTrash={false}>
