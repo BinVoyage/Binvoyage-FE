@@ -1,10 +1,7 @@
 {
   "compilerOptions": { 
-    "types": [
-      "kakao.maps.d.ts",
-    ]
-    
-},
+    "typeRoots" : ["./@types", "./node_modules/@types"]
+  },  
   "files": [],
   "references": [
     {

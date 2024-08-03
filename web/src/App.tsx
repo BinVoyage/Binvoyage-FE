@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import Map from "./components/Map";
-import { MarkerStore } from "./store/Store";
+import { useStore } from "./store/Store";
 
 type CurrentLocation = {
   latitude: number;
@@ -8,32 +8,45 @@ type CurrentLocation = {
 };
 
 function App() {
-  const markerList = MarkerStore(state => state.markers);
-
   const defaultLocation: CurrentLocation = {
-    latitude: 37.123456,
-    longitude: 127.123456,
+    latitude: 37.563685889,
+    longitude: 126.975584404,
   };
   const [currentLocation, setCurrentLocation] = useState<CurrentLocation>(defaultLocation);
+  const {setFilterMode} = useStore();
 
   useEffect(() => {
     const handleMessage = (event: any) => {
-      const message = JSON.parse(event.data);
-      if (message.type === "location") {
-        setCurrentLocation({
-          latitude: message.payload.latitude,
-          longitude: message.payload.longitude,
-        });
-        return currentLocation;
+      try {
+        const message = JSON.parse(event.data);
+
+        if (message.type === "location") {
+          setCurrentLocation({
+            latitude: message.payload.latitude,
+            longitude: message.payload.longitude,
+          });
+        } else if (message.type === "filter") {
+          setFilterMode(message.payload.filterMode);
+        }
+      } catch (error) {
+        alert(`Error parsing message: ${error}`);
       }
     };
 
     if (navigator.userAgent.match(/Android/i)) {
       document.addEventListener("message", handleMessage, true);
     } else if (navigator.userAgent.match(/iPhone|iPad|iPod/i)) {
-      window.removeEventListener("message", handleMessage);
+      window.addEventListener("message", handleMessage);
     }
-  }, [markerList]);
+
+    return () => {
+      if (navigator.userAgent.match(/Android/i)) {
+        document.removeEventListener("message", handleMessage, true);
+      } else if (navigator.userAgent.match(/iPhone|iPad|iPod/i)) {
+        window.removeEventListener("message", handleMessage);
+      }
+    };
+  }, []);
 
   return (
     <div>

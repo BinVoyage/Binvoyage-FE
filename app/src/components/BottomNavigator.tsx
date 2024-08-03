@@ -1,6 +1,6 @@
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Home from 'screens/home/Home';
-import FindBin from 'screens/FindBin';
+import FindBin from 'screens/FindBin/FindBin';
 import MyPage from 'screens/MyPage';
 import HomeSvg from 'assets/images/HomeSvg';
 import MySvg from 'assets/images/MySvg';
