@@ -19,7 +19,7 @@ function App() {
     const handleMessage = (event: any) => {
       try {
         const message = JSON.parse(event.data);
-
+        // alert(`message type: ${message.type}`)
         if (message.type === "location") {
           const { latitude, longitude } = message.payload;
 

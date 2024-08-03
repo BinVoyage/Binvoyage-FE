@@ -1,4 +1,4 @@
-import {Text, View, Alert, Platform, StyleSheet} from 'react-native';
+import {Text, View, Alert, Platform, StyleSheet, TouchableOpacity, ImageBackground} from 'react-native';
 import {WebView, WebViewMessageEvent} from 'react-native-webview';
 import {useEffect, useRef, useState} from 'react';
 import {PERMISSIONS, RESULTS, request} from 'react-native-permissions';
@@ -44,7 +44,7 @@ export default function FindBin() {
             setTimeout(() => {
               // 지연을 주고 메시지 전송
               webViewRef.current?.postMessage(JSON.stringify(message));
-            }, 100); // 0.1초 지연
+            }, 500); // 0.5초 지연
           }
         },
         error => {
@@ -52,7 +52,7 @@ export default function FindBin() {
         },
         {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000, distanceFilter: 10},
       );
-      return Ids;
+      setWatcherId(Ids); // Watcher ID를 상태로 저장
     } else {
       Alert.alert('위치 권한이 필요합니다!', '위치 권한을 켜주세요!', [
         {
@@ -67,7 +67,22 @@ export default function FindBin() {
     if (isWebViewLoaded) {
       requestPermissionAndSendLocation(); // WebView가 로드된 후에 위치 권한 요청 및 위치 정보 전송을 시작
     }
+
+    return () => {
+      if (watcherId !== null) {
+        Geolocation.clearWatch(watcherId); // 컴포넌트 언마운트 시 위치 감시 중지
+      }
+    };
   }, [isWebViewLoaded]);
+
+  const refreshLocationWatching = () => {
+    // 기존의 위치 감시 중지
+    if (watcherId !== null) {
+      Geolocation.clearWatch(watcherId);
+    }
+    // 새로 위치 감시 시작
+    requestPermissionAndSendLocation();
+  };
 
   const handleMessage = (e: WebViewMessageEvent) => {
     try {
@@ -109,15 +124,6 @@ export default function FindBin() {
     sendMessageToWebView(mode);
   };
 
-  useEffect(() => {
-    // 컴포넌트 언마운트 시 Watcher 중지
-    return () => {
-      if (watcherId !== null) {
-        Geolocation.clearWatch(watcherId);
-      }
-    };
-  }, [watcherId]);
-
   return (
     <View style={styles.container}>
       <WebView
@@ -150,6 +156,9 @@ export default function FindBin() {
           </S.FilterWrapper>
         </S.RowWrapper>
       </S.ItemWrapper>
+      <S.RefreshWrapper onPress={refreshLocationWatching}>
+        <Image source={require('assets/images/icon-refresh.png')} style={{width: 60, height: 60}} />
+      </S.RefreshWrapper>
     </View>
   );
 }

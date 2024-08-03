@@ -1,12 +1,6 @@
-import { MutableRefObject, useEffect, useRef } from "react";
+import { MutableRefObject, useEffect, useRef, useState } from "react";
 import { bin_list } from './Places';
 import { useStore } from "../store/Store";
-
-declare global {
-  interface Window {
-    kakao: any;
-  }
-}
 
 type CurrentLocation = {
   latitude: number;
@@ -14,17 +8,18 @@ type CurrentLocation = {
 };
 
 type MarkerInfo = {
-  marker: any;
+  marker: kakao.maps.Marker;
   type_no: number;
-  map: any;
+  map: kakao.maps.Map;
   distance: number;
 };
 
 
 const Map = ({ latitude, longitude }: CurrentLocation) => {
-  const mapRef = useRef<HTMLElement | null>(null);
+  const mapRef = useRef<kakao.maps.Map | null>(null);
   const markersRef = useRef<MarkerInfo[]>([]);
   const filterMode = useStore(state => state.filterMode);
+  const [currentMarker, setCurrentMarker] = useState<kakao.maps.Marker | null>(null);
 
   const initMap = () => {
     const container = document.getElementById('map');
@@ -38,14 +33,15 @@ const Map = ({ latitude, longitude }: CurrentLocation) => {
     const imageOption = { offset: new window.kakao.maps.Point(latitude, longitude) };
     const currentImage = new window.kakao.maps.MarkerImage(currentImageSrc, imageSize, imageOption);
     const currentPosition = new window.kakao.maps.LatLng(latitude, longitude);
-    const currentMarker = new window.kakao.maps.Marker({
+    const myMarker = new window.kakao.maps.Marker({
       position: currentPosition,
       image: currentImage,
     });
 
     const map = new window.kakao.maps.Map(container as HTMLElement, options);
-    (mapRef as MutableRefObject<any>).current = map;
-    currentMarker.setMap(map);
+    (mapRef as MutableRefObject<kakao.maps.Map | null>).current = map;
+    myMarker.setMap(map);
+    setCurrentMarker(myMarker); 
 
     // Yellow circle to represent the 2000 meter range from current position
     const circle = new window.kakao.maps.Circle({
@@ -123,6 +119,15 @@ const Map = ({ latitude, longitude }: CurrentLocation) => {
 
   useEffect(() => {
     window.kakao.maps.load(() => initMap());
+  }, []);
+
+  // 좌표 변경 시 currentMarker 이동 처리
+  useEffect(() => {
+    if (mapRef.current && currentMarker) {
+      const currentPosition = new window.kakao.maps.LatLng(latitude, longitude);
+      currentMarker.setPosition(currentPosition);
+      mapRef.current.setCenter(currentPosition);
+    }
   }, [latitude, longitude]);
 
   useEffect(() => {
