@@ -28,13 +28,6 @@ export default function NewTrashDetail() {
           location_type_no: 1,
         },
       });
-      Toast.show({
-        type: 'success',
-        text1: 'Thank you for letting us know!',
-        position: 'bottom',
-        bottomOffset: 100,
-        visibilityTime: 2000,
-      });
       console.log('성공');
       navigation2.navigate('Home');
     } catch (error) {

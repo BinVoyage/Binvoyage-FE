@@ -1,12 +1,29 @@
 import {NavigationProp, useNavigation} from '@react-navigation/native';
+import api from 'api/api';
 import ArrowNextSvg from 'assets/images/ArrowNextSvg';
 import HomeTrashSvg from 'assets/images/HomeTrashSvg';
 import {Palette} from 'constants/palette';
+import {useEffect, useState} from 'react';
 import * as S from 'screens/home/Home.style';
 
 export default function Home() {
   const navigation1 = useNavigation<NavigationProp<RootTabParamList>>();
   const navigation2 = useNavigation<NavigationProp<RootHomeParamList>>();
+  const [members, setMembers] = useState<string | null>('');
+
+  const getMemberData = async () => {
+    try {
+      const response = await api.get('/user');
+      setMembers(response.data.data);
+      console.log(response.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    getMemberData();
+  }, []);
 
   return (
     <S.Container>
