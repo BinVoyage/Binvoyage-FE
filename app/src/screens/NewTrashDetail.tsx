@@ -35,6 +35,7 @@ export default function NewTrashDetail() {
         bottomOffset: 100,
         visibilityTime: 2000,
       });
+      console.log('성공');
       navigation2.navigate('Home');
     } catch (error) {
       Toast.show({
