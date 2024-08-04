@@ -12,7 +12,7 @@ export default function StackNavigator() {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="BinDetailNavigator" screenOptions={{headerShown: false}}>
+      <Stack.Navigator initialRouteName="OnBoarding" screenOptions={{headerShown: false}}>
         <Stack.Screen name="BottomNavigator" component={BottomNavigator} />
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="OnBoarding" component={Onboarding} />
