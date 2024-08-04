@@ -28,7 +28,7 @@ export default function Login() {
       setUserInfo(userInfo);
       navigation.navigate('UserInput');
     } catch (error) {
-      Alert.alert('error');
+      Alert.alert(`${error}`);
     }
   };
 

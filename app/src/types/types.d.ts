@@ -56,3 +56,17 @@ interface BinDetailResponse {
   msg: string;
   data: BinData;
 }
+
+interface BinItemProps {
+  bin_id: number;
+  type_no: number;
+  type_name: string;
+  location_type_no: number;
+  location_type_name: string;
+  coordinate: [number, number];
+  distance: number;
+  visit_success_rate: number;
+  address: string;
+  detail: string;
+  visit_count: number;
+}

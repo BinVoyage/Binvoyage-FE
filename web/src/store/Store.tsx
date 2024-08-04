@@ -1,24 +1,10 @@
-import { create } from "zustand";
+import { create } from 'zustand'
 
-type Marker = {
-    marker: any; //추후 수정
-    id: number;
-  }
-
-type Address = {
-  address:any;
-}  
-
-type MarkerStore =  {
-  markers: Marker[];
-  setMarkers: (list: Marker[]) => void;
-  addressList?: Address[];
-  setStarAddressList?: (list: Address[]) => void;
+interface store {
+  filterMode : number;
+  setFilterMode : (mode : number) => void;
 }
-
-export const MarkerStore = create<MarkerStore>((set) => ({
-  markers: [],
-  setMarkers: (list: Marker[]) => set({ markers: list }),
-  addressList: [],
-  setStarAddressList: (list: Address[]) => set({ addressList: list }),
-}));
+export const useStore = create<store>((set)=>({
+  filterMode: -1,
+  setFilterMode: (mode: number) => set(() => ({ filterMode: mode })),
+}))

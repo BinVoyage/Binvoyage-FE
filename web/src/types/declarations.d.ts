@@ -1,9 +1,11 @@
-// declare module '*.svg' {
-//   import React from 'react';
-//   import {SvgProps} from 'react-native-svg';
-//   const content: React.FC<SvgProps>;
-//   export default content;
-// }
+declare global {
+  interface Window {
+    ReactNativeWebView: {
+      postMessage: (message: string) => void;
+    };
+    kakao: any;
+  }
+}
 
 declare module '*.svg' {
 	import React = require('react');
@@ -11,3 +13,5 @@ declare module '*.svg' {
   const src: string;
 	export default src;
 }
+
+export {};

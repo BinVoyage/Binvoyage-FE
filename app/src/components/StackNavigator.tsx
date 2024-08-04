@@ -4,7 +4,6 @@ import BottomNavigator from 'components/BottomNavigator';
 import UserInput from 'screens/UserInput';
 import Login from 'screens/login/Login';
 import Onboarding from 'screens/OnBoarding';
-import BinDetail from 'screens/binDetail/BinDetail';
 import BinDetailNavigator from './BinDetailNavigator';
 
 export default function StackNavigator() {
@@ -12,7 +11,7 @@ export default function StackNavigator() {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="BinDetailNavigator" screenOptions={{headerShown: false}}>
+      <Stack.Navigator initialRouteName="BottomNavigator" screenOptions={{headerShown: false}}>
         <Stack.Screen name="BottomNavigator" component={BottomNavigator} />
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="OnBoarding" component={Onboarding} />
