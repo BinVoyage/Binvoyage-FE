@@ -10,10 +10,13 @@ type RootStackParamList = {
   Login: undefined;
   OnBoarding: undefined;
   UserInput: undefined;
+  NewTrashDetail: undefined;
 };
 
 type RootHomeParamList = {
   Home: undefined;
   PassPort: undefined;
   NewTrash: undefined;
+  NewTrashDetail: undefined;
+  tabBarStyle?: undefined;
 };

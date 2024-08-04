@@ -24,7 +24,7 @@ export default function Login() {
     try {
       await GoogleSignin.hasPlayServices();
       const userInfo = await GoogleSignin.signIn();
-      // Alert.alert(userInfo.idToken!);
+      Alert.alert(userInfo.idToken!);
       setUserInfo(userInfo);
       navigation.navigate('UserInput');
     } catch (error) {
