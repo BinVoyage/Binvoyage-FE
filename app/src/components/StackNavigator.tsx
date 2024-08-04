@@ -4,7 +4,6 @@ import BottomNavigator from 'components/BottomNavigator';
 import UserInput from 'screens/UserInput';
 import Login from 'screens/login/Login';
 import Onboarding from 'screens/OnBoarding';
-import BinDetail from 'screens/binDetail/BinDetail';
 import BinDetailNavigator from './BinDetailNavigator';
 
 export default function StackNavigator() {
