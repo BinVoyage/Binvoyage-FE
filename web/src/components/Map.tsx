@@ -30,7 +30,7 @@ const Map = ({ latitude, longitude }: CurrentLocation) => {
 
     const currentImageSrc = "image/Current.svg";
     const imageSize = new window.kakao.maps.Size(30, 30);
-    const imageOption = { offset: new window.kakao.maps.Point(latitude, longitude) };
+    const imageOption = { offset: new window.kakao.maps.Point(15, 15) };
     const currentImage = new window.kakao.maps.MarkerImage(currentImageSrc, imageSize, imageOption);
     const currentPosition = new window.kakao.maps.LatLng(latitude, longitude);
     const myMarker = new window.kakao.maps.Marker({
