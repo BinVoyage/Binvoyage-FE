@@ -1,11 +1,13 @@
 import BottomSheet, {BottomSheetView} from '@gorhom/bottom-sheet';
 import {Palette} from 'constants/palette';
 import {useRef, useMemo} from 'react';
-import {StyleSheet} from 'react-native';
+import {Dimensions, StyleSheet} from 'react-native';
 
 export default function MyBottomSheet({children}: {children: React.ReactNode}) {
+  const height = Dimensions.get('window').height;
   const bottomSheetRef = useRef<BottomSheet>(null);
-  const snapPoints = useMemo(() => ['3%', '25%'], []);
+  const bottomSheetHeight = height > 700 ? '25%' : '30%';
+  const snapPoints = useMemo(() => ['3%', bottomSheetHeight], [bottomSheetHeight]);
 
   return (
     <BottomSheet

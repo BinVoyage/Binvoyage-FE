@@ -174,6 +174,19 @@ export default function FindBin() {
       detail: 'Near the busstop',
       visit_count: 3,
     },
+    {
+      bin_id: 4,
+      type_no: 1,
+      type_name: 'Trash',
+      location_type_no: 1,
+      location_type_name: 'Subway Entrance',
+      coordinate: [37.5674198878673, 126.977873671097],
+      distance: 300,
+      visit_success_rate: 0,
+      address: '702, Olympic-ro, Gangdong-gu,  Seoul',
+      detail: 'Near the busstop',
+      visit_count: 0,
+    },
   ];
 
   return (
