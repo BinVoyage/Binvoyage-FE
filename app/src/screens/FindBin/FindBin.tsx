@@ -12,6 +12,7 @@ import {Image} from 'react-native';
 import MyBottomSheet from 'components/MyBottomSheet';
 import Carousel from 'react-native-snap-carousel';
 import BinItem from 'components/binItem/BinItem';
+import EmptyItem from 'components/binItem/EmptyItem';
 
 export default function FindBin() {
   const webViewRef = useRef<WebView>(null);
@@ -225,17 +226,21 @@ export default function FindBin() {
         <Image source={require('assets/images/icon-refresh.png')} style={{width: 60, height: 60}} />
       </S.RefreshWrapper>
       <MyBottomSheet>
-        <Carousel
-          ref={carouselRef}
-          data={data}
-          renderItem={renderItem}
-          sliderWidth={width}
-          itemWidth={itemWidth + itemSpacing}
-          inactiveSlideScale={1}
-          inactiveSlideOpacity={1}
-          firstItem={0} // 첫번째 아이템이 슬라이더의 왼쪽에 위치하도록 설정
-          activeSlideAlignment="start" // 슬라이드가 왼쪽 정렬되도록 설정
-        />
+        {data.length ? (
+          <Carousel
+            ref={carouselRef}
+            data={data}
+            renderItem={renderItem}
+            sliderWidth={width}
+            itemWidth={itemWidth + itemSpacing}
+            inactiveSlideScale={1}
+            inactiveSlideOpacity={1}
+            firstItem={0} // 첫번째 아이템이 슬라이더의 왼쪽에 위치하도록 설정
+            activeSlideAlignment="start" // 슬라이드가 왼쪽 정렬되도록 설정
+          />
+        ) : (
+          <EmptyItem />
+        )}
       </MyBottomSheet>
     </View>
   );
