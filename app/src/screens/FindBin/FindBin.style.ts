@@ -70,11 +70,3 @@ export const FilterText = styled(DefaultText)<{isSelected: boolean}>`
   font-weight: ${Typo.B3.fontWeight};
   color: ${props => (props.isSelected ? Palette.White : Palette.Gray5)};
 `;
-
-export const RefreshWrapper = styled.TouchableOpacity`
-  position: absolute;
-  bottom: 40px;
-  right: 16px;
-  width: 60px;
-  height: 60px;
-`;

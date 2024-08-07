@@ -1,6 +1,6 @@
-import {Text, View, Alert, Platform, StyleSheet, TouchableOpacity, ImageBackground, Dimensions} from 'react-native';
+import {View, Alert, Platform, StyleSheet, Dimensions, TouchableOpacity} from 'react-native';
 import {WebView, WebViewMessageEvent} from 'react-native-webview';
-import {useEffect, useMemo, useRef, useState} from 'react';
+import {useEffect, useRef, useState} from 'react';
 import {PERMISSIONS, RESULTS, request} from 'react-native-permissions';
 import Geolocation from '@react-native-community/geolocation';
 import * as S from 'screens/FindBin/FindBin.style';
@@ -13,6 +13,7 @@ import MyBottomSheet from 'components/MyBottomSheet';
 import Carousel from 'react-native-snap-carousel';
 import BinItem from 'components/binItem/BinItem';
 import EmptyItem from 'components/binItem/EmptyItem';
+import Animated, {useAnimatedStyle, withTiming} from 'react-native-reanimated';
 
 export default function FindBin() {
   const webViewRef = useRef<WebView>(null);
@@ -20,9 +21,17 @@ export default function FindBin() {
   const [currentAddress, setCurrentAddress] = useState<string>('');
   const [watcherId, setWatcherId] = useState<number | null>(null); // Watcher ID를 저장할 상태
   const [isWebViewLoaded, setIsWebViewLoaded] = useState(false); // WebView 로드 상태
+  const [bottomSheetOffset, setBottomSheetOffset] = useState(0); // BottomSheet의 높이 또는 offset 상태
   const carouselRef = useRef(null);
 
   const {width, height} = Dimensions.get('window');
+  const refreshWrapperBottom = bottomSheetOffset > 0 ? bottomSheetOffset + 10 : 40;
+
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      bottom: withTiming(refreshWrapperBottom, {duration: 300}), // 애니메이션 추가
+    };
+  }, [refreshWrapperBottom]);
 
   const URL = 'http://localhost:5173';
 
@@ -222,10 +231,13 @@ export default function FindBin() {
           </S.FilterWrapper>
         </S.RowWrapper>
       </S.ItemWrapper>
-      <S.RefreshWrapper onPress={refreshLocationWatching}>
-        <Image source={require('assets/images/icon-refresh.png')} style={{width: 60, height: 60}} />
-      </S.RefreshWrapper>
-      <MyBottomSheet>
+      <Animated.View style={[styles.refresh, animatedStyle]}>
+        <TouchableOpacity onPress={refreshLocationWatching}>
+          <Image source={require('assets/images/icon-refresh.png')} style={{width: 60, height: 60}} />
+        </TouchableOpacity>
+      </Animated.View>
+
+      <MyBottomSheet onSheetChange={setBottomSheetOffset}>
         {data.length ? (
           <Carousel
             ref={carouselRef}
@@ -255,5 +267,12 @@ const styles = StyleSheet.create({
   },
   View: {
     flex: 1,
+  },
+  refresh: {
+    position: 'absolute',
+    // bottom: 40,
+    right: 16,
+    width: 60,
+    height: 60,
   },
 });
