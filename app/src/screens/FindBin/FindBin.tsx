@@ -20,8 +20,9 @@ export default function FindBin() {
   const [filterMode, setFilterMode] = useState<number>(-1);
   const [currentAddress, setCurrentAddress] = useState<string>('');
   const [watcherId, setWatcherId] = useState<number | null>(null); // Watcher ID를 저장할 상태
-  const [isWebViewLoaded, setIsWebViewLoaded] = useState(false); // WebView 로드 상태
-  const [bottomSheetOffset, setBottomSheetOffset] = useState(0); // BottomSheet의 높이 또는 offset 상태
+  const [isWebViewLoaded, setIsWebViewLoaded] = useState<boolean>(false); // WebView 로드 상태
+  const [bottomSheetOffset, setBottomSheetOffset] = useState<number>(0); // BottomSheet의 높이 또는 offset 상태
+  const [isSearchShow, setIsSearchShow] = useState<boolean>(false);
   const carouselRef = useRef(null);
 
   const {width, height} = Dimensions.get('window');
@@ -54,7 +55,7 @@ export default function FindBin() {
             },
           };
 
-          console.log('Sending message:', JSON.stringify(message)); // 메시지 전송 확인
+          // console.log('Sending message:', JSON.stringify(message)); // 메시지 전송 확인
 
           if (isWebViewLoaded && webViewRef.current) {
             setTimeout(() => {
@@ -105,13 +106,30 @@ export default function FindBin() {
       const data = JSON.parse(e.nativeEvent.data);
       if (data.type === 'address') {
         setCurrentAddress(data.payload.address);
+      } else if (data.type === 'centerMoved') {
+        setIsSearchShow(true);
       }
     } catch (err) {
-      console.log('error');
+      console.log(err);
     }
   };
 
-  const sendMessageToWebView = (mode: number) => {
+  const sendSearchMessage = () => {
+    if (webViewRef.current) {
+      const message = {
+        type: 'search',
+      };
+      // 메시지가 잘 전송되었는지 확인하기 위한 로그
+      // console.log('Sending message to WebView:', JSON.stringify(message));
+
+      webViewRef.current.postMessage(JSON.stringify(message));
+    } else {
+      // WebView ref가 null일 때의 로그
+      console.log('WebView reference is null, message not sent.');
+    }
+  };
+
+  const sendModeMessage = (mode: number) => {
     if (webViewRef.current) {
       const message = {
         type: 'filter',
@@ -133,11 +151,11 @@ export default function FindBin() {
   const handleFilter = (mode: number) => {
     if (filterMode === mode) {
       setFilterMode(-1);
-      sendMessageToWebView(-1);
+      sendModeMessage(-1);
       return;
     }
     setFilterMode(mode);
-    sendMessageToWebView(mode);
+    sendModeMessage(mode);
   };
 
   const renderItem = ({item}: {item: BinItemProps}) => <BinItem item={item} />;
@@ -236,6 +254,11 @@ export default function FindBin() {
           <Image source={require('assets/images/icon-refresh.png')} style={{width: 60, height: 60}} />
         </TouchableOpacity>
       </Animated.View>
+      <Animated.View style={[styles.search, animatedStyle, isSearchShow ? styles.visible : null]}>
+        <S.BtnSearchThisArea onPress={sendSearchMessage}>
+          <S.TextSearchThisArea>Search this area</S.TextSearchThisArea>
+        </S.BtnSearchThisArea>
+      </Animated.View>
 
       <MyBottomSheet onSheetChange={setBottomSheetOffset}>
         {data.length ? (
@@ -270,9 +293,16 @@ const styles = StyleSheet.create({
   },
   refresh: {
     position: 'absolute',
-    // bottom: 40,
     right: 16,
     width: 60,
     height: 60,
+  },
+  search: {
+    display: 'none',
+    position: 'absolute',
+    alignSelf: 'center',
+  },
+  visible: {
+    display: 'flex',
   },
 });

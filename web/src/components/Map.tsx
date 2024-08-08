@@ -1,10 +1,12 @@
 import { MutableRefObject, useEffect, useRef, useState } from "react";
 import { bin_list } from './Places';
 import { useStore } from "../store/Store";
+import debounce from "lodash.debounce";
 
 type CurrentLocation = {
   latitude: number;
   longitude: number;
+  triggerSearch: number;
 };
 
 type MarkerInfo = {
@@ -15,11 +17,12 @@ type MarkerInfo = {
 };
 
 
-const Map = ({ latitude, longitude }: CurrentLocation) => {
+const Map = ({ latitude, longitude, triggerSearch }: CurrentLocation) => {
   const mapRef = useRef<kakao.maps.Map | null>(null);
   const markersRef = useRef<MarkerInfo[]>([]);
   const filterMode = useStore(state => state.filterMode);
   const [currentMarker, setCurrentMarker] = useState<kakao.maps.Marker | null>(null);
+  const [center, setCenter] = useState<kakao.maps.LatLng>(new window.kakao.maps.LatLng(latitude, longitude));
 
   const initMap = () => {
     const container = document.getElementById('map');
@@ -58,6 +61,9 @@ const Map = ({ latitude, longitude }: CurrentLocation) => {
 
     initMarkers(map);
     filterMarkers(filterMode);
+
+    // 중심 좌표 변경 이벤트 리스너 추가
+    window.kakao.maps.event.addListener(map, 'center_changed', debounce(handleCenterChanged, 500));
 
     // 사용자가 확대/축소할 때 최대 레벨을 제한하는 이벤트 리스너 추가
     window.kakao.maps.event.addListener(map, 'zoom_changed', function() {
@@ -117,6 +123,23 @@ const Map = ({ latitude, longitude }: CurrentLocation) => {
     });
   };
 
+  const handleCenterChanged = () => {
+    if (mapRef.current) {
+      const newCenter = mapRef.current.getCenter();
+      const currentCenter = center;
+      const distance = currentCenter ? calculateDistance(newCenter) : Infinity;
+
+      // 유의미한 변화로 간주하는 거리 설정 (예: 100m 이상 이동 시)
+      const significantDistance = 100;
+
+      if (distance > significantDistance) {
+        setCenter(newCenter);
+        // React Native로 메시지 보내기
+        window.ReactNativeWebView?.postMessage(JSON.stringify({ type: 'centerMoved', payload: {latitude: newCenter.getLat(), longitude: newCenter.getLng()} }));
+      }
+    }
+  };
+
   useEffect(() => {
     window.kakao.maps.load(() => initMap());
   }, []);
@@ -134,7 +157,11 @@ const Map = ({ latitude, longitude }: CurrentLocation) => {
     filterMarkers(filterMode); // filterMode 변경 시 마커 필터링
   }, [filterMode]);
 
-
+  useEffect(() => {
+    if (triggerSearch) {
+      alert(`center: 룰루랄라`)
+    }
+  }, [triggerSearch])
   return (
     <>
       <div id="map" style={{ width: "100vw", height: "100vh" }} />
