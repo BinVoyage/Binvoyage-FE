@@ -8,6 +8,7 @@ import {Palette} from 'constants/palette';
 import {Alert, TouchableOpacity} from 'react-native';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 import Terms from 'components/terms/Terms';
+import api from 'api/api';
 
 export default function Login() {
   const [userInfo, setUserInfo] = useState<User | null>(null);
@@ -26,7 +27,16 @@ export default function Login() {
       const userInfo = await GoogleSignin.signIn();
       // Alert.alert(userInfo.idToken!);
       setUserInfo(userInfo);
-      navigation.navigate('UserInput');
+      const response = await api.post('/login/oauth2', {
+        login_type: 'google',
+        token: userInfo.idToken,
+      });
+
+      if (response.status === 200) {
+        navigation.navigate('UserInput');
+      } else {
+        Alert.alert('로그인 실패');
+      }
     } catch (error) {
       Alert.alert(`${error}`);
     }
