@@ -14,6 +14,7 @@ import Carousel from 'react-native-snap-carousel';
 import BinItem from 'components/binItem/BinItem';
 import EmptyItem from 'components/binItem/EmptyItem';
 import Animated, {useAnimatedStyle, withTiming} from 'react-native-reanimated';
+import {NativeViewGestureHandler} from 'react-native-gesture-handler';
 
 export default function FindBin() {
   const webViewRef = useRef<WebView>(null);
@@ -34,7 +35,7 @@ export default function FindBin() {
     };
   }, [refreshWrapperBottom]);
 
-  const URL = 'https://binvoyage.netlify.app/';
+  const URL = Platform.OS === 'ios' ? 'http://localhost:5173/' : 'https://binvoyage.netlify.app/';
 
   const requestPermissionAndSendLocation = async () => {
     let result;
@@ -53,7 +54,7 @@ export default function FindBin() {
               // latitude: coords.latitude,
               // longitude: coords.longitude,
               latitude: 37.563685889,
-              longitude: 126.975584404
+              longitude: 126.975584404,
             },
           };
 
@@ -232,7 +233,6 @@ export default function FindBin() {
           console.log('WebView loaded');
           setIsWebViewLoaded(true); // WebView 로드 상태를 true로 설정
         }}
-        
       />
       <S.ItemWrapper>
         <S.LocationWrapper>
@@ -266,17 +266,19 @@ export default function FindBin() {
 
       <MyBottomSheet onSheetChange={setBottomSheetOffset}>
         {data.length ? (
-          <Carousel
-            ref={carouselRef}
-            data={data}
-            renderItem={renderItem}
-            sliderWidth={width}
-            itemWidth={itemWidth + itemSpacing}
-            inactiveSlideScale={1}
-            inactiveSlideOpacity={1}
-            firstItem={0} // 첫번째 아이템이 슬라이더의 왼쪽에 위치하도록 설정
-            activeSlideAlignment="start" // 슬라이드가 왼쪽 정렬되도록 설정
-          />
+          <NativeViewGestureHandler disallowInterruption={true}>
+            <Carousel
+              ref={carouselRef}
+              data={data}
+              renderItem={renderItem}
+              sliderWidth={width}
+              itemWidth={itemWidth + itemSpacing}
+              inactiveSlideScale={1}
+              inactiveSlideOpacity={1}
+              firstItem={0} // 첫번째 아이템이 슬라이더의 왼쪽에 위치하도록 설정
+              activeSlideAlignment="start" // 슬라이드가 왼쪽 정렬되도록 설정
+            />
+          </NativeViewGestureHandler>
         ) : (
           <EmptyItem />
         )}
