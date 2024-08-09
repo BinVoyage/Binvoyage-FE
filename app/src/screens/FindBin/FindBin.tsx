@@ -34,7 +34,7 @@ export default function FindBin() {
     };
   }, [refreshWrapperBottom]);
 
-  const URL = 'http://localhost:5173';
+  const URL = 'https://binvoyage.netlify.app/';
 
   const requestPermissionAndSendLocation = async () => {
     let result;
@@ -50,12 +50,14 @@ export default function FindBin() {
           const message = {
             type: 'location',
             payload: {
-              latitude: coords.latitude,
-              longitude: coords.longitude,
+              // latitude: coords.latitude,
+              // longitude: coords.longitude,
+              latitude: 37.563685889,
+              longitude: 126.975584404
             },
           };
 
-          // console.log('Sending message:', JSON.stringify(message)); // 메시지 전송 확인
+          console.log('Sending message:', JSON.stringify(message)); // 메시지 전송 확인
 
           if (isWebViewLoaded && webViewRef.current) {
             setTimeout(() => {
@@ -222,6 +224,7 @@ export default function FindBin() {
       <WebView
         ref={webViewRef}
         style={styles.webview}
+        originWhitelist={['http://*', 'https://*', 'intent://*']}
         source={{uri: URL}}
         javaScriptEnabled={true}
         onMessage={handleMessage}
@@ -229,6 +232,7 @@ export default function FindBin() {
           console.log('WebView loaded');
           setIsWebViewLoaded(true); // WebView 로드 상태를 true로 설정
         }}
+        
       />
       <S.ItemWrapper>
         <S.LocationWrapper>
