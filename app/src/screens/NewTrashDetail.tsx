@@ -10,13 +10,18 @@ import {useEffect, useState} from 'react';
 import axios from 'axios';
 import api from 'api/api';
 import Toast from 'react-native-toast-message';
+import {usePermissions} from 'components/usePermission';
+import {useImage} from 'components/useImage';
+import {pictureStore} from 'store/Store';
 
 export default function NewTrashDetail() {
   const navigation2 = useNavigation<NavigationProp<RootHomeParamList>>();
 
   const [isClick, setIsClick] = useState<boolean>(false);
   const [changeText, onChangeText] = useState('');
-
+  const {Camera} = useImage();
+  const {images} = pictureStore();
+  // console.log('image_path', images[0].path, typeof images[0].path); //이미지 경로 (타입 string 확인)
   const handleSubmit = async () => {
     try {
       await api.post('/bin/new', {
@@ -26,7 +31,15 @@ export default function NewTrashDetail() {
           log: 33.34345,
           type_no: 1,
           location_type_no: 1,
+          image: images[0].path,
         },
+      });
+      Toast.show({
+        type: 'success',
+        text1: 'success',
+        position: 'top',
+        bottomOffset: 100,
+        visibilityTime: 2000,
       });
       console.log('성공');
       navigation2.navigate('Home');
@@ -102,7 +115,7 @@ export default function NewTrashDetail() {
               placeholder="In front of a store (e.g. Olive Young) or 
           by the bus stop? More details will help fellow wanderers!"
             />
-            <AddPicture>
+            <AddPicture onPress={Camera}>
               <AddImage source={require('assets/images/AddImage.png')} style={{alignItems: 'center'}} />
               <AddSub> Upload</AddSub>
               <Addb3> You can upload only one photo!</Addb3>
@@ -263,7 +276,7 @@ const TextArea = styled.TextInput`
   padding-right: 16px; */
 `;
 
-const AddPicture = styled.View`
+const AddPicture = styled.Pressable`
   width: 343px;
   height: 134px;
   flex-shrink: 0;
