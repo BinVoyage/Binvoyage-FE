@@ -4,10 +4,20 @@ import {Palette} from 'constants/palette';
 import ArrowNextSvg from 'assets/images/ArrowNextSvg';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {Typo} from 'constants/typo';
+import api from 'api/api';
 
 export default function MyPage() {
   const CommentNavigator = useNavigation<NavigationProp<RootMyParamList>>();
-
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  const Logout = async () => {
+    try {
+      await api.delete('api/login/logout');
+      console.log('성공');
+      navigation.navigate('Login');
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <MyWrapper>
       <ScrollView>
@@ -80,7 +90,7 @@ export default function MyPage() {
               <ArrowNextSvg width="24px" height="24px" fill="#BEC1C7" />
             </TextWrapper>
           </SettingButton>
-          <SettingButton>
+          <SettingButton onPress={Logout}>
             <TextWrapper>
               <SettingTexts5>
                 <OtherText>Log out</OtherText>
