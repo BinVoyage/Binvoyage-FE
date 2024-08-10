@@ -6,6 +6,7 @@ import Login from 'screens/login/Login';
 import Onboarding from 'screens/OnBoarding';
 import BinDetail from 'screens/binDetail/BinDetail';
 import BinDetailNavigator from './BinDetailNavigator';
+import MyComment from 'screens/MyComment';
 
 export default function StackNavigator() {
   const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -18,6 +19,7 @@ export default function StackNavigator() {
         <Stack.Screen name="OnBoarding" component={Onboarding} />
         <Stack.Screen name="UserInput" component={UserInput} />
         <Stack.Screen name="BinDetailNavigator" component={BinDetailNavigator} />
+        <Stack.Screen name="MyComment" component={MyComment} />
       </Stack.Navigator>
     </NavigationContainer>
   );

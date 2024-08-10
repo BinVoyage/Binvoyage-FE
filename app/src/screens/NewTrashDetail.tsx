@@ -26,7 +26,7 @@ export default function NewTrashDetail() {
     try {
       await api.post('/bin/new', {
         data: {
-          address: 'Seoul',
+          address: 'Seoul Gongduck',
           lat: 27.5,
           log: 33.34345,
           type_no: 1,

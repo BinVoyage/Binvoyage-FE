@@ -2,21 +2,23 @@ import {Text, View, SectionList} from 'react-native';
 import styled from 'styled-components/native';
 import {Palette} from 'constants/palette';
 import ArrowNextSvg from 'assets/images/ArrowNextSvg';
+import {NavigationProp, useNavigation} from '@react-navigation/native';
 
 export default function MyPage() {
+  const CommentNavigator = useNavigation<NavigationProp<RootMyParamList>>();
+
   return (
     <MyWrapper>
-      <MyImage source={require('assets/images/Ticket.png')} style={{alignItems: 'center'}} />
-
+      <MyImage source={require('assets/images/Ticket.png')} style={{alignItems: 'center'}}></MyImage>
       <TextWrapper>
-        <FeedbackWrapper>
+        <FeedbackButton onPress={() => CommentNavigator.navigate('MyComment')}>
           <TextWrapper>
             <Texts>
               <Text>See my feedback</Text>
             </Texts>
             <ArrowNextSvg width="24px" height="24px" fill="#66B7FF" />
           </TextWrapper>
-        </FeedbackWrapper>
+        </FeedbackButton>
       </TextWrapper>
     </MyWrapper>
   );
@@ -49,7 +51,7 @@ const Texts = styled.View`
   padding-right: 175px;
 `;
 
-const FeedbackWrapper = styled.TouchableOpacity`
+const FeedbackButton = styled.TouchableOpacity`
   width: 342px;
   height: 48px;
   padding: 12px 12px 12px 16px;
