@@ -34,23 +34,11 @@ export default function NewTrashDetail() {
           image: images[0].path,
         },
       });
-      Toast.show({
-        type: 'success',
-        text1: 'success',
-        position: 'top',
-        bottomOffset: 100,
-        visibilityTime: 2000,
-      });
+
       console.log('성공');
       navigation2.navigate('Home');
     } catch (error) {
-      Toast.show({
-        type: 'error',
-        text1: 'error!!',
-        position: 'top',
-        bottomOffset: 100,
-        visibilityTime: 2000,
-      });
+      console.log(error);
     }
   };
 

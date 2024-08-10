@@ -13,6 +13,7 @@ type RootStackParamList = {
   NewTrashDetail: undefined;
   BinDetailNavigator: undefined;
   MyComment: undefined; // 마이페이지 -> 작성한 피드백
+  DeleteAccount: undefined;
 };
 
 type RootHomeParamList = {
@@ -33,4 +34,5 @@ type RootBinDetailParamList = {
 type RootMyParamList = {
   MyPage: undefined;
   MyComment: undefined;
+  DeleteAccount: undefined;
 };
