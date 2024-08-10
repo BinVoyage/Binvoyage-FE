@@ -59,7 +59,7 @@ export default function ReportWrongInfo({route}: ReportWrongInfoProps) {
 
   return (
     <S.Container>
-      <S.ArrowPrevWrapper>
+      <S.ArrowPrevWrapper onPress={() => navigation.goBack()}>
         <ArrowPrevSvg width="24" height="24" fill={Palette.Gray4} />
       </S.ArrowPrevWrapper>
       <ScrollView bounces={false} showsVerticalScrollIndicator={false} style={{marginBottom: 28}}>

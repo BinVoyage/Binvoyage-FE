@@ -35,7 +35,7 @@ export default function FindBin() {
     };
   }, [refreshWrapperBottom]);
 
-  const URL = Platform.OS === 'ios' ? 'http://localhost:5173/' : 'https://binvoyage.netlify.app/';
+  const URL = 'https://binvoyage.netlify.app/';
 
   const requestPermissionAndSendLocation = async () => {
     let result;

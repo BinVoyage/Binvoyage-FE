@@ -1,4 +1,4 @@
-import {NavigationProp, useNavigation} from '@react-navigation/native';
+import {NavigationProp, RouteProp, useNavigation} from '@react-navigation/native';
 import api from 'api/api';
 import ArrowDownSvg from 'assets/images/ArrowDownSvg';
 import ArrowNextSvg from 'assets/images/ArrowNextSvg';
@@ -7,11 +7,16 @@ import FootPrintSvg from 'assets/images/FootPrintSvg';
 import ReviewItem from 'components/reviewItem/ReviewItem';
 import {Palette} from 'constants/palette';
 import {useEffect, useState} from 'react';
-import {ScrollView, Text, TouchableOpacity, View} from 'react-native';
+import {ScrollView, Text, TouchableOpacity, View, Linking, Platform} from 'react-native';
 import * as S from 'screens/binDetail/BinDetail.style';
 import {formatDate} from 'utils/formatDate';
 
-export default function BinDetail() {
+type BinDetailProps = {
+  route: RouteProp<RootBinDetailParamList, 'BinDetail'>;
+};
+
+export default function BinDetail({route}: BinDetailProps) {
+  const {bin_id} = route.params;
   const navigation = useNavigation<NavigationProp<RootBinDetailParamList>>();
   const [binData, setBinData] = useState<BinDetail | null>(null);
   const [feedbackList, setFeedbackList] = useState<Feedback[]>([]);
@@ -19,7 +24,7 @@ export default function BinDetail() {
   useEffect(() => {
     const getBinData = async () => {
       try {
-        const response = await api.get<BinDetailResponse>('/bin/1');
+        const response = await api.get<BinDetailResponse>(`/bin/${bin_id}`);
         setBinData(response.data.data);
         console.log(response.data.msg);
       } catch (error) {
@@ -29,7 +34,7 @@ export default function BinDetail() {
 
     const getFeedbackData = async () => {
       try {
-        const response = await api.get<FeedbackResponse>('/bin/feedback/1');
+        const response = await api.get<FeedbackResponse>(`/bin/feedback/${bin_id}`);
         setFeedbackList(response.data.data.feedback_list);
         console.log(response.data.msg);
       } catch (error) {
@@ -41,9 +46,23 @@ export default function BinDetail() {
     getFeedbackData();
   }, []);
 
+  const openMaps = () => {
+    const [latitude, longitude] = binData!.coordinate;
+    const label = 'Destination'; // 목적지의 레이블
+
+    const url = Platform.select({
+      ios: `maps:0,0?q=${label}@${latitude},${longitude}`,
+      android: `geo:0,0?q=${latitude},${longitude}(${label})`,
+    });
+
+    if (url) {
+      Linking.openURL(url).catch(err => console.error('Error opening map:', err));
+    }
+  };
+
   return (
     <S.Container>
-      <S.ArrowDownWrapper>
+      <S.ArrowDownWrapper onPress={() => navigation.goBack()}>
         <ArrowDownSvg width="24" height="24" fill={Palette.Gray4} />
       </S.ArrowDownWrapper>
       <ScrollView bounces={false} style={{flex: 1, backgroundColor: Palette.Gray1}}>
@@ -108,7 +127,7 @@ export default function BinDetail() {
             {/* 최근 n개의 발견 / 실패 리스트 출력 */}
             {binData?.visit_list
               ? binData.visit_list.slice(0, 5).map((item, index) => (
-                  <S.RowWrapper style={{marginBottom: 2}}>
+                  <S.RowWrapper style={{marginBottom: 2}} key={index}>
                     <S.TextDate>{formatDate(item.visit_dt)}</S.TextDate>
                     <S.VisitDescription>
                       Someone <Text style={{color: item.is_success ? Palette.Primary : Palette.Secondary2}}>found</Text> this bin
@@ -144,7 +163,7 @@ export default function BinDetail() {
         <S.Button isPrimary>
           <S.ButtonText>Verify visit</S.ButtonText>
         </S.Button>
-        <S.Button>
+        <S.Button onPress={openMaps}>
           <S.ButtonText>Get directions</S.ButtonText>
         </S.Button>
       </S.BtnContainer>

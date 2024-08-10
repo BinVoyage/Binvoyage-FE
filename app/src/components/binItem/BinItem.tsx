@@ -1,6 +1,9 @@
+import {NavigationProp, useNavigation} from '@react-navigation/native';
 import * as S from 'components/binItem/BinItem.style';
 
 export default function BinItem({item}: {item: BinItemProps}) {
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+
   let visitMessage = '';
   if (item.visit_success_rate !== null && item.visit_success_rate !== undefined && item.visit_count) {
     if (item.visit_success_rate >= 70) {
@@ -12,7 +15,13 @@ export default function BinItem({item}: {item: BinItemProps}) {
     }
   }
   return (
-    <S.Container>
+    <S.Container
+      onPress={() =>
+        navigation.navigate('BinDetailNavigator', {
+          screen: 'BinDetail',
+          params: {bin_id: 1},
+        })
+      }>
       <S.TextAddress numberOfLines={2} ellipsizeMode="tail">
         {item.address}
       </S.TextAddress>
