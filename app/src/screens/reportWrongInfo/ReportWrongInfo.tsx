@@ -19,6 +19,7 @@ export default function ReportWrongInfo({route}: ReportWrongInfoProps) {
   const [selected, setSelected] = useState<boolean[]>([false, false, false, false, false]);
   const [isValid, setIsValid] = useState<boolean>(false);
   const navigation = useNavigation<NavigationProp<RootBinDetailParamList>>();
+  const navigation2 = useNavigation<NavigationProp<RootStackParamList>>();
 
   const reportTypes = [
     'The location details are incorrect',
@@ -47,7 +48,7 @@ export default function ReportWrongInfo({route}: ReportWrongInfoProps) {
         bottomOffset: 100,
         visibilityTime: 2000,
       });
-      navigation.goBack();
+      navigation2.navigate('BottomNavigator');
     } catch (error) {
       console.log(error);
     }

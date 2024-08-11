@@ -1,6 +1,7 @@
 import {NavigationProp, RouteProp, useNavigation} from '@react-navigation/native';
 import ArrowPrevSvg from 'assets/images/ArrowPrevSvg';
 import BinSvg from 'assets/images/BinSvg';
+import ModalFailed from 'components/modalVerifyVisit/ModalFailed';
 import ModalSuccess from 'components/modalVerifyVisit/ModalSuccess';
 import {Palette} from 'constants/palette';
 import {useEffect, useState} from 'react';
@@ -17,6 +18,7 @@ export default function VerifyVisit({route}: VerifyVisitProps) {
   const [isValid, setIsValid] = useState<boolean>(true);
   const [titleMessage, setTitleMessage] = useState<string>(`Get closer to the bin to verify\nyour visit!`);
   const [modalSuccess, setModalSuccess] = useState<boolean>(false);
+  const [modalFailed, setModalFailed] = useState<boolean>(false);
 
   useEffect(() => {
     if (isValid) {
@@ -25,6 +27,18 @@ export default function VerifyVisit({route}: VerifyVisitProps) {
     }
     setTitleMessage(`Get closer to the bin to verify\nyour visit!`);
   }, [isValid]);
+
+  const handleReportIssue = () => {
+    navigation.navigate('ReportWrongInfo', {
+      bin_id,
+      type_name,
+      location_type_name,
+      address,
+      detail,
+      image,
+    });
+  };
+
   return (
     <>
       <S.Container>
@@ -55,12 +69,13 @@ export default function VerifyVisit({route}: VerifyVisitProps) {
           <S.Button isPrimary isValid={isValid} disabled={!isValid} onPress={() => setModalSuccess(true)}>
             <S.ButtonText isValid={isValid}>Found it!</S.ButtonText>
           </S.Button>
-          <S.Button isValid={isValid} disabled={!isValid}>
+          <S.Button isValid={isValid} disabled={!isValid} onPress={() => setModalFailed(true)}>
             <S.ButtonText isValid={isValid}>Can't find it</S.ButtonText>
           </S.Button>
         </S.BtnContainer>
       </S.Container>
       {modalSuccess ? <ModalSuccess bin_id={bin_id} address={address} /> : null}
+      {modalFailed ? <ModalFailed handleReportIssue={handleReportIssue} /> : null}
     </>
   );
 }
