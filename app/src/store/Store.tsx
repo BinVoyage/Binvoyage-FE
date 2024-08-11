@@ -13,3 +13,20 @@ export const mapStore = create<userStore>(set => ({
   setWebViewRef: (ref: React.RefObject<WebView>) => set({webViewRef: ref}),
   setAddressList: (list: String[]) => set({addressList: list}),
 }));
+
+type Image = {
+  path: string;
+  modificationDate: string;
+};
+
+type Picturestore = {
+  images: Image[];
+  addImages: (newImage: Image) => void;
+};
+export const pictureStore = create<Picturestore>(set => ({
+  images: [],
+  addImages: (newImage: Image) =>
+    set(state => ({
+      images: [...state.images, newImage],
+    })),
+}));
