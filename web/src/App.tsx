@@ -12,7 +12,8 @@ function App() {
     latitude: 37.563685889,
     longitude: 126.975584404,
   };
-  const [currentLocation, setCurrentLocation] = useState<CurrentLocation>(defaultLocation);
+  const [isLocationSet, setIsLocationSet] = useState<boolean>(false); // 위치 설정 여부 상태 추가
+  const [currentLocation, setCurrentLocation] = useState<CurrentLocation | null>(null);
   const {setFilterMode} = useStore();
   const [triggerSearch, setTriggerSearch] = useState<number>(0);
 
@@ -24,10 +25,11 @@ function App() {
         if (message.type === "location") {
           const { latitude, longitude } = message.payload;
 
-          setCurrentLocation(prevLocation => ({
-            latitude: prevLocation.latitude + 0.000001,  // 약간의 변화 추가함으로써 위치 변화없더라도 새로고침 시 현위치 중심설정
-            longitude: prevLocation.longitude + 0.000001,
-          }));
+          setCurrentLocation({
+            latitude: latitude,
+            longitude: longitude
+          });
+          setIsLocationSet(true);
 
           const geocoder = new window.kakao.maps.services.Geocoder();
           const coord = new window.kakao.maps.LatLng(latitude, longitude);
@@ -72,7 +74,7 @@ function App() {
 
   return (
     <div>
-      <Map latitude={currentLocation.latitude} longitude={currentLocation.longitude} triggerSearch={triggerSearch}/>
+      {isLocationSet && currentLocation ? <Map latitude={currentLocation.latitude} longitude={currentLocation.longitude} triggerSearch={triggerSearch}/> : null}
     </div>
   );
 }

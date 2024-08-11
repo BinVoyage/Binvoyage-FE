@@ -36,6 +36,7 @@ export default function FindBin() {
   }, [refreshWrapperBottom]);
 
   const URL = 'https://binvoyage.netlify.app/';
+  // const URL = 'http://localhost:5173/';
 
   const requestPermissionAndSendLocation = async () => {
     let result;
@@ -51,10 +52,10 @@ export default function FindBin() {
           const message = {
             type: 'location',
             payload: {
-              // latitude: coords.latitude,
-              // longitude: coords.longitude,
-              latitude: 37.563685889,
-              longitude: 126.975584404,
+              latitude: coords.latitude,
+              longitude: coords.longitude,
+              // latitude: 37.563685889,
+              // longitude: 126.975584404,
             },
           };
 

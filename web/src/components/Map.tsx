@@ -22,7 +22,8 @@ const Map = ({ latitude, longitude, triggerSearch }: CurrentLocation) => {
   const markersRef = useRef<MarkerInfo[]>([]);
   const filterMode = useStore(state => state.filterMode);
   const [currentMarker, setCurrentMarker] = useState<kakao.maps.Marker | null>(null);
-  const [center, setCenter] = useState<kakao.maps.LatLng>(new window.kakao.maps.LatLng(latitude, longitude));
+  const [center, setCenter] = useState<kakao.maps.LatLng | null>(null);
+  const [isMapLoaded, setIsMapLoaded] = useState<boolean>(false);
 
   const initMap = () => {
     const container = document.getElementById('map');
@@ -73,6 +74,8 @@ const Map = ({ latitude, longitude, triggerSearch }: CurrentLocation) => {
       }
       map.setCenter(currentPosition); // 현재 위치를 중심으로 설정
     });
+
+    setIsMapLoaded(true);
   };
 
   const initMarkers = (map: any) => {
@@ -146,12 +149,13 @@ const Map = ({ latitude, longitude, triggerSearch }: CurrentLocation) => {
 
   // 좌표 변경 시 currentMarker 이동 처리
   useEffect(() => {
-    if (mapRef.current && currentMarker) {
+    alert('gdsfadsf');
+    if (mapRef.current && isMapLoaded && currentMarker) {
       const currentPosition = new window.kakao.maps.LatLng(latitude, longitude);
       currentMarker.setPosition(currentPosition);
       mapRef.current.setCenter(currentPosition);
     }
-  }, [latitude, longitude]);
+  }, [latitude, longitude, isMapLoaded]);
 
   useEffect(() => {
     filterMarkers(filterMode); // filterMode 변경 시 마커 필터링
