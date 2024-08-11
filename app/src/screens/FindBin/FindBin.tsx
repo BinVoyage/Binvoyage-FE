@@ -103,6 +103,19 @@ export default function FindBin() {
     }
     // 새로 위치 감시 시작
     requestPermissionAndSendLocation();
+
+    if (webViewRef.current) {
+      const message = {
+        type: 'refresh',
+      };
+      // 메시지가 잘 전송되었는지 확인하기 위한 로그
+      // console.log('Sending message to WebView:', JSON.stringify(message));
+
+      webViewRef.current.postMessage(JSON.stringify(message));
+    } else {
+      // WebView ref가 null일 때의 로그
+      console.log('WebView reference is null, message not sent.');
+    }
   };
 
   const handleMessage = (e: WebViewMessageEvent) => {

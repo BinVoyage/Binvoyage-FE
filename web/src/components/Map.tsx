@@ -7,6 +7,7 @@ type CurrentLocation = {
   latitude: number;
   longitude: number;
   triggerSearch: number;
+  triggerRefresh: number;
 };
 
 type MarkerInfo = {
@@ -16,8 +17,7 @@ type MarkerInfo = {
   distance: number;
 };
 
-
-const Map = ({ latitude, longitude, triggerSearch }: CurrentLocation) => {
+const Map = ({ latitude, longitude, triggerSearch, triggerRefresh }: CurrentLocation) => {
   const mapRef = useRef<kakao.maps.Map | null>(null);
   const markersRef = useRef<MarkerInfo[]>([]);
   const filterMode = useStore(state => state.filterMode);
@@ -154,7 +154,7 @@ const Map = ({ latitude, longitude, triggerSearch }: CurrentLocation) => {
       currentMarker.setPosition(currentPosition);
       mapRef.current.setCenter(currentPosition);
     }
-  }, [latitude, longitude, isMapLoaded]);
+  }, [latitude, longitude, isMapLoaded, triggerRefresh]);
 
   useEffect(() => {
     filterMarkers(filterMode); // filterMode 변경 시 마커 필터링

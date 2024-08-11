@@ -12,6 +12,7 @@ function App() {
   const [currentLocation, setCurrentLocation] = useState<CurrentLocation | null>(null);
   const {setFilterMode} = useStore();
   const [triggerSearch, setTriggerSearch] = useState<number>(0);
+  const [triggerRefresh, setTriggerRefresh] = useState<number>(0);
 
   useEffect(() => {
     const handleMessage = (event: any) => {
@@ -44,9 +45,11 @@ function App() {
           });
 
         } else if (message.type === "filter") {
-          setFilterMode(message.payload.filterMode);
+            setFilterMode(message.payload.filterMode);
         } else if (message.type === "search") {
-          setTriggerSearch(Math.random());
+            setTriggerSearch(Math.random());
+        } else if (message.type === "refresh") {
+            setTriggerRefresh(Math.random());
         }
       } catch (error) {
         alert(`Error parsing message: ${error}`);
@@ -70,7 +73,7 @@ function App() {
 
   return (
     <div>
-      {isLocationSet && currentLocation ? <Map latitude={currentLocation.latitude} longitude={currentLocation.longitude} triggerSearch={triggerSearch}/> : null}
+      {isLocationSet && currentLocation ? <Map latitude={currentLocation.latitude} longitude={currentLocation.longitude} triggerSearch={triggerSearch} triggerRefresh={triggerRefresh}/> : null}
     </div>
   );
 }
