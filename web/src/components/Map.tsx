@@ -149,7 +149,6 @@ const Map = ({ latitude, longitude, triggerSearch }: CurrentLocation) => {
 
   // 좌표 변경 시 currentMarker 이동 처리
   useEffect(() => {
-    alert('gdsfadsf');
     if (mapRef.current && isMapLoaded && currentMarker) {
       const currentPosition = new window.kakao.maps.LatLng(latitude, longitude);
       currentMarker.setPosition(currentPosition);
