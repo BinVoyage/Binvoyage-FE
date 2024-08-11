@@ -149,7 +149,18 @@ export default function BinDetail({route}: BinDetailProps) {
           </S.GrayContainer>
         </ScrollView>
         <S.BtnContainer>
-          <S.Button isPrimary>
+          <S.Button
+            isPrimary
+            onPress={() =>
+              navigation.navigate('VerifyVisit', {
+                bin_id: binData?.bin_id ?? -1,
+                type_name: binData?.type_name ?? '',
+                location_type_name: binData?.location_type_name ?? '',
+                address: binData?.address ?? '',
+                detail: binData?.detail ?? '',
+                image: binData?.image ?? '',
+              })
+            }>
             <S.ButtonText>Verify visit</S.ButtonText>
           </S.Button>
           <S.Button onPress={() => setIsModalOpen(true)}>
