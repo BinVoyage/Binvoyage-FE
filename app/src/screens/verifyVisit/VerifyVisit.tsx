@@ -1,11 +1,13 @@
 import {NavigationProp, RouteProp, useNavigation} from '@react-navigation/native';
+import api from 'api/api';
 import ArrowPrevSvg from 'assets/images/ArrowPrevSvg';
 import BinSvg from 'assets/images/BinSvg';
 import ModalFailed from 'components/modalVerifyVisit/ModalFailed';
+import ModalStamp from 'components/modalVerifyVisit/ModalStamp';
 import ModalSuccess from 'components/modalVerifyVisit/ModalSuccess';
 import {Palette} from 'constants/palette';
 import {useEffect, useState} from 'react';
-import {ScrollView} from 'react-native';
+import {Alert, ScrollView} from 'react-native';
 import * as S from 'screens/verifyVisit/VerifyVisit.style';
 
 type VerifyVisitProps = {
@@ -13,12 +15,13 @@ type VerifyVisitProps = {
 };
 
 export default function VerifyVisit({route}: VerifyVisitProps) {
-  const {bin_id, type_name, location_type_name, address, detail, image} = route.params;
+  const {bin_id, type_name, location_type_name, address, detail, image, coordinate} = route.params;
   const navigation = useNavigation<NavigationProp<RootBinDetailParamList>>();
   const [isValid, setIsValid] = useState<boolean>(true);
   const [titleMessage, setTitleMessage] = useState<string>(`Get closer to the bin to verify\nyour visit!`);
   const [modalSuccess, setModalSuccess] = useState<boolean>(false);
   const [modalFailed, setModalFailed] = useState<boolean>(false);
+  const [modalStamp, setModalStamp] = useState<boolean>(false);
 
   useEffect(() => {
     if (isValid) {
@@ -28,15 +31,47 @@ export default function VerifyVisit({route}: VerifyVisitProps) {
     setTitleMessage(`Get closer to the bin to verify\nyour visit!`);
   }, [isValid]);
 
-  const handleReportIssue = () => {
-    navigation.navigate('ReportWrongInfo', {
-      bin_id,
-      type_name,
-      location_type_name,
-      address,
-      detail,
-      image,
-    });
+  const handleReportIssue = async () => {
+    try {
+      const response = await api.post(`/bin/visit/${bin_id}`, {
+        lat: coordinate[0],
+        lng: coordinate[1],
+        is_visit: false,
+      });
+      if (response.data.success) {
+        navigation.navigate('ReportWrongInfo', {
+          bin_id,
+          type_name,
+          location_type_name,
+          address,
+          detail,
+          image,
+          isVerifyVisit: true,
+        });
+      } else {
+        Alert.alert('실패 ㅜㅜ');
+      }
+    } catch (error) {
+      Alert.alert(`${error}`);
+    }
+  };
+
+  const handleStampModal = async (isVisit: boolean) => {
+    try {
+      const response = await api.post(`/bin/visit/${bin_id}`, {
+        lat: coordinate[0],
+        lng: coordinate[1],
+        is_visit: true,
+      });
+      if (response.data.success) {
+        isVisit ? setModalSuccess(false) : setModalFailed(false);
+        setModalStamp(true);
+      } else {
+        Alert.alert('실패 ㅜㅜ');
+      }
+    } catch (error) {
+      Alert.alert(`${error}`);
+    }
   };
 
   return (
@@ -74,8 +109,9 @@ export default function VerifyVisit({route}: VerifyVisitProps) {
           </S.Button>
         </S.BtnContainer>
       </S.Container>
-      {modalSuccess ? <ModalSuccess bin_id={bin_id} address={address} /> : null}
-      {modalFailed ? <ModalFailed handleReportIssue={handleReportIssue} /> : null}
+      {modalSuccess ? <ModalSuccess bin_id={bin_id} address={address} coordinate={coordinate} handleStampModal={handleStampModal} /> : null}
+      {modalFailed ? <ModalFailed handleReportIssue={handleReportIssue} handleStampModal={handleStampModal} /> : null}
+      {modalStamp ? <ModalStamp /> : null}
     </>
   );
 }

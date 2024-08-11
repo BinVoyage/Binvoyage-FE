@@ -3,16 +3,36 @@ import * as S from 'components/modalVerifyVisit/ModalVerifyVisit.style';
 import {Palette} from 'constants/palette';
 import {useState} from 'react';
 import {Alert, Image, Keyboard, TouchableWithoutFeedback} from 'react-native';
+import Toast from 'react-native-toast-message';
 
 interface Props {
   bin_id: number;
   address: string;
+  coordinate: [number, number];
+  handleStampModal: (isVisit: boolean) => void;
 }
 
-export default function ModalSuccess({bin_id, address}: Props) {
+export default function ModalSuccess({bin_id, address, coordinate, handleStampModal}: Props) {
   const [reviewMode, setReviewMode] = useState<boolean>(false);
   const placeholder = `Got any tips for finding this bin?\nFeel like leaving a comment?`;
   const [content, setContent] = useState<string>('');
+
+  const handleReviewMode = async () => {
+    try {
+      const response = await api.post(`/bin/visit/${bin_id}`, {
+        lat: coordinate[0],
+        lng: coordinate[1],
+        is_visit: true,
+      });
+      if (response.data.success) {
+        setReviewMode(true);
+      } else {
+        Alert.alert('실패 ㅜㅜ');
+      }
+    } catch (error) {
+      Alert.alert(`${error}`);
+    }
+  };
 
   const handleSubmit = async () => {
     if (content.length >= 5) {
@@ -23,7 +43,14 @@ export default function ModalSuccess({bin_id, address}: Props) {
         });
 
         if (response.data.success) {
-          Alert.alert(`야호`);
+          Toast.show({
+            type: 'success',
+            text1: 'Thank you for letting us know!',
+            position: 'bottom',
+            bottomOffset: 100,
+            visibilityTime: 2000,
+          });
+          handleStampModal(true);
         } else {
           Alert.alert('실패 ㅜㅜ');
         }
@@ -58,16 +85,16 @@ export default function ModalSuccess({bin_id, address}: Props) {
               <S.Button isPrimary={content.length >= 5} disabled={content.length < 5} onPress={handleSubmit} style={{marginBottom: 10}}>
                 <S.ButtonText isPrimary={content.length >= 5}>Submit</S.ButtonText>
               </S.Button>
-              <S.Button>
+              <S.Button onPress={() => handleStampModal(true)}>
                 <S.ButtonText>Cancel</S.ButtonText>
               </S.Button>
             </>
           ) : (
             <>
-              <S.Button isPrimary onPress={() => setReviewMode(true)} style={{marginBottom: 10}}>
+              <S.Button isPrimary onPress={handleReviewMode} style={{marginBottom: 10}}>
                 <S.ButtonText isPrimary> Sure! This bin is...</S.ButtonText>
               </S.Button>
-              <S.Button>
+              <S.Button onPress={() => handleStampModal(true)}>
                 <S.ButtonText>Nope! Don’t bug me!</S.ButtonText>
               </S.Button>
             </>

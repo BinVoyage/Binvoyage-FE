@@ -4,9 +4,10 @@ import {Image} from 'react-native';
 
 interface Props {
   handleReportIssue: () => void;
+  handleStampModal: (isVisit: boolean) => void;
 }
 
-export default function ModalFailed({handleReportIssue}: Props) {
+export default function ModalFailed({handleReportIssue, handleStampModal}: Props) {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   return (
     <S.Background>
@@ -17,7 +18,7 @@ export default function ModalFailed({handleReportIssue}: Props) {
         <S.Button isPrimary style={{marginBottom: 10}} onPress={handleReportIssue}>
           <S.ButtonText isPrimary>Report issue</S.ButtonText>
         </S.Button>
-        <S.Button onPress={() => navigation.navigate('BottomNavigator')}>
+        <S.Button onPress={() => handleStampModal(false)}>
           <S.ButtonText>Maybe next time</S.ButtonText>
         </S.Button>
       </S.Container>

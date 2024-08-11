@@ -81,6 +81,7 @@ export default function BinDetail({route}: BinDetailProps) {
                     address: binData?.address ?? '',
                     detail: binData?.detail ?? '',
                     image: binData?.image ?? '',
+                    isVerifyVisit: false,
                   })
                 }>
                 <S.RowWrapper>
@@ -159,6 +160,7 @@ export default function BinDetail({route}: BinDetailProps) {
                 address: binData?.address ?? '',
                 detail: binData?.detail ?? '',
                 image: binData?.image ?? '',
+                coordinate: binData?.coordinate ?? [0, 0],
               })
             }>
             <S.ButtonText>Verify visit</S.ButtonText>
