@@ -8,10 +8,6 @@ type CurrentLocation = {
 };
 
 function App() {
-  const defaultLocation: CurrentLocation = {
-    latitude: 37.563685889,
-    longitude: 126.975584404,
-  };
   const [isLocationSet, setIsLocationSet] = useState<boolean>(false); // 위치 설정 여부 상태 추가
   const [currentLocation, setCurrentLocation] = useState<CurrentLocation | null>(null);
   const {setFilterMode} = useStore();
