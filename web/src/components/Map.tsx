@@ -46,20 +46,7 @@ const Map = ({ latitude, longitude, triggerSearch, triggerRefresh }: CurrentLoca
     (mapRef as MutableRefObject<kakao.maps.Map | null>).current = map;
     myMarker.setMap(map);
     setCurrentMarker(myMarker); 
-
-    // Yellow circle to represent the 2000 meter range from current position
-    const circle = new window.kakao.maps.Circle({
-      center: currentPosition,
-      radius: 2000, // 2000 meters
-      strokeWeight: 2,
-      strokeColor: '#FFD700',
-      strokeOpacity: 1,
-      strokeStyle: 'solid',
-      fillColor: '#FFD700',
-      fillOpacity: 0.3
-    });
-    circle.setMap(map);
-
+    
     initMarkers(map);
     filterMarkers(filterMode);
 
