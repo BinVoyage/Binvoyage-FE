@@ -118,3 +118,9 @@ export const ButtonText = styled(DefaultText)<{isValid: boolean}>`
   font-weight: ${Typo.Button1.fontWeight};
   color: ${props => (props.isValid ? Palette.White : Palette.Gray5)};
 `;
+
+export const WebViewContainer = styled.View`
+  width: ${width}px;
+  height: ${Math.round((width * 238) / 348)}px;
+  border-radius: 10px;
+`;

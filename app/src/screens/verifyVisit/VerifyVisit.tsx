@@ -1,4 +1,5 @@
-import {NavigationProp, RouteProp, useNavigation} from '@react-navigation/native';
+import Geolocation from '@react-native-community/geolocation';
+import {NavigationProp, RouteProp, useIsFocused, useNavigation} from '@react-navigation/native';
 import api from 'api/api';
 import ArrowPrevSvg from 'assets/images/ArrowPrevSvg';
 import BinSvg from 'assets/images/BinSvg';
@@ -6,8 +7,10 @@ import ModalFailed from 'components/modalVerifyVisit/ModalFailed';
 import ModalStamp from 'components/modalVerifyVisit/ModalStamp';
 import ModalSuccess from 'components/modalVerifyVisit/ModalSuccess';
 import {Palette} from 'constants/palette';
-import {useEffect, useState} from 'react';
-import {Alert, ScrollView} from 'react-native';
+import {useEffect, useRef, useState} from 'react';
+import {Alert, Platform, ScrollView} from 'react-native';
+import {request, PERMISSIONS, RESULTS} from 'react-native-permissions';
+import WebView, {WebViewMessageEvent} from 'react-native-webview';
 import * as S from 'screens/verifyVisit/VerifyVisit.style';
 
 type VerifyVisitProps = {
@@ -17,11 +20,83 @@ type VerifyVisitProps = {
 export default function VerifyVisit({route}: VerifyVisitProps) {
   const {bin_id, type_name, location_type_name, address, detail, image, coordinate} = route.params;
   const navigation = useNavigation<NavigationProp<RootBinDetailParamList>>();
-  const [isValid, setIsValid] = useState<boolean>(true);
+  const [isValid, setIsValid] = useState<boolean>(false);
   const [titleMessage, setTitleMessage] = useState<string>(`Get closer to the bin to verify\nyour visit!`);
   const [modalSuccess, setModalSuccess] = useState<boolean>(false);
   const [modalFailed, setModalFailed] = useState<boolean>(false);
   const [modalStamp, setModalStamp] = useState<boolean>(false);
+  const webViewRef = useRef<WebView>(null);
+  const [watcherId, setWatcherId] = useState<number | null>(null); // Watcher ID를 저장할 상태
+  const [isWebViewLoaded, setIsWebViewLoaded] = useState<boolean>(false); // WebView 로드 상태
+  const isFocused = useIsFocused();
+
+  const URL = 'https://binvoyage.netlify.app/verify';
+
+  const requestPermissionAndSendLocation = async () => {
+    let result;
+    if (Platform.OS === 'android') {
+      result = await request(PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION);
+    } else if (Platform.OS === 'ios') {
+      result = await request(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE);
+    }
+    if (result === RESULTS.GRANTED) {
+      if (watcherId !== null) {
+        Geolocation.clearWatch(watcherId);
+      }
+      const Ids = Geolocation.watchPosition(
+        position => {
+          const {coords} = position;
+          const message = {
+            type: 'verify',
+            payload: {
+              latitude: coords.latitude,
+              longitude: coords.longitude,
+              bin_lat: coordinate[0],
+              bin_lng: coordinate[1],
+              // latitude: 37.563685889,
+              // longitude: 126.975584404,
+              // bin_lat: 37.568677620456,
+              // bin_lng: 126.977657083792,
+            },
+          };
+
+          console.log('Sending message:', JSON.stringify(message)); // 메시지 전송 확인
+
+          if (isWebViewLoaded && webViewRef.current) {
+            setTimeout(() => {
+              // 지연을 주고 메시지 전송
+              webViewRef.current?.postMessage(JSON.stringify(message));
+            }, 500); // 0.5초 지연
+          }
+        },
+        error => {
+          console.log(error);
+        },
+        {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000, distanceFilter: 10},
+      );
+      setWatcherId(Ids); // Watcher ID를 상태로 저장
+    } else {
+      Alert.alert('위치 권한이 필요합니다!', '위치 권한을 켜주세요!', [
+        {
+          text: 'OK',
+          onPress: () => requestPermissionAndSendLocation(),
+        },
+      ]);
+    }
+  };
+
+  useEffect(() => {
+    if (isFocused && isWebViewLoaded) {
+      requestPermissionAndSendLocation();
+    }
+
+    return () => {
+      if (!isFocused && watcherId !== null) {
+        Geolocation.clearWatch(watcherId);
+        setWatcherId(null);
+      }
+    };
+  }, [isFocused, isWebViewLoaded]);
 
   useEffect(() => {
     if (isValid) {
@@ -74,6 +149,17 @@ export default function VerifyVisit({route}: VerifyVisitProps) {
     }
   };
 
+  const handleMessage = (e: WebViewMessageEvent) => {
+    try {
+      const data = JSON.parse(e.nativeEvent.data);
+      if (data.type === 'proximity') {
+        setIsValid(data.payload.within50m);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return (
     <>
       <S.Container>
@@ -99,6 +185,19 @@ export default function VerifyVisit({route}: VerifyVisitProps) {
             </S.RowWrapper>
             <S.TextLocationContents>{detail}</S.TextLocationContents>
           </S.DetailWrapper>
+          <S.WebViewContainer>
+            <WebView
+              ref={webViewRef}
+              style={{width: '100%', height: '100%', borderRadius: 10}}
+              originWhitelist={['http://*', 'https://*', 'intent://*']}
+              source={{uri: URL}}
+              javaScriptEnabled={true}
+              onMessage={handleMessage}
+              onLoad={() => {
+                setIsWebViewLoaded(true);
+              }}
+            />
+          </S.WebViewContainer>
         </ScrollView>
         <S.BtnContainer>
           <S.Button isPrimary isValid={isValid} disabled={!isValid} onPress={() => setModalSuccess(true)}>

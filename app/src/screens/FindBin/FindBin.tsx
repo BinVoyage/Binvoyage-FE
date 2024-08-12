@@ -15,6 +15,7 @@ import BinItem from 'components/binItem/BinItem';
 import EmptyItem from 'components/binItem/EmptyItem';
 import Animated, {useAnimatedStyle, withTiming} from 'react-native-reanimated';
 import {NativeViewGestureHandler} from 'react-native-gesture-handler';
+import {useIsFocused} from '@react-navigation/native';
 
 export default function FindBin() {
   const webViewRef = useRef<WebView>(null);
@@ -25,6 +26,8 @@ export default function FindBin() {
   const [bottomSheetOffset, setBottomSheetOffset] = useState<number>(0); // BottomSheet의 높이 또는 offset 상태
   const [isSearchShow, setIsSearchShow] = useState<boolean>(false);
   const carouselRef = useRef(null);
+
+  const isFocused = useIsFocused();
 
   const {width, height} = Dimensions.get('window');
   const refreshWrapperBottom = bottomSheetOffset > 0 ? bottomSheetOffset + 10 : 40;
@@ -85,31 +88,38 @@ export default function FindBin() {
   };
 
   useEffect(() => {
-    if (isWebViewLoaded) {
-      requestPermissionAndSendLocation(); // WebView가 로드된 후에 위치 권한 요청 및 위치 정보 전송을 시작
+    if (isFocused && isWebViewLoaded) {
+      requestPermissionAndSendLocation();
+    } else {
+      // 다른 페이지로 이동한 경우 위치 감지를 중지
+      if (watcherId !== null) {
+        Geolocation.clearWatch(watcherId);
+        setWatcherId(null);
+      }
     }
 
     return () => {
-      if (watcherId !== null) {
-        Geolocation.clearWatch(watcherId); // 컴포넌트 언마운트 시 위치 감시 중지
+      if (!isFocused && watcherId !== null) {
+        Geolocation.clearWatch(watcherId);
+        setWatcherId(null);
       }
     };
-  }, [isWebViewLoaded]);
+  }, [isFocused, isWebViewLoaded]);
 
   const refreshLocationWatching = () => {
     // 기존의 위치 감시 중지
-    if (watcherId !== null) {
-      Geolocation.clearWatch(watcherId);
-    }
-    // 새로 위치 감시 시작
-    requestPermissionAndSendLocation();
+    // if (watcherId !== null) {
+    //   Geolocation.clearWatch(watcherId);
+    // }
+    // // 새로 위치 감시 시작
+    // requestPermissionAndSendLocation();
 
     if (webViewRef.current) {
       const message = {
         type: 'refresh',
       };
       // 메시지가 잘 전송되었는지 확인하기 위한 로그
-      // console.log('Sending message to WebView:', JSON.stringify(message));
+      console.log('Sending message to WebView:', JSON.stringify(message));
 
       webViewRef.current.postMessage(JSON.stringify(message));
     } else {
