@@ -28,11 +28,12 @@ export default function VerifyVisit({route}: VerifyVisitProps) {
   const webViewRef = useRef<WebView>(null);
   const [watcherId, setWatcherId] = useState<number | null>(null); // Watcher ID를 저장할 상태
   const [isWebViewLoaded, setIsWebViewLoaded] = useState<boolean>(false); // WebView 로드 상태
-  const isFocused = useIsFocused();
+  // const isFocused = useIsFocused();
 
   const URL = 'https://binvoyage.netlify.app/verify';
 
   const requestPermissionAndSendLocation = async () => {
+    console.log('requestPermissionAndSendLocation called');
     let result;
     if (Platform.OS === 'android') {
       result = await request(PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION);
@@ -40,9 +41,6 @@ export default function VerifyVisit({route}: VerifyVisitProps) {
       result = await request(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE);
     }
     if (result === RESULTS.GRANTED) {
-      if (watcherId !== null) {
-        Geolocation.clearWatch(watcherId);
-      }
       const Ids = Geolocation.watchPosition(
         position => {
           const {coords} = position;
@@ -60,6 +58,7 @@ export default function VerifyVisit({route}: VerifyVisitProps) {
             },
           };
 
+          console.log('Location updated:', coords); // 위치 정보 로그 출력
           console.log('Sending message:', JSON.stringify(message)); // 메시지 전송 확인
 
           if (isWebViewLoaded && webViewRef.current) {
@@ -70,10 +69,11 @@ export default function VerifyVisit({route}: VerifyVisitProps) {
           }
         },
         error => {
-          console.log(error);
+          console.log('Error in watchPosition:', error); // 에러 로그 출력
         },
         {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000, distanceFilter: 10},
       );
+      console.log('Watcher ID set:', Ids); // Watcher ID 설정 확인
       setWatcherId(Ids); // Watcher ID를 상태로 저장
     } else {
       Alert.alert('위치 권한이 필요합니다!', '위치 권한을 켜주세요!', [
@@ -86,17 +86,19 @@ export default function VerifyVisit({route}: VerifyVisitProps) {
   };
 
   useEffect(() => {
-    if (isFocused && isWebViewLoaded) {
+    console.log('useEffect triggered:', {isWebViewLoaded}); // useEffect 트리거 로그
+    if (isWebViewLoaded && watcherId === null) {
       requestPermissionAndSendLocation();
     }
 
     return () => {
-      if (!isFocused && watcherId !== null) {
+      console.log('Component unmounted, clearing watcher if exists'); // 언마운트 로그
+      if (watcherId !== null) {
         Geolocation.clearWatch(watcherId);
         setWatcherId(null);
       }
     };
-  }, [isFocused, isWebViewLoaded]);
+  }, [isWebViewLoaded, watcherId]);
 
   useEffect(() => {
     if (isValid) {
@@ -152,11 +154,12 @@ export default function VerifyVisit({route}: VerifyVisitProps) {
   const handleMessage = (e: WebViewMessageEvent) => {
     try {
       const data = JSON.parse(e.nativeEvent.data);
+      console.log('Message received from WebView:', data); // WebView로부터 메시지 수신 로그
       if (data.type === 'proximity') {
         setIsValid(data.payload.within50m);
       }
     } catch (err) {
-      console.log(err);
+      console.log('Error parsing message from WebView:', err); // 파싱 에러 로그
     }
   };
 
@@ -194,6 +197,7 @@ export default function VerifyVisit({route}: VerifyVisitProps) {
               javaScriptEnabled={true}
               onMessage={handleMessage}
               onLoad={() => {
+                console.log('WebView loaded');
                 setIsWebViewLoaded(true);
               }}
             />
