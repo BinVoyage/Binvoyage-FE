@@ -1,13 +1,18 @@
 import { MutableRefObject, useEffect, useRef, useState } from "react";
 
 type VerifyVisitProps = {
-  latitude: number;
-  longitude: number;
-  bin_lat: number;
-  bin_lng: number;
+    verifyLocation: VerifyLocationType
 };
 
-const VerifyVisit = ({ latitude, longitude, bin_lat, bin_lng }: VerifyVisitProps) => {
+type VerifyLocationType = {
+    latitude: number;
+    longitude: number;
+    bin_lat: number;
+    bin_lng: number;
+  }
+
+const VerifyVisit = ({ verifyLocation }: VerifyVisitProps) => {
+  const {latitude, longitude, bin_lat, bin_lng} = verifyLocation;
   const mapRef = useRef<kakao.maps.Map | null>(null);
   const [currentMarker, setCurrentMarker] = useState<kakao.maps.Marker | null>(null);
   const [binMarker, setBinMarker] = useState<kakao.maps.Marker | null>(null);
@@ -22,7 +27,7 @@ const VerifyVisit = ({ latitude, longitude, bin_lat, bin_lng }: VerifyVisitProps
     };
 
     const currentImageSrc = "image/Current.svg";
-    const binImageSrc = "image/Bin.svg"; // 쓰레기통 마커 이미지
+    const binImageSrc = "image/targetMarker.svg"; // 쓰레기통 마커 이미지
     const imageSize = new window.kakao.maps.Size(30, 30);
     const imageOption = { offset: new window.kakao.maps.Point(15, 15) };
     const currentImage = new window.kakao.maps.MarkerImage(currentImageSrc, imageSize, imageOption);

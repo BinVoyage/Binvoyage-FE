@@ -10,6 +10,13 @@ type CurrentLocation = {
   longitude: number;
 };
 
+type VerifyLocation = {
+  latitude: number;
+  longitude: number;
+  bin_lat: number;
+  bin_lng: number;
+}
+
 function App() {
   const [isLocationSet, setIsLocationSet] = useState<boolean>(false); // 위치 설정 여부 상태 추가
   const [currentLocation, setCurrentLocation] = useState<CurrentLocation | null>({latitude: 37.563685889, longitude: 126.975584404});
@@ -18,7 +25,7 @@ function App() {
   const [triggerRefresh, setTriggerRefresh] = useState<number>(0);
 
   // VerifyVisit
-  const [targetLocation, setTargetLocation] = useState<CurrentLocation | null>({latitude: 37.54397760413326, longitude: 127.12560598299282})
+  const [verifyLocation, setVerifyLocation] = useState<VerifyLocation | null>({"latitude":37.563685889,"longitude":126.975584404,"bin_lat":37.563685889,"bin_lng":126.975584404})
 
   useEffect(() => {
     const handleMessage = (event: any) => {
@@ -58,13 +65,11 @@ function App() {
             setTriggerRefresh(Math.random());
         } else if (message.type === "verify") {
           const { latitude, longitude, bin_lat, bin_lng } = message.payload;
-          setCurrentLocation({
-            latitude: latitude,
-            longitude: longitude
-          });
-          setTargetLocation({
-            latitude: bin_lat,
-            longitude: bin_lng,
+          setVerifyLocation({
+            latitude,
+            longitude,
+            bin_lat,
+            bin_lng
           })
         }
       } catch (error) {
@@ -106,7 +111,7 @@ function App() {
         <Route
           path="/verify"
           element={
-            <VerifyVisit latitude={currentLocation!.latitude} longitude={currentLocation!.longitude} bin_lat={targetLocation!.latitude} bin_lng={targetLocation!.longitude}/>
+            verifyLocation && <VerifyVisit verifyLocation={verifyLocation}/>
           }
         />
       </Routes>
