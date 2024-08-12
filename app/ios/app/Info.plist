@@ -73,6 +73,20 @@
 		</dict>
 		<key>NSAllowsArbitraryLoads</key>
 		<true/>
+		<key> NSExceptionDomains </key>
+    	<dict>
+        	<key>3.37.135.150</key>
+			<dict>
+				<key> NSTemporaryExceptionAllowsInsecureHTTPLoads </key>
+				<true/>
+				<key>NSTemporaryExceptionMinimumTLSVersion</key>
+				<string>TLSv1.0</string> <!-- TLS 버전을 지정하지 않으면 기본적으로 TLS 1.2 이상을 요구합니다 -->
+				<key>NSIncludesSubdomains</key>
+				<true/>
+				<key>NSTemporaryExceptionRequiresForwardSecrecy</key>
+				<false/>
+			</dict>
+    	</dict>
 		<key>NSAllowsLocalNetworking</key>
 		<true/>
 	</dict>

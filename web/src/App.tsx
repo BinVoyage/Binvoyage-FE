@@ -4,7 +4,6 @@ import { useStore } from "./store/Store";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import VerifyVisit from "./components/VerifyVisit";
 
-
 type CurrentLocation = {
   latitude: number;
   longitude: number;
@@ -116,7 +115,6 @@ function App() {
         />
       </Routes>
     </Router>
-
   );
 }
 

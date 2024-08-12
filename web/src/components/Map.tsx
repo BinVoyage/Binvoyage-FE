@@ -53,6 +53,22 @@ const Map = ({ latitude, longitude, triggerSearch, triggerRefresh }: CurrentLoca
     // 중심 좌표 변경 이벤트 리스너 추가
     window.kakao.maps.event.addListener(map, 'center_changed', debounce(handleCenterChanged, 500));
 
+    // Yellow circle to represent the 2000 meter range from current position
+    const circle = new window.kakao.maps.Circle({
+      center: currentPosition,
+      radius: 2000, // 2000 meters
+      strokeWeight: 2,
+      strokeColor: '#FFD700',
+      strokeOpacity: 1,
+      strokeStyle: 'solid',
+      fillColor: '#FFD700',
+      fillOpacity: 0.3
+    });
+    circle.setMap(map);
+
+    initMarkers(map);
+    filterMarkers(filterMode);
+
     // 사용자가 확대/축소할 때 최대 레벨을 제한하는 이벤트 리스너 추가
     window.kakao.maps.event.addListener(map, 'zoom_changed', function() {
       const currentLevel = map.getLevel();
@@ -152,6 +168,7 @@ const Map = ({ latitude, longitude, triggerSearch, triggerRefresh }: CurrentLoca
       alert(`center: 룰루랄라`)
     }
   }, [triggerSearch])
+
   return (
     <>
       <div id="map" style={{ width: "100vw", height: "100vh" }} />
