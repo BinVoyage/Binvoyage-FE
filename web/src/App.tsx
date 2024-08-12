@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
 import Map from "./components/Map";
 import { useStore } from "./store/Store";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import VerifyVisit from "./components/VerifyVisit";
+
 
 type CurrentLocation = {
   latitude: number;
@@ -9,10 +12,13 @@ type CurrentLocation = {
 
 function App() {
   const [isLocationSet, setIsLocationSet] = useState<boolean>(false); // 위치 설정 여부 상태 추가
-  const [currentLocation, setCurrentLocation] = useState<CurrentLocation | null>(null);
+  const [currentLocation, setCurrentLocation] = useState<CurrentLocation | null>({latitude: 37.563685889, longitude: 126.975584404});
   const {setFilterMode} = useStore();
   const [triggerSearch, setTriggerSearch] = useState<number>(0);
   const [triggerRefresh, setTriggerRefresh] = useState<number>(0);
+
+  // VerifyVisit
+  const [targetLocation, setTargetLocation] = useState<CurrentLocation | null>({latitude: 37.54397760413326, longitude: 127.12560598299282})
 
   useEffect(() => {
     const handleMessage = (event: any) => {
@@ -50,6 +56,16 @@ function App() {
             setTriggerSearch(Math.random());
         } else if (message.type === "refresh") {
             setTriggerRefresh(Math.random());
+        } else if (message.type === "verify") {
+          const { latitude, longitude, bin_lat, bin_lng } = message.payload;
+          setCurrentLocation({
+            latitude: latitude,
+            longitude: longitude
+          });
+          setTargetLocation({
+            latitude: bin_lat,
+            longitude: bin_lng,
+          })
         }
       } catch (error) {
         alert(`Error parsing message: ${error}`);
@@ -72,9 +88,30 @@ function App() {
   }, []);
 
   return (
-    <div>
-      {isLocationSet && currentLocation ? <Map latitude={currentLocation.latitude} longitude={currentLocation.longitude} triggerSearch={triggerSearch} triggerRefresh={triggerRefresh}/> : null}
-    </div>
+    <Router>
+      <Routes>
+        <Route
+          path="/"
+          element={
+            currentLocation && isLocationSet &&(
+              <Map
+                latitude={currentLocation.latitude}
+                longitude={currentLocation.longitude}
+                triggerSearch={triggerSearch}
+                triggerRefresh={triggerRefresh}
+              />
+            )
+          }
+        />
+        <Route
+          path="/verify"
+          element={
+            <VerifyVisit latitude={currentLocation!.latitude} longitude={currentLocation!.longitude} bin_lat={targetLocation!.latitude} bin_lng={targetLocation!.longitude}/>
+          }
+        />
+      </Routes>
+    </Router>
+
   );
 }
 
