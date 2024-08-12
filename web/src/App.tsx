@@ -19,13 +19,13 @@ type VerifyLocation = {
 
 function App() {
   const [isLocationSet, setIsLocationSet] = useState<boolean>(false); // 위치 설정 여부 상태 추가
-  const [currentLocation, setCurrentLocation] = useState<CurrentLocation | null>({latitude: 37.563685889, longitude: 126.975584404});
+  const [currentLocation, setCurrentLocation] = useState<CurrentLocation | null>(null);
   const {setFilterMode} = useStore();
   const [triggerSearch, setTriggerSearch] = useState<number>(0);
   const [triggerRefresh, setTriggerRefresh] = useState<number>(0);
 
   // VerifyVisit
-  const [verifyLocation, setVerifyLocation] = useState<VerifyLocation | null>({"latitude":37.563685889,"longitude":126.975584404,"bin_lat":37.563685889,"bin_lng":126.975584404})
+  const [verifyLocation, setVerifyLocation] = useState<VerifyLocation | null>(null);
 
   useEffect(() => {
     const handleMessage = (event: any) => {

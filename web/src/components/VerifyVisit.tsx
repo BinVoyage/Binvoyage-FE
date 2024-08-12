@@ -23,7 +23,7 @@ const VerifyVisit = ({ verifyLocation }: VerifyVisitProps) => {
     const container = document.getElementById('verifyVisitMap');
     const options = {
       center: new window.kakao.maps.LatLng(latitude, longitude),
-      level: 1,
+      level: 3,
     };
 
     const currentImageSrc = "image/Current.svg";
@@ -39,19 +39,21 @@ const VerifyVisit = ({ verifyLocation }: VerifyVisitProps) => {
     const myMarker = new window.kakao.maps.Marker({
       position: currentPosition,
       image: currentImage,
+      zIndex: 2,
     });
 
     const myBinMarker = new window.kakao.maps.Marker({
       position: binPosition,
       image: binImage,
+      zIndex: 1,
     });
 
     const map = new window.kakao.maps.Map(container as HTMLElement, options);
     (mapRef as MutableRefObject<kakao.maps.Map | null>).current = map;
     myMarker.setMap(map);
     myBinMarker.setMap(map);
-    setCurrentMarker(myMarker);
     setBinMarker(myBinMarker);
+    setCurrentMarker(myMarker);
     setIsMapLoaded(true);
 
     // 50m 반경의 노란색 원을 쓰레기통 주변에 표시
@@ -103,7 +105,7 @@ const VerifyVisit = ({ verifyLocation }: VerifyVisitProps) => {
     if (mapRef.current && isMapLoaded && currentMarker) {
       const currentPosition = new window.kakao.maps.LatLng(latitude, longitude);
       currentMarker.setPosition(currentPosition);
-      mapRef.current.setCenter(currentPosition);
+    //   mapRef.current.setCenter(currentPosition);
 
       if (binMarker) {
         const binPosition = new window.kakao.maps.LatLng(bin_lat, bin_lng);
@@ -116,7 +118,7 @@ const VerifyVisit = ({ verifyLocation }: VerifyVisitProps) => {
         checkProximity(calculatedDistance);
       }
     }
-  }, [latitude, longitude, bin_lat, bin_lng, isMapLoaded]);
+  }, [latitude, longitude, isMapLoaded]);
 
   return (
     <div id="verifyVisitMap" style={{ width: "100vw", height: "100vh" }}></div>
