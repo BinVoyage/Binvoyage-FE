@@ -11,7 +11,6 @@ const VerifyVisit = ({ latitude, longitude, bin_lat, bin_lng }: VerifyVisitProps
   const mapRef = useRef<kakao.maps.Map | null>(null);
   const [currentMarker, setCurrentMarker] = useState<kakao.maps.Marker | null>(null);
   const [binMarker, setBinMarker] = useState<kakao.maps.Marker | null>(null);
-  const [distance, setDistance] = useState<number | null>(null);
   const [isMapLoaded, setIsMapLoaded] = useState<boolean>(false);
   const [isWithin50m, setIsWithin50m] = useState<boolean | null>(null);
 
@@ -68,7 +67,6 @@ const VerifyVisit = ({ latitude, longitude, bin_lat, bin_lng }: VerifyVisitProps
       path: [currentPosition, binPosition],
     });
     const calculatedDistance = poly.getLength(); // 미터 단위 거리 계산
-    setDistance(calculatedDistance);
 
     // 현재 위치가 50m 반경 내에 있는지 확인 및 상태 설정
     checkProximity(calculatedDistance);
@@ -108,7 +106,6 @@ const VerifyVisit = ({ latitude, longitude, bin_lat, bin_lng }: VerifyVisitProps
           path: [currentPosition, binPosition],
         });
         const calculatedDistance = poly.getLength();
-        setDistance(calculatedDistance);
 
         // 현재 위치가 50m 반경 내에 있는지 확인 및 상태 설정
         checkProximity(calculatedDistance);
