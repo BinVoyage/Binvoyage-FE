@@ -71,10 +71,18 @@ export const FilterText = styled(DefaultText)<{isSelected: boolean}>`
   color: ${props => (props.isSelected ? Palette.White : Palette.Gray5)};
 `;
 
-export const RefreshWrapper = styled.TouchableOpacity`
-  position: absolute;
-  bottom: 40px;
-  right: 16px;
-  width: 60px;
-  height: 60px;
+export const BtnSearchThisArea = styled.TouchableOpacity`
+  padding: 8px 16px;
+  border-radius: 22px;
+  background: ${Palette.Secondary};
+  shadow-color: rgba(0, 0, 0, 0.2);
+  shadow-offset: 0px 2px;
+  shadow-opacity: 1;
+  shadow-radius: 6px;
+`;
+
+export const TextSearchThisArea = styled(DefaultText)`
+  font-size: ${Typo.Label.fontSize};
+  font-weight: ${Typo.Label.fontWeight};
+  color: ${Palette.White};
 `;

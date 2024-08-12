@@ -9,17 +9,21 @@
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
   },
+  "homepage": "https://binvoyage.netlify.app/",
   "dependencies": {
     "@vitejs/plugin-react": "^4.3.1",
     "axios": "^1.7.2",
+    "lodash.debounce": "^4.0.8",
     "netlify-cli": "^17.33.4",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "react-router-dom": "^6.26.0",
     "styled-components": "^6.1.11",
     "vite-plugin-html": "^3.2.2",
     "zustand": "^4.5.4"
   },
   "devDependencies": {
+    "@types/lodash.debounce": "^4.0.9",
     "@types/node": "^20.14.10",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",

@@ -1,10 +1,13 @@
 declare namespace kakao.maps {
     class LatLng {
       constructor(latitude: number, longitude: number);
+      getLat(): number;
+      getLng(): number;
     }
   
     class Map {
       constructor(container: HTMLElement, options: object);
+      getCenter(): LatLng;
       setCenter(position: LatLng): void;
       getLevel(): number;
       setLevel(level: number): void;
