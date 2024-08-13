@@ -10,6 +10,10 @@ type RootStackParamList = {
   Login: undefined;
   OnBoarding: undefined;
   UserInput: undefined;
+  NewTrashDetail: undefined;
+  BinDetailNavigator: undefined;
+  MyComment: undefined; // 마이페이지 -> 작성한 피드백
+  DeleteAccount: undefined;
   BinDetailNavigator: {
     screen: 'BinDetail' | 'FeedbackList' | 'ReportFeedback' | 'ReportWrongInfo' | 'VerifyVisit';
     params?: {
@@ -21,6 +25,10 @@ type RootStackParamList = {
 type RootHomeParamList = {
   Home: undefined;
   PassPort: undefined;
+  NewTrash: undefined;
+  NewTrashDetail: undefined;
+  tabBarStyle?: undefined;
+  OnBoarding: undefined;
 };
 
 type RootBinDetailParamList = {
@@ -45,4 +53,10 @@ type RootBinDetailParamList = {
     image: string;
     coordinate: [number, number];
   };
+};
+
+type RootMyParamList = {
+  MyPage: undefined;
+  MyComment: undefined;
+  DeleteAccount: undefined;
 };
