@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import Map from "./components/Map";
-import { useStore } from "./store/Store";
+import { mapStore } from "./store/Store";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import VerifyVisit from "./components/VerifyVisit";
 
@@ -19,7 +19,7 @@ type VerifyLocation = {
 function App() {
   const [isLocationSet, setIsLocationSet] = useState<boolean>(false); // 위치 설정 여부 상태 추가
   const [currentLocation, setCurrentLocation] = useState<CurrentLocation | null>(null);
-  const {setFilterMode} = useStore();
+  const {setFilterMode} = mapStore();
   const [triggerSearch, setTriggerSearch] = useState<number>(0);
   const [triggerRefresh, setTriggerRefresh] = useState<number>(0);
 

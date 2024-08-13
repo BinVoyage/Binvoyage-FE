@@ -76,3 +76,12 @@ type CurrentPosition = {
   latitude: number;
   longitude: number;
 };
+
+type UserInfo = {
+  user_name: string;
+  nationality: string;
+  stamp_cnt: string;
+  newly_found_cnt: number;
+  report_cnt: number;
+  feedback_cnt: number;
+};

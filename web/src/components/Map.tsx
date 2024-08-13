@@ -1,6 +1,6 @@
 import { MutableRefObject, useEffect, useRef, useState } from "react";
 import { bin_list } from './Places';
-import { useStore } from "../store/Store";
+import { mapStore } from "../store/Store";
 import debounce from "lodash.debounce";
 
 type CurrentLocation = {
@@ -20,7 +20,7 @@ type MarkerInfo = {
 const Map = ({ latitude, longitude, triggerSearch, triggerRefresh }: CurrentLocation) => {
   const mapRef = useRef<kakao.maps.Map | null>(null);
   const markersRef = useRef<MarkerInfo[]>([]);
-  const filterMode = useStore(state => state.filterMode);
+  const filterMode = mapStore(state => state.filterMode);
   const [currentMarker, setCurrentMarker] = useState<kakao.maps.Marker | null>(null);
   const [center, setCenter] = useState<kakao.maps.LatLng | null>(null);
   const [isMapLoaded, setIsMapLoaded] = useState<boolean>(false);

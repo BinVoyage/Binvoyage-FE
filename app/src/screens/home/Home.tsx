@@ -1,16 +1,44 @@
 import {NavigationProp, useNavigation} from '@react-navigation/native';
+import api from 'api/api';
 import ArrowNextSvg from 'assets/images/ArrowNextSvg';
 import HomeTrashSvg from 'assets/images/HomeTrashSvg';
 import {Palette} from 'constants/palette';
+import {useEffect} from 'react';
 import * as S from 'screens/home/Home.style';
+import {userStore} from 'store/Store';
 
 export default function Home() {
   const navigation1 = useNavigation<NavigationProp<RootTabParamList>>();
   const navigation2 = useNavigation<NavigationProp<RootHomeParamList>>();
+  const {userInfo, setUserInfo} = userStore();
+
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        const response = await api.get('/user');
+
+        if (response.data.success) {
+          setUserInfo(response.data.data);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    getData();
+  }, []);
+
+  useEffect(() => {
+    console.log(userInfo);
+  }, [userInfo]);
 
   return (
     <S.Container>
-      <S.HeaderTitle>Julia, Start your BinVoyage!</S.HeaderTitle>
+      {userInfo?.user_name ? (
+        <S.HeaderTitle>{`${userInfo?.user_name}, Start your BinVoyage!`}</S.HeaderTitle>
+      ) : (
+        <S.HeaderTitle>isLoading...</S.HeaderTitle>
+      )}
       <S.Bridge onPress={() => navigation1.navigate('FindBin')}>
         <S.BridgeIconWrapper source={require('assets/images/icon-trash-wrapper.png')} resizeMode="contain">
           {/* <HomeTrashSvg width="40" height="66" /> */}

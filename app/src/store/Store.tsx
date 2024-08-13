@@ -1,10 +1,21 @@
 import {create} from 'zustand';
 
-interface useStore {
+interface mapStore {
   currentPosition: CurrentPosition | null;
   setCurrentPosition: (position: CurrentPosition) => void;
 }
-export const useStore = create<useStore>(set => ({
+
+interface userStore {
+  userInfo: UserInfo | null;
+  setUserInfo: (info: UserInfo) => void;
+}
+
+export const mapStore = create<mapStore>(set => ({
   currentPosition: null,
   setCurrentPosition: position => set({currentPosition: position}),
+}));
+
+export const userStore = create<userStore>(set => ({
+  userInfo: null,
+  setUserInfo: info => set({userInfo: info}),
 }));

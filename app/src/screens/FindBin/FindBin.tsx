@@ -17,7 +17,7 @@ import Animated, {useAnimatedStyle, withTiming} from 'react-native-reanimated';
 import {NativeViewGestureHandler} from 'react-native-gesture-handler';
 import {useIsFocused} from '@react-navigation/native';
 import api from 'api/api';
-import {useStore} from 'store/Store';
+import {mapStore} from 'store/Store';
 
 export default function FindBin() {
   const webViewRef = useRef<WebView>(null);
@@ -29,7 +29,7 @@ export default function FindBin() {
   const [isSearchShow, setIsSearchShow] = useState<boolean>(false);
   const carouselRef = useRef(null);
   const [data, setData] = useState<BinItemProps[]>([]);
-  const {currentPosition, setCurrentPosition} = useStore();
+  const {currentPosition, setCurrentPosition} = mapStore();
 
   const isFocused = useIsFocused();
 

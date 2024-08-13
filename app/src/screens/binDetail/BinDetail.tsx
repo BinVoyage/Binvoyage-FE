@@ -10,7 +10,7 @@ import {Palette} from 'constants/palette';
 import {useEffect, useState} from 'react';
 import {ScrollView, Text, TouchableOpacity, View} from 'react-native';
 import * as S from 'screens/binDetail/BinDetail.style';
-import {useStore} from 'store/Store';
+import {mapStore} from 'store/Store';
 import {formatDate} from 'utils/formatDate';
 
 type BinDetailProps = {
@@ -23,7 +23,7 @@ export default function BinDetail({route}: BinDetailProps) {
   const [binData, setBinData] = useState<BinDetail | null>(null);
   const [feedbackList, setFeedbackList] = useState<Feedback[]>([]);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const currentLocation = useStore(state => state.currentPosition);
+  const currentLocation = mapStore(state => state.currentPosition);
 
   useEffect(() => {
     const getBinData = async () => {
