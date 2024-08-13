@@ -1,11 +1,25 @@
 import BottomSheet, {BottomSheetView} from '@gorhom/bottom-sheet';
 import {Palette} from 'constants/palette';
-import {useRef, useMemo} from 'react';
-import {StyleSheet} from 'react-native';
+import {useRef, useMemo, useState, useEffect} from 'react';
+import {Dimensions, StyleSheet} from 'react-native';
 
-export default function MyBottomSheet({children}: {children: React.ReactNode}) {
+interface Props {
+  onSheetChange: (offset: number) => void;
+  children: React.ReactNode;
+}
+
+export default function MyBottomSheet({onSheetChange, children}: Props) {
+  const height = Dimensions.get('window').height;
+  // const [index, setIndex] = useState<number>(1);
   const bottomSheetRef = useRef<BottomSheet>(null);
-  const snapPoints = useMemo(() => ['3%', '25%'], []);
+  const bottomSheetHeight = height > 700 ? '25%' : '30%';
+  const snapPoints = useMemo(() => ['3%', bottomSheetHeight], [bottomSheetHeight]);
+
+  const handleSheetChanges = (index: number) => {
+    // index를 사용하여 바텀싯이 어느 정도 열려있는지 확인하고 offset 계산
+    const offset = index === 0 ? 0 : height * (parseFloat(bottomSheetHeight) / 100);
+    onSheetChange(offset);
+  };
 
   return (
     <BottomSheet
@@ -13,7 +27,8 @@ export default function MyBottomSheet({children}: {children: React.ReactNode}) {
       index={1}
       snapPoints={snapPoints}
       backgroundStyle={styles.container}
-      handleIndicatorStyle={styles.handleIndicator}>
+      handleIndicatorStyle={styles.handleIndicator}
+      onChange={handleSheetChanges}>
       <BottomSheetView style={styles.wrapper}>{children}</BottomSheetView>
     </BottomSheet>
   );

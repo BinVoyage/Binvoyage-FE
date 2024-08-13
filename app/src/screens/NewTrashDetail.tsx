@@ -7,7 +7,6 @@ import {Typo} from 'constants/typo';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 import NewTrashLocation from 'assets/images/NewTrashLocation';
 import {useEffect, useRef, useState} from 'react';
-import axios from 'axios';
 import api from 'api/api';
 import Toast from 'react-native-toast-message';
 import {useImage} from 'components/useImage';
