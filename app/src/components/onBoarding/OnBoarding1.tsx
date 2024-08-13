@@ -1,4 +1,5 @@
 import * as S from 'components/onBoarding/OnBoarding.style';
+import { ImageBackground } from 'react-native';
 
 interface Props {
   onNext: () => void;
@@ -7,7 +8,9 @@ interface Props {
 export default function Onboarding1({onNext}: Props) {
   return (
     <S.Container>
-      <S.Background></S.Background>
+      <S.Background>
+        <S.BgImg source={require('assets/images/img-onboarding1.png')} />
+      </S.Background>
       <S.Modal>
         <S.Pagination>
           <S.CurrentDot />

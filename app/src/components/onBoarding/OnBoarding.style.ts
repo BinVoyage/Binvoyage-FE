@@ -1,22 +1,42 @@
 import DefaultText from 'components/DefaultText';
 import {Palette} from 'constants/palette';
 import {Typo} from 'constants/typo';
+import { Dimensions } from 'react-native';
 import styled from 'styled-components/native';
 
+const screenWidth = Dimensions.get('window').width;
+const screenHeight = Dimensions.get('window').height;
+
+const widthRatio = 244 / 375;
+const heightRatio = 530 / 812;
+
 export const Container = styled.View`
+  position: relative;
   flex: 1;
 `;
 
 export const Background = styled.View`
+  position: relative;
   background: ${Palette.Gray2};
   flex: 1;
 `;
 
+export const BgImg = styled.ImageBackground`
+  position: absolute;
+  width: ${Math.round(screenWidth * widthRatio)};
+  height: ${Math.round(screenHeight * heightRatio)};
+  bottom: 180px;
+  align-self: center;
+`
+
 export const Modal = styled.View`
+  position: absolute;
+  bottom: 0;
   width: 100%;
   height: 225px;
   padding: 17px 38px 38px;
   align-items: center;
+  background: ${Palette.White};
 `;
 
 export const Pagination = styled.View`
