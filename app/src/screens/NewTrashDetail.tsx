@@ -26,7 +26,7 @@ export default function NewTrashDetail() {
   // 이미지 보내기
   const getImages = async () => {
     try {
-      const url = await api.get('api/image-url');
+      const url = await api.get('/image-url');
       console.log('이미지 성공', url.data.data);
       setUrl(url.data.data.presigned_url);
       setImageUrl(url.data.data.image_url);
@@ -55,7 +55,7 @@ export default function NewTrashDetail() {
 
   const handleSubmit = async () => {
     try {
-      await api.post('api/bin/new', {
+      await api.post('/bin/new', {
         // data: {
         address: '10-3, Seongbuk-ro 8-gil, Seongbuk-gu',
         lat: 27.5,
