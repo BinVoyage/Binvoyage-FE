@@ -20,26 +20,22 @@ export default function Login() {
       webClientId: GOOGLE_WEB_CLIENT_ID,
       offlineAccess: false,
     });
-  });
+  }, []);
 
   const handleGoogleLogin = async () => {
     try {
       await GoogleSignin.hasPlayServices();
       const userInfo = await GoogleSignin.signIn();
-      // Alert.alert(userInfo.idToken!);
-      // setUserInfo(userInfo);
-      const response = await api.post('/login/oauth2', {
-        login_type: 'google',
-        token: userInfo.idToken,
-      });
+      console.log(userInfo.idToken);
+      const response = await api.post(`/login/oauth2?type=google&token=${userInfo.idToken}`);
 
-      if (response.status === 200) {
+      if (response.status === 201) {
         navigation.navigate('UserInput');
       } else {
         Alert.alert('로그인 실패');
       }
-    } catch (error) {
-      Alert.alert(`${error}`);
+    } catch (error: any) {
+      console.log(error.response.data);
     }
   };
 
@@ -53,12 +49,9 @@ export default function Login() {
 
       const {identityToken} = appleAuthRequestResponse;
       if (identityToken) {
-        const response = await api.post('/login/oauth2', {
-          login_type: 'apple',
-          token: identityToken,
-        });
+        const response = await api.post(`/login/oauth2?type=apple&token=${identityToken}`);
 
-        if (response.status === 200) {
+        if (response.status === 201) {
           navigation.navigate('UserInput');
         } else {
           Alert.alert('로그인 실패');
