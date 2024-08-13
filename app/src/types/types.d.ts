@@ -28,6 +28,43 @@ interface FeedbackResponse {
   };
 }
 
+interface Nickname {
+  user_name: string;
+  nationality: string;
+  stamp_cnt: number;
+  newly_found_cnt: number;
+  report_cnt: number;
+  feedback_cnt: number;
+}
+
+interface NewTrashDetail {
+  presigned_url: string | undefined;
+  image_url: string | undefined;
+}
+
+interface Mycomment {
+  bin_type_name: string;
+  feedback_id: number;
+  registration_dt?: string;
+  change_dt?: string;
+  content?: string;
+  bin_id?: number;
+  bin_address?: string;
+}
+
+interface MyCommentResponse {
+  code: number;
+  success: boolean;
+  msg: string;
+  data: {
+    total_count: number;
+    page: number;
+    count: number;
+    next: string | null;
+    feedback_list: Mycomment[];
+  };
+}
+
 interface Visit {
   visit_dt: string;
   is_success: boolean;

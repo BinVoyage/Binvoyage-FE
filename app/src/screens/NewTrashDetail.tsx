@@ -15,8 +15,7 @@ import {pictureStore} from 'store/Store';
 
 export default function NewTrashDetail() {
   const navigation2 = useNavigation<NavigationProp<RootHomeParamList>>();
-  const [urls, setUrl] = useState<any>({value: ''});
-  const [imageurls, setImageUrl] = useState({value: ''});
+  const [urls, setUrl] = useState<NewTrashDetail>();
   const [isClick, setIsClick] = useState<boolean>(false);
   const [changeText, onChangeText] = useState('');
   const {Camera} = useImage();
@@ -27,17 +26,16 @@ export default function NewTrashDetail() {
     try {
       const url = await api.get('/image-url');
       console.log('이미지 성공', url.data.data);
-      setUrl(url.data.data.presigned_url);
-      setImageUrl(url.data.data.image_url);
+      setUrl(url.data.data);
     } catch (error) {
       console.log(error);
       console.log('이미지 실패');
     }
   };
 
-  useEffect(() => {
-    getImages();
-  }, [urls.value, imageurls.value]);
+  // useEffect(() => {
+  //   getImages();
+  // }, []);
 
   const datas = images[0]?.data?.data;
   const headers = {
@@ -45,7 +43,7 @@ export default function NewTrashDetail() {
   };
   const postImages = async () => {
     try {
-      await api.put(urls, datas, {headers: headers});
+      await api.put(urls?.presigned_url as unknown as string, datas, {headers: headers});
       console.log('이미지 첨부 성공!!!!');
     } catch (error) {
       console.log(error);
@@ -53,9 +51,9 @@ export default function NewTrashDetail() {
     }
   };
 
-  useEffect(() => {
-    postImages();
-  }, []);
+  // useEffect(() => {
+  //   postImages();
+  // }, []);
 
   // form 제출
   const handleSubmit = async () => {
@@ -68,7 +66,7 @@ export default function NewTrashDetail() {
         detail: 'near the olive young',
         type_no: 1,
         location_type_no: 1,
-        image: imageurls,
+        image: urls?.image_url as unknown as string,
         // },
       });
       console.log('성공');
@@ -140,12 +138,12 @@ export default function NewTrashDetail() {
           by the bus stop? More details will help fellow wanderers!"
             />
             <AddPicture
-              onPressOut={Camera}
+              onPressIn={Camera}
               onPress={() => {
-                getImages();
-              }}
-              onLongPress={() => {
                 postImages();
+              }}
+              onPressOut={() => {
+                getImages();
               }}>
               <AddImage source={require('assets/images/AddImage.png')} style={{alignItems: 'center'}} />
               <AddSub> Upload</AddSub>

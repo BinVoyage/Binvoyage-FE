@@ -5,10 +5,27 @@ import ArrowNextSvg from 'assets/images/ArrowNextSvg';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {Typo} from 'constants/typo';
 import api from 'api/api';
+import {useEffect, useState} from 'react';
 
 export default function MyPage() {
   const CommentNavigator = useNavigation<NavigationProp<RootMyParamList>>();
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  const [members, setMembers] = useState<Nickname>();
+  const getMemberData = async () => {
+    try {
+      const response = await api.get('/user');
+      setMembers(response.data.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    getMemberData();
+  }, []);
+
+  console.log(members?.feedback_cnt);
+
   const Logout = async () => {
     try {
       await api.delete('api/login/logout');
@@ -24,7 +41,7 @@ export default function MyPage() {
         <MyImage source={require('assets/images/Ticket.png')} style={{alignItems: 'center'}}>
           <SettingTopWrapper>
             <TopWrapper>
-              <NickName>Nickname</NickName>
+              <NickName>{members?.user_name}</NickName>
               <WriteImage source={require('assets/images/WriteProfile.png')} style={{alignItems: 'center'}} />
             </TopWrapper>
             <MiddleWrapper>
@@ -33,17 +50,17 @@ export default function MyPage() {
           </SettingTopWrapper>
           <UserGrid>
             <Usercolumn>
-              <ColumnContent>20</ColumnContent>
+              <ColumnContent>{members?.newly_found_cnt}</ColumnContent>
               <Sub>Newly found</Sub>
             </Usercolumn>
             <Sero />
             <Usercolumn>
-              <ColumnContent>11</ColumnContent>
+              <ColumnContent>{members?.report_cnt}</ColumnContent>
               <Sub>Reported</Sub>
             </Usercolumn>
             <Sero />
             <Usercolumn>
-              <ColumnContent>20</ColumnContent>
+              <ColumnContent>{members?.stamp_cnt}</ColumnContent>
               <Sub>Verified</Sub>
             </Usercolumn>
           </UserGrid>

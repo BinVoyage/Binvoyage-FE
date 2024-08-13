@@ -9,13 +9,12 @@ import * as S from 'screens/home/Home.style';
 export default function Home() {
   const navigation1 = useNavigation<NavigationProp<RootTabParamList>>();
   const navigation2 = useNavigation<NavigationProp<RootHomeParamList>>();
-  const [members, setMembers] = useState<string | null>('');
-
+  const [members, setMembers] = useState<Nickname>();
   const getMemberData = async () => {
     try {
       const response = await api.get('/user');
       setMembers(response.data.data);
-      console.log(response.data);
+      // console.log(response.data.data.user_name);
     } catch (error) {
       console.error(error);
     }
@@ -27,7 +26,7 @@ export default function Home() {
 
   return (
     <S.Container>
-      <S.HeaderTitle>Julia, Start your BinVoyage!</S.HeaderTitle>
+      <S.HeaderTitle>{members?.user_name}, Start your BinVoyage!</S.HeaderTitle>
       <S.Bridge onPress={() => navigation1.navigate('FindBin')}>
         <S.BridgeIconWrapper source={require('assets/images/icon-trash-wrapper.png')} resizeMode="contain">
           {/* <HomeTrashSvg width="40" height="66" /> */}

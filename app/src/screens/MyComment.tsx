@@ -5,57 +5,26 @@ import ArrowPrevSvg from 'assets/images/ArrowPrevSvg';
 import BinSvg from 'assets/images/BinSvg';
 import {Typo} from 'constants/typo';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
-import {ScrollView} from 'react-native-gesture-handler';
+import {useEffect, useRef, useState} from 'react';
+import api from 'api/api';
 
 export default function MyComment() {
   const CommentNavigator = useNavigation<NavigationProp<RootMyParamList>>();
-  const Data = [
-    {
-      bin_type_name: 'Trash',
-      feedback_id: 1,
-      registration_dt: '2024-09-01T16:00',
-      change_dt: '2024-09-01T17:00',
-      content: 'Hello World!1',
-      bin_id: 1,
-      bin_address: '33, Dongil-ro 184-gil, Nowon-gu, Seoul',
-    },
-    {
-      bin_type_name: 'Recycling',
-      feedback_id: 2,
-      registration_dt: '2024-09-01T16:00',
-      change_dt: '2024-09-01T17:00',
-      content: 'Hello World!2',
-      bin_id: 2,
-      bin_address: '33, Dongil-ro 184-gil, Nowon-gu, Seoul2',
-    },
-    {
-      bin_type_name: 'Trash',
-      feedback_id: 3,
-      registration_dt: '2024-09-01T16:00',
-      change_dt: '2024-09-01T17:00',
-      content: 'Hello World!3',
-      bin_id: 3,
-      bin_address: '33, Dongil-ro 184-gil, Nowon-gu, Seoul3',
-    },
-    {
-      bin_type_name: 'Trash',
-      feedback_id: 4,
-      registration_dt: '2024-09-01T16:00',
-      change_dt: '2024-09-01T17:00',
-      content: 'Hello World!4',
-      bin_id: 4,
-      bin_address: '33, Dongil-ro 184-gil, Nowon-gu, Seoul4',
-    },
-    {
-      bin_type_name: 'Trash',
-      feedback_id: 5,
-      registration_dt: '2024-09-01T16:00',
-      change_dt: '2024-09-01T17:00',
-      content: 'Hello World!4',
-      bin_id: 5,
-      bin_address: '33, Dongil-ro 184-gil, Nowon-gu, Seoul4',
-    },
-  ];
+  const [comment, setComment] = useState<Mycomment[]>([]);
+
+  const CommentsData = async () => {
+    try {
+      const response = await api.get<MyCommentResponse>('/user/feedback');
+      setComment(response.data.data.feedback_list);
+      console.log(response.data.msg);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    CommentsData();
+  }, []);
 
   type ItemProps = {
     bin_type_name: string;
@@ -67,7 +36,7 @@ export default function MyComment() {
     bin_address?: string;
   };
 
-  const Item = ({feedback_id, registration_dt, change_dt, content, bin_id, bin_address, bin_type_name}: ItemProps) => (
+  const CommentItem = ({registration_dt, content, bin_address, bin_type_name}: ItemProps) => (
     <ItemWrapper>
       <ItemTopWrapper>
         <MyImage source={require('assets/images/s_bin.png')} style={{alignItems: 'center'}} />
@@ -91,16 +60,17 @@ export default function MyComment() {
       <BackDropBox onPress={() => CommentNavigator.navigate('MyPage')}>
         <ArrowPrevSvg width="24px" height="24px" fill="#5A5E6A" />
       </BackDropBox>
-      <ListBox
-        data={Data}
-        renderItem={({item}: any) => (
-          <Item
+      <FlatList
+        data={comment}
+        showsVerticalScrollIndicator={false}
+        keyExtractor={item => item.feedback_id.toString()}
+        renderItem={({item}) => (
+          <CommentItem
             bin_type_name={item.bin_type_name}
             feedback_id={item.feedback_id}
             registration_dt={item.registration_dt}
             content={item.content}
             bin_address={item.bin_address}
-            // change_dt={item.change_dt}
           />
         )}
       />
