@@ -1,4 +1,4 @@
-import {NavigationProp, useNavigation} from '@react-navigation/native';
+import {NavigationProp, RouteProp, useNavigation} from '@react-navigation/native';
 import api from 'api/api';
 import ArrowPrevSvg from 'assets/images/ArrowPrevSvg';
 import ReviewItem from 'components/reviewItem/ReviewItem';
@@ -7,7 +7,12 @@ import {useEffect, useRef, useState} from 'react';
 import {FlatList, Text, TouchableOpacity} from 'react-native';
 import * as S from 'screens/feedbackList/FeedbackList.style';
 
-export default function FeedbackList() {
+type FeedbackListProps = {
+  route: RouteProp<RootBinDetailParamList, 'FeedbackList'>;
+};
+
+export default function FeedbackList({route}: FeedbackListProps) {
+  const {bin_id} = route.params;
   const navigation = useNavigation<NavigationProp<RootBinDetailParamList>>();
   const [feedbackList, setFeedbackList] = useState<Feedback[]>([]);
   const scrollViewRef = useRef<FlatList>(null);
@@ -21,11 +26,13 @@ export default function FeedbackList() {
   useEffect(() => {
     const getData = async () => {
       try {
-        const response = await api.get<FeedbackResponse>('/bin/feedback/1/?page=1');
-        setFeedbackList(response.data.data.feedback_list);
-        console.log(response.data.msg);
-      } catch (error) {
-        console.error(error);
+        const response = await api.get<FeedbackResponse>(`/bin/feedback/${bin_id}/?page=1`);
+
+        if (response.data.success) {
+          setFeedbackList(response.data.data.feedback_list);
+        }
+      } catch (error: any) {
+        console.log(error.response.data);
       }
     };
 

@@ -25,7 +25,7 @@ type RootHomeParamList = {
 
 type RootBinDetailParamList = {
   BinDetail: {bin_id: number};
-  FeedbackList: undefined;
+  FeedbackList: {bin_id: number};
   ReportFeedback: {date: string; author: string; content: string; feedbackId: number};
   ReportWrongInfo: {
     bin_id: number;

@@ -144,7 +144,12 @@ export default function BinDetail({route}: BinDetailProps) {
                   />
                 ))}
               </View>
-              <S.SeeAllWrapper onPress={() => navigation.navigate('FeedbackList')}>
+              <S.SeeAllWrapper
+                onPress={() =>
+                  navigation.navigate('FeedbackList', {
+                    bin_id,
+                  })
+                }>
                 <S.TextSeeAll>See All</S.TextSeeAll>
                 <ArrowDownSvg width="24" height="24" fill={Palette.Gray4} />
               </S.SeeAllWrapper>
