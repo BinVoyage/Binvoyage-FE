@@ -49,12 +49,12 @@ export default function VerifyVisit({route}: VerifyVisitProps) {
             payload: {
               // latitude: coords.latitude,
               // longitude: coords.longitude,
-              // bin_lat: coordinate[0],
-              // bin_lng: coordinate[1],
+              bin_lat: coordinate[1],
+              bin_lng: coordinate[0],
               latitude: 37.563685889,
               longitude: 126.975584404,
-              bin_lat: 37.568677620456,
-              bin_lng: 126.977657083792,
+              // bin_lat: 37.568677620456,
+              // bin_lng: 126.977657083792,
             },
           };
 
