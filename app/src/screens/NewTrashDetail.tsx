@@ -57,6 +57,7 @@ export default function NewTrashDetail() {
     postImages();
   }, []);
 
+  // form 제출
   const handleSubmit = async () => {
     try {
       await api.post('api/bin/new', {
@@ -138,7 +139,14 @@ export default function NewTrashDetail() {
               placeholder="In front of a store (e.g. Olive Young) or 
           by the bus stop? More details will help fellow wanderers!"
             />
-            <AddPicture onPress={Camera}>
+            <AddPicture
+              onPressOut={Camera}
+              onPress={() => {
+                getImages();
+              }}
+              onLongPress={() => {
+                postImages();
+              }}>
               <AddImage source={require('assets/images/AddImage.png')} style={{alignItems: 'center'}} />
               <AddSub> Upload</AddSub>
               <Addb3> You can upload only one photo!</Addb3>
