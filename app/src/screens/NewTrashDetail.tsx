@@ -35,7 +35,7 @@ export default function NewTrashDetail() {
     }
   };
 
-  getImages();
+  // getImages();
 
   const datas = images[0].data.data;
   const headers = {
@@ -51,7 +51,7 @@ export default function NewTrashDetail() {
     }
   };
 
-  postImages();
+  // postImages();
 
   const handleSubmit = async () => {
     try {
