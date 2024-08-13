@@ -7,7 +7,6 @@ import {Typo} from 'constants/typo';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {useEffect, useRef, useState} from 'react';
 import api from 'api/api';
-import FeedbackList from './feedbackList/FeedbackList';
 
 export default function MyComment() {
   const CommentNavigator = useNavigation<NavigationProp<RootMyParamList>>();
@@ -55,15 +54,6 @@ export default function MyComment() {
       <Line />
     </ItemWrapper>
   );
-
-  // const handleDelete = async() =>{
-  //   try {
-  //     await api.delete(`/bin/feedback/${comm}`);
-  //     console.log('성공');
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // }
 
   return (
     <CommentWrapper>

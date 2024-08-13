@@ -38,8 +38,13 @@ interface Nickname {
 }
 
 interface NewTrashDetail {
-  presigned_url: string | undefined;
-  image_url: string | undefined;
+  code: number;
+  success: boolean;
+  msg: string;
+  data: {
+    presigned_url: string | undefined;
+    image_url: string | undefined;
+  };
 }
 
 interface Mycomment {
@@ -63,6 +68,10 @@ interface MyCommentResponse {
     next: string | null;
     feedback_list: Mycomment[];
   };
+}
+
+interface DeleteComment {
+  feedback_id: number;
 }
 
 interface Visit {
