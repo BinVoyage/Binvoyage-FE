@@ -48,6 +48,7 @@ interface BinDetail {
   fail_count: number;
   last_visit_dt: string;
   visit_list: Visit[];
+  distance: number;
 }
 
 interface BinDetailResponse {
@@ -70,3 +71,8 @@ interface BinItemProps {
   detail: string;
   visit_count: number;
 }
+
+type CurrentPosition = {
+  latitude: number;
+  longitude: number;
+};

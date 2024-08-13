@@ -10,6 +10,7 @@ import {Palette} from 'constants/palette';
 import {useEffect, useState} from 'react';
 import {ScrollView, Text, TouchableOpacity, View} from 'react-native';
 import * as S from 'screens/binDetail/BinDetail.style';
+import {useStore} from 'store/Store';
 import {formatDate} from 'utils/formatDate';
 
 type BinDetailProps = {
@@ -22,11 +23,13 @@ export default function BinDetail({route}: BinDetailProps) {
   const [binData, setBinData] = useState<BinDetail | null>(null);
   const [feedbackList, setFeedbackList] = useState<Feedback[]>([]);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const currentLocation = useStore(state => state.currentPosition);
 
   useEffect(() => {
     const getBinData = async () => {
       try {
-        const response = await api.get<BinDetailResponse>(`/bin/search/${bin_id}`);
+        // const response = await api.get<BinDetailResponse>(`/bin/search/${bin_id}`);
+        const response = await api.get<BinDetailResponse>(`/bin/search/${bin_id}?lat=${currentLocation?.latitude}&lng=${currentLocation?.longitude}`);
         setBinData(response.data.data);
       } catch (error: any) {
         console.log(error);
@@ -68,7 +71,7 @@ export default function BinDetail({route}: BinDetailProps) {
                 <S.Division />
                 <S.RowWrapper>
                   <FootPrintSvg width="24" height="24" fill={Palette.Gray4} />
-                  <S.TextInfo1>100m</S.TextInfo1>
+                  {binData?.distance ? <S.TextInfo1>{Math.round(binData.distance)}m</S.TextInfo1> : <S.TextInfo1>isLoading...</S.TextInfo1>}
                 </S.RowWrapper>
               </S.RowWrapper>
               <TouchableOpacity
