@@ -8,7 +8,7 @@ import ModalOpenMap from 'components/modalOpenMap/ModalOpenMap';
 import ReviewItem from 'components/reviewItem/ReviewItem';
 import {Palette} from 'constants/palette';
 import {useEffect, useState} from 'react';
-import {ScrollView, Text, TouchableOpacity, View, Linking, Platform, Alert} from 'react-native';
+import {ScrollView, Text, TouchableOpacity, View} from 'react-native';
 import * as S from 'screens/binDetail/BinDetail.style';
 import {formatDate} from 'utils/formatDate';
 
@@ -26,11 +26,10 @@ export default function BinDetail({route}: BinDetailProps) {
   useEffect(() => {
     const getBinData = async () => {
       try {
-        const response = await api.get<BinDetailResponse>(`/bin/${bin_id}`);
+        const response = await api.get<BinDetailResponse>(`/bin/search/${bin_id}`);
         setBinData(response.data.data);
-        console.log(response.data.msg);
-      } catch (error) {
-        console.error(error);
+      } catch (error: any) {
+        console.log(error);
       }
     };
 
@@ -38,9 +37,9 @@ export default function BinDetail({route}: BinDetailProps) {
       try {
         const response = await api.get<FeedbackResponse>(`/bin/feedback/${bin_id}`);
         setFeedbackList(response.data.data.feedback_list);
-        console.log(response.data.msg);
+        console.log('3.' + response.data.msg);
       } catch (error) {
-        console.error(error);
+        console.error('4.' + error);
       }
     };
 

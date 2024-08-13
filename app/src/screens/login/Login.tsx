@@ -29,7 +29,7 @@ export default function Login() {
       console.log(userInfo.idToken);
       const response = await api.post(`/login/oauth2?type=google&token=${userInfo.idToken}`);
 
-      if (response.status === 201) {
+      if (response.data.success) {
         navigation.navigate('UserInput');
       } else {
         Alert.alert('로그인 실패');

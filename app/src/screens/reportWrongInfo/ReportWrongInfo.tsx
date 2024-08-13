@@ -38,11 +38,14 @@ export default function ReportWrongInfo({route}: ReportWrongInfoProps) {
   };
 
   const handleSubmit = async () => {
-    const selectedReportTypes = reportTypes.filter((_, index) => selected[index]);
+    const selectedReportTypes = selected
+      .map((isSelected, index) => (isSelected ? index + 1 : null)) // 선택된 항목의 인덱스 + 1
+      .filter(index => index !== null) as number[]; // null을 제외하고 숫자 배열로 변환
     try {
       await api.post(`/bin/report/${bin_id}`, {
         report_type_list: selectedReportTypes,
       });
+      console.log(selectedReportTypes);
       Toast.show({
         type: 'success',
         text1: 'Thank you for letting us know!',
