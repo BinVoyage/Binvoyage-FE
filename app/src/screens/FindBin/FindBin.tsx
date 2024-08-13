@@ -16,6 +16,12 @@ import EmptyItem from 'components/binItem/EmptyItem';
 import Animated, {useAnimatedStyle, withTiming} from 'react-native-reanimated';
 import {NativeViewGestureHandler} from 'react-native-gesture-handler';
 import {useIsFocused} from '@react-navigation/native';
+import api from 'api/api';
+
+type CurrentPosition = {
+  latitude: number;
+  longitude: number;
+}
 
 export default function FindBin() {
   const webViewRef = useRef<WebView>(null);
@@ -26,6 +32,8 @@ export default function FindBin() {
   const [bottomSheetOffset, setBottomSheetOffset] = useState<number>(0); // BottomSheet의 높이 또는 offset 상태
   const [isSearchShow, setIsSearchShow] = useState<boolean>(false);
   const carouselRef = useRef(null);
+  const [data, setData] = useState<BinItemProps[]>([]);
+  const [currentPosition, setCurrentPosition] = useState<CurrentPosition | null>(null);
 
   const isFocused = useIsFocused();
 
@@ -55,12 +63,17 @@ export default function FindBin() {
           const message = {
             type: 'location',
             payload: {
-              latitude: coords.latitude,
-              longitude: coords.longitude,
-              // latitude: 37.563685889,
-              // longitude: 126.975584404,
+              // latitude: coords.latitude,
+              // longitude: coords.longitude,
+              latitude: 37.563685889,
+              longitude: 126.975584404,
             },
           };
+          if (currentPosition === null) {
+            /* 애뮬레이터 테스트용 */
+            // setCurrentPosition({latitude: coords.latitude, longitude: coords.longitude});
+            setCurrentPosition({latitude: 37.563685889, longitude: 126.975584404});
+          }
 
           console.log('Sending message:', JSON.stringify(message)); // 메시지 전송 확인
 
@@ -189,60 +202,86 @@ export default function FindBin() {
   const itemWidth = (width / 375) * 232;
   const itemSpacing = 16; // 슬라이드 간 간격 설정
 
-  const data: BinItemProps[] = [
-    {
-      bin_id: 1,
-      type_no: 1,
-      type_name: 'Trash',
-      location_type_no: 1,
-      location_type_name: 'Subway Entrance',
-      coordinate: [37.54397760413326, 127.12560598299282],
-      distance: 100,
-      visit_success_rate: 70,
-      address: '702, Olympic-ro, Gangdong-gu,  Seoul',
-      detail: 'Near the busstop',
-      visit_count: 3,
-    },
-    {
-      bin_id: 2,
-      type_no: 1,
-      type_name: 'Trash',
-      location_type_no: 1,
-      location_type_name: 'Subway Entrance',
-      coordinate: [37.5663174209601, 126.977829174031],
-      distance: 200,
-      visit_success_rate: 69,
-      address: '702, Olympic-ro, Gangdong-gu,  Seoul',
-      detail: 'Near the busstop',
-      visit_count: 3,
-    },
-    {
-      bin_id: 3,
-      type_no: 1,
-      type_name: 'Trash',
-      location_type_no: 1,
-      location_type_name: 'Subway Entrance',
-      coordinate: [37.5674198878673, 126.977873671097],
-      distance: 300,
-      visit_success_rate: 40,
-      address: '702, Olympic-ro, Gangdong-gu,  Seoul',
-      detail: 'Near the busstop',
-      visit_count: 3,
-    },
-    {
-      bin_id: 4,
-      type_no: 1,
-      type_name: 'Trash',
-      location_type_no: 1,
-      location_type_name: 'Subway Entrance',
-      coordinate: [37.5674198878673, 126.977873671097],
-      distance: 300,
-      visit_success_rate: 0,
-      address: '702, Olympic-ro, Gangdong-gu,  Seoul',
-      detail: 'Near the busstop',
-      visit_count: 0,
-    },
-  ];
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        const response = await api.get(`/bin/search?lat=${currentPosition?.latitude}&lon=${currentPosition?.longitude}&radius=2000&filter=0`);
+
+        if (response.status === 200) {
+          setData(response.data.data.bin_list);
+        } else {
+          console.log("실패 ㅜㅜ");
+        }
+        
+      } catch(error: any) {
+        console.log(error.response.data);
+      }
+    }
+
+    if (currentPosition) {
+      console.log("get data!!!");
+      getData();
+    }
+  }, [currentPosition])
+
+  useEffect(() => {
+    console.log(data.length);
+  },[data])
+
+  // const data: BinItemProps[] = [
+  //   {
+  //     bin_id: 1,
+  //     type_no: 1,
+  //     type_name: 'Trash',
+  //     location_type_no: 1,
+  //     location_type_name: 'Subway Entrance',
+  //     coordinate: [37.54397760413326, 127.12560598299282],
+  //     distance: 100,
+  //     visit_success_rate: 70,
+  //     address: '702, Olympic-ro, Gangdong-gu,  Seoul',
+  //     detail: 'Near the busstop',
+  //     visit_count: 3,
+  //   },
+  //   {
+  //     bin_id: 2,
+  //     type_no: 1,
+  //     type_name: 'Trash',
+  //     location_type_no: 1,
+  //     location_type_name: 'Subway Entrance',
+  //     coordinate: [37.5663174209601, 126.977829174031],
+  //     distance: 200,
+  //     visit_success_rate: 69,
+  //     address: '702, Olympic-ro, Gangdong-gu,  Seoul',
+  //     detail: 'Near the busstop',
+  //     visit_count: 3,
+  //   },
+  //   {
+  //     bin_id: 3,
+  //     type_no: 1,
+  //     type_name: 'Trash',
+  //     location_type_no: 1,
+  //     location_type_name: 'Subway Entrance',
+  //     coordinate: [37.5674198878673, 126.977873671097],
+  //     distance: 300,
+  //     visit_success_rate: 40,
+  //     address: '702, Olympic-ro, Gangdong-gu,  Seoul',
+  //     detail: 'Near the busstop',
+  //     visit_count: 3,
+  //   },
+  //   {
+  //     bin_id: 4,
+  //     type_no: 1,
+  //     type_name: 'Trash',
+  //     location_type_no: 1,
+  //     location_type_name: 'Subway Entrance',
+  //     coordinate: [37.5674198878673, 126.977873671097],
+  //     distance: 300,
+  //     visit_success_rate: 0,
+  //     address: '702, Olympic-ro, Gangdong-gu,  Seoul',
+  //     detail: 'Near the busstop',
+  //     visit_count: 0,
+  //   },
+  // ];
 
   return (
     <View style={styles.container}>
