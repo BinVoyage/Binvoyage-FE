@@ -126,24 +126,6 @@ export default function FindBin() {
       // WebView ref가 null일 때의 로그
       console.log('WebView reference is null, message not sent.');
     }
-    if (isWebViewLoaded) {
-      requestPermissionAndSendLocation(); // WebView가 로드된 후에 위치 권한 요청 및 위치 정보 전송을 시작
-    }
-
-    return () => {
-      if (watcherId !== null) {
-        Geolocation.clearWatch(watcherId); // 컴포넌트 언마운트 시 위치 감시 중지
-      }
-    };
-  }, [isWebViewLoaded]);
-
-  const refreshLocationWatching = () => {
-    // 기존의 위치 감시 중지
-    if (watcherId !== null) {
-      Geolocation.clearWatch(watcherId);
-    }
-    // 새로 위치 감시 시작
-    requestPermissionAndSendLocation();
   };
 
   const handleMessage = (e: WebViewMessageEvent) => {
@@ -324,21 +306,6 @@ export default function FindBin() {
         ) : (
           <EmptyItem />
         )}
-      <S.RefreshWrapper onPress={refreshLocationWatching}>
-        <Image source={require('assets/images/icon-refresh.png')} style={{width: 60, height: 60}} />
-      </S.RefreshWrapper>
-      <MyBottomSheet>
-        <Carousel
-          ref={carouselRef}
-          data={data}
-          renderItem={renderItem}
-          sliderWidth={width}
-          itemWidth={itemWidth + itemSpacing}
-          inactiveSlideScale={1}
-          inactiveSlideOpacity={1}
-          firstItem={0} // 첫번째 아이템이 슬라이더의 왼쪽에 위치하도록 설정
-          activeSlideAlignment="start" // 슬라이드가 왼쪽 정렬되도록 설정
-        />
       </MyBottomSheet>
     </View>
   );
