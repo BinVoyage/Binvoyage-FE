@@ -1,8 +1,11 @@
 {
   "compilerOptions": { 
-    "typeRoots": ["./node_modules/@types", "./src/types"]
-  },  
-  "include": ["src/**/*", "declarations.d.ts"],
+    "types": [
+      "kakao.maps.d.ts",
+    ]
+    
+},
+  "files": [],
   "references": [
     {
       "path": "./tsconfig.app.json"
