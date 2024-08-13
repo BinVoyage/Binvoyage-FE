@@ -6,18 +6,17 @@ import DefaultText from 'components/DefaultText';
 import {Typo} from 'constants/typo';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 import NewTrashLocation from 'assets/images/NewTrashLocation';
-import {useEffect, useState} from 'react';
+import {useEffect, useRef, useState} from 'react';
 import axios from 'axios';
 import api from 'api/api';
 import Toast from 'react-native-toast-message';
-import {usePermissions} from 'components/usePermission';
 import {useImage} from 'components/useImage';
 import {pictureStore} from 'store/Store';
 
 export default function NewTrashDetail() {
   const navigation2 = useNavigation<NavigationProp<RootHomeParamList>>();
-  const [urls, setUrl] = useState<any>('');
-  const [imageurl, setImageUrl] = useState<string>('');
+  const [urls, setUrl] = useState<any>({value: ''});
+  const [imageurls, setImageUrl] = useState({value: ''});
   const [isClick, setIsClick] = useState<boolean>(false);
   const [changeText, onChangeText] = useState('');
   const {Camera} = useImage();
@@ -32,12 +31,15 @@ export default function NewTrashDetail() {
       setImageUrl(url.data.data.image_url);
     } catch (error) {
       console.log(error);
+      console.log('이미지 실패');
     }
   };
 
-  // getImages();
+  useEffect(() => {
+    getImages();
+  }, [urls.value, imageurls.value]);
 
-  const datas = images[0].data.data;
+  const datas = images[0]?.data?.data;
   const headers = {
     'Content-Type': 'image/jpeg',
   };
@@ -51,11 +53,13 @@ export default function NewTrashDetail() {
     }
   };
 
-  // postImages();
+  useEffect(() => {
+    postImages();
+  }, []);
 
   const handleSubmit = async () => {
     try {
-      await api.post('/bin/new', {
+      await api.post('api/bin/new', {
         // data: {
         address: '10-3, Seongbuk-ro 8-gil, Seongbuk-gu',
         lat: 27.5,
@@ -63,7 +67,7 @@ export default function NewTrashDetail() {
         detail: 'near the olive young',
         type_no: 1,
         location_type_no: 1,
-        image: imageurl,
+        image: imageurls,
         // },
       });
       console.log('성공');
