@@ -23,15 +23,6 @@ export default function MyComment() {
     }
   };
 
-  // const handleDelete = async() =>{
-  //   try {
-  //     const delresponse = await api.delete<MyCommentResponse>(`/bin/feedback/${comment}`);
-  //     console.log('성공');
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // }
-
   useEffect(() => {
     CommentsData();
   }, []);
