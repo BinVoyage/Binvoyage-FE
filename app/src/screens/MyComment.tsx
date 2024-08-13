@@ -7,6 +7,7 @@ import {Typo} from 'constants/typo';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {useEffect, useRef, useState} from 'react';
 import api from 'api/api';
+import FeedbackList from './feedbackList/FeedbackList';
 
 export default function MyComment() {
   const CommentNavigator = useNavigation<NavigationProp<RootMyParamList>>();
@@ -16,11 +17,20 @@ export default function MyComment() {
     try {
       const response = await api.get<MyCommentResponse>('/user/feedback');
       setComment(response.data.data.feedback_list);
-      console.log(response.data.msg);
+      console.log(response.data.data.feedback_list);
     } catch (error) {
       console.error(error);
     }
   };
+
+  // const handleDelete = async() =>{
+  //   try {
+  //     const delresponse = await api.delete<MyCommentResponse>(`/bin/feedback/${comment}`);
+  //     console.log('성공');
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // }
 
   useEffect(() => {
     CommentsData();
@@ -55,6 +65,15 @@ export default function MyComment() {
     </ItemWrapper>
   );
 
+  // const handleDelete = async() =>{
+  //   try {
+  //     await api.delete(`/bin/feedback/${comm}`);
+  //     console.log('성공');
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // }
+
   return (
     <CommentWrapper>
       <BackDropBox onPress={() => CommentNavigator.navigate('MyPage')}>
@@ -64,6 +83,7 @@ export default function MyComment() {
         data={comment}
         showsVerticalScrollIndicator={false}
         keyExtractor={item => item.feedback_id.toString()}
+        onEndReachedThreshold={0.8}
         renderItem={({item}) => (
           <CommentItem
             bin_type_name={item.bin_type_name}
