@@ -60,3 +60,9 @@ type RootMyParamList = {
   MyComment: undefined;
   DeleteAccount: undefined;
 };
+
+type RootMyParamList = {
+  MyPage: undefined;
+  MyComment: undefined;
+  DeleteAccount: undefined;
+};

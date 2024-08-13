@@ -1,10 +1,11 @@
 import api from 'api/api';
+import {useState} from 'react';
 import ImagePicker from 'react-native-image-crop-picker';
 import {pictureStore} from 'store/Store';
 
 export const useImage = () => {
   const addImages = pictureStore(state => state.addImages);
-
+  const [urls, setUrl] = useState<any>();
   const Camera = async () => {
     try {
       const image = await ImagePicker.openCamera({
@@ -65,5 +66,17 @@ export const useImage = () => {
     }
   };
 
-  return {Camera, Album};
+  const getImages = async () => {
+    try {
+      const url = await api.get('/image-url');
+      console.log('이미지 성공', url.data.data);
+      setUrl(url.data.data.presigned_url);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  // getImages();
+
+  return {Camera, Album, getImages};
 };

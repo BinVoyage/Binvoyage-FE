@@ -5,10 +5,27 @@ import ArrowNextSvg from 'assets/images/ArrowNextSvg';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {Typo} from 'constants/typo';
 import api from 'api/api';
+import {useEffect, useState} from 'react';
 
 export default function MyPage() {
   const CommentNavigator = useNavigation<NavigationProp<RootMyParamList>>();
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  const [members, setMembers] = useState<Nickname>();
+  const getMemberData = async () => {
+    try {
+      const response = await api.get('/user');
+      setMembers(response.data.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    getMemberData();
+  }, []);
+
+  console.log(members?.feedback_cnt);
+
   const Logout = async () => {
     try {
       await api.delete('api/login/logout');
@@ -24,7 +41,7 @@ export default function MyPage() {
         <MyImage source={require('assets/images/Ticket.png')} style={{alignItems: 'center'}}>
           <SettingTopWrapper>
             <TopWrapper>
-              <NickName>Nickname</NickName>
+              <NickName>{members?.user_name}</NickName>
               <WriteImage source={require('assets/images/WriteProfile.png')} style={{alignItems: 'center'}} />
             </TopWrapper>
             <MiddleWrapper>
@@ -33,17 +50,17 @@ export default function MyPage() {
           </SettingTopWrapper>
           <UserGrid>
             <Usercolumn>
-              <ColumnContent>20</ColumnContent>
+              <ColumnContent>{members?.newly_found_cnt}</ColumnContent>
               <Sub>Newly found</Sub>
             </Usercolumn>
             <Sero />
             <Usercolumn>
-              <ColumnContent>11</ColumnContent>
+              <ColumnContent>{members?.report_cnt}</ColumnContent>
               <Sub>Reported</Sub>
             </Usercolumn>
             <Sero />
             <Usercolumn>
-              <ColumnContent>20</ColumnContent>
+              <ColumnContent>{members?.stamp_cnt}</ColumnContent>
               <Sub>Verified</Sub>
             </Usercolumn>
           </UserGrid>
@@ -58,7 +75,7 @@ export default function MyPage() {
         </FeedbackButton>
         <SettingWrapper>
           {/* cmc 웹 노션 테스트로 연결해봤는데 실제기기에서 잘나옴 - 구글로 바꿔놓음 */}
-          <SettingButton onPress={() => Linking.openURL(`https://www.notion.so/oneg1107/About-us-473ef656d31148ba87cf4d43ca2e2579`)}>
+          <SettingButton onPress={() => Linking.openURL(`https://binvoyage.notion.site/About-us-473ef656d31148ba87cf4d43ca2e2579?pvs=4`)}>
             <TextWrapper>
               <SettingTexts>
                 <OtherText>About</OtherText>
@@ -66,7 +83,7 @@ export default function MyPage() {
               <ArrowNextSvg width="24px" height="24px" fill="#BEC1C7" />
             </TextWrapper>
           </SettingButton>
-          <SettingButton onPress={() => Linking.openURL(`https://www.notion.so/oneg1107/Terms-of-service-49be66fa52b94ac9a5d937c0a2d341ba`)}>
+          <SettingButton onPress={() => Linking.openURL(`https://binvoyage.notion.site/Terms-of-service-49be66fa52b94ac9a5d937c0a2d341ba?pvs=4`)}>
             <TextWrapper>
               <SettingTexts2>
                 <OtherText>Terms of service</OtherText>
@@ -74,7 +91,7 @@ export default function MyPage() {
               <ArrowNextSvg width="24px" height="24px" fill="#BEC1C7" />
             </TextWrapper>
           </SettingButton>
-          <SettingButton onPress={() => Linking.openURL(`https://www.notion.so/oneg1107/Privacy-policy-43cb8c8cfe3941fabc84097c693f8c6f`)}>
+          <SettingButton onPress={() => Linking.openURL(`https://binvoyage.notion.site/Privacy-policy-43cb8c8cfe3941fabc84097c693f8c6f?pvs=4`)}>
             <TextWrapper>
               <SettingTexts3>
                 <OtherText>Privacy policy</OtherText>
@@ -82,7 +99,7 @@ export default function MyPage() {
               <ArrowNextSvg width="24px" height="24px" fill="#BEC1C7" />
             </TextWrapper>
           </SettingButton>
-          <SettingButton>
+          <SettingButton onPress={() => Linking.openURL(`https://forms.gle/qEAcgLHFw9x3GJ889`)}>
             <TextWrapper>
               <SettingTexts4>
                 <OtherText>Contact us</OtherText>

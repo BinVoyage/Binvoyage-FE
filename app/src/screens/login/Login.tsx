@@ -1,6 +1,6 @@
-import {GoogleSignin, User} from '@react-native-google-signin/google-signin';
+import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import * as S from 'screens/login/Login.style';
-import {useEffect, useState} from 'react';
+import {useEffect} from 'react';
 import {GOOGLE_WEB_CLIENT_ID} from '@env';
 import GoogleSvg from 'assets/images/GoogleSvg';
 import AppleSvg from 'assets/images/AppleSvg';
@@ -10,9 +10,9 @@ import {NavigationProp, useNavigation} from '@react-navigation/native';
 import Terms from 'components/terms/Terms';
 import api from 'api/api';
 import appleAuth from '@invertase/react-native-apple-authentication';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function Login() {
-  // const [userInfo, setUserInfo] = useState<User | null>(null);
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
   useEffect(() => {
@@ -20,26 +20,25 @@ export default function Login() {
       webClientId: GOOGLE_WEB_CLIENT_ID,
       offlineAccess: false,
     });
-  });
+  }, []);
 
   const handleGoogleLogin = async () => {
     try {
       await GoogleSignin.hasPlayServices();
       const userInfo = await GoogleSignin.signIn();
-      // Alert.alert(userInfo.idToken!);
-      // setUserInfo(userInfo);
-      const response = await api.post('/login/oauth2', {
-        login_type: 'google',
-        token: userInfo.idToken,
-      });
 
-      if (response.status === 200) {
-        navigation.navigate('UserInput');
-      } else {
-        Alert.alert('로그인 실패');
+      if (userInfo.idToken) {
+        const response = await api.post(`/login/oauth2?type=google&token=${userInfo.idToken}`);
+
+        if (response.data.success) {
+          await AsyncStorage.setItem('authToken', userInfo.idToken);
+          navigation.navigate('UserInput');
+        } else {
+          Alert.alert('로그인 실패');
+        }
       }
-    } catch (error) {
-      Alert.alert(`${error}`);
+    } catch (error: any) {
+      console.log(error.response.data);
     }
   };
 
@@ -53,12 +52,10 @@ export default function Login() {
 
       const {identityToken} = appleAuthRequestResponse;
       if (identityToken) {
-        const response = await api.post('/login/oauth2', {
-          login_type: 'apple',
-          token: identityToken,
-        });
+        const response = await api.post(`/login/oauth2?type=apple&token=${identityToken}`);
 
-        if (response.status === 200) {
+        if (response.data.success) {
+          await AsyncStorage.setItem('authToken', identityToken);
           navigation.navigate('UserInput');
         } else {
           Alert.alert('로그인 실패');
