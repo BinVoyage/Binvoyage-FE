@@ -1,5 +1,5 @@
 import {Palette} from 'constants/palette';
-import {Image, Text, View, ScrollView} from 'react-native';
+import {Image, Text, View, ScrollView, Dimensions} from 'react-native';
 import styled from 'styled-components/native';
 import CloseSvg from 'assets/images/CloseSvg';
 import DefaultText from 'components/DefaultText';
@@ -16,25 +16,56 @@ import {pictureStore} from 'store/Store';
 
 export default function NewTrashDetail() {
   const navigation2 = useNavigation<NavigationProp<RootHomeParamList>>();
-
+  const [urls, setUrl] = useState<any>('');
+  const [imageurl, setImageUrl] = useState<string>('');
   const [isClick, setIsClick] = useState<boolean>(false);
   const [changeText, onChangeText] = useState('');
   const {Camera} = useImage();
   const {images} = pictureStore();
-  // console.log('image_path', images[0].path, typeof images[0].path); //이미지 경로 (타입 string 확인)
+
+  // 이미지 보내기
+  const getImages = async () => {
+    try {
+      const url = await api.get('api/image-url');
+      console.log('이미지 성공', url.data.data);
+      setUrl(url.data.data.presigned_url);
+      setImageUrl(url.data.data.image_url);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  getImages();
+
+  const datas = images[0].data.data;
+  const headers = {
+    'Content-Type': 'image/jpeg',
+  };
+  const postImages = async () => {
+    try {
+      await api.put(urls, datas, {headers: headers});
+      console.log('이미지 첨부 성공!!!!');
+    } catch (error) {
+      console.log(error);
+      console.log('이미지 첨부 실패!!!!!');
+    }
+  };
+
+  postImages();
+
   const handleSubmit = async () => {
     try {
-      await api.post('/bin/new', {
-        data: {
-          address: 'Seoul Gongduck',
-          lat: 27.5,
-          log: 33.34345,
-          type_no: 1,
-          location_type_no: 1,
-          image: images[0].path,
-        },
+      await api.post('api/bin/new', {
+        // data: {
+        address: '10-3, Seongbuk-ro 8-gil, Seongbuk-gu',
+        lat: 27.5,
+        log: 126.8321,
+        detail: 'near the olive young',
+        type_no: 1,
+        location_type_no: 1,
+        image: imageurl,
+        // },
       });
-
       console.log('성공');
       navigation2.navigate('Home');
     } catch (error) {
@@ -118,6 +149,9 @@ export default function NewTrashDetail() {
   );
 }
 
+const screenWidth = Dimensions.get('window').width;
+const width = screenWidth - 32;
+
 const Wrapper = styled.View`
   width: 100%;
   height: 800px;
@@ -156,10 +190,10 @@ const HeadLocationWrapper = styled.View`
 const HeadTitle = styled.View`
   width: 100%;
   align-items: left;
-  padding-top: 12px;
-  padding-right: 94px;
-  padding-left: 16px;
-  padding-bottom: 10px;
+  padding-top: 12;
+  padding-right: 94;
+  padding-left: 16;
+  padding-bottom: 10;
 `;
 
 const HeadTitleText = styled(DefaultText)`

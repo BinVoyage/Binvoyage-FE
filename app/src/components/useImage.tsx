@@ -1,3 +1,4 @@
+import api from 'api/api';
 import ImagePicker from 'react-native-image-crop-picker';
 import {pictureStore} from 'store/Store';
 
@@ -10,14 +11,23 @@ export const useImage = () => {
         width: 300,
         height: 300,
         cropping: true,
+        includeBase64: true,
       });
       console.log('camera', image);
       if (image) {
         addImages({
+          data: image,
           path: image.path,
           modificationDate: image.modificationDate!,
         });
       }
+      // if (image) {
+      //   addImages({
+      //     path: image.path,
+      //     modificationDate: image.modificationDate!,
+      //     data: image.sourceURL!,
+      //   });
+      // }
     } catch (err) {
       console.log(err);
     }
@@ -43,6 +53,7 @@ export const useImage = () => {
             addImages({
               path: cropped.path,
               modificationDate: cropped.modificationDate!,
+              data: image.filename!,
             });
           }
         } catch (cropError) {

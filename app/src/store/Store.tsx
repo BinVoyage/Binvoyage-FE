@@ -15,8 +15,12 @@ export const mapStore = create<userStore>(set => ({
 }));
 
 type Image = {
-  path: string;
-  modificationDate: string;
+  path?: string;
+  modificationDate?: string;
+  data?: string | number | undefined | any;
+  base64?: any;
+  image?: any;
+  mime?: string | undefined;
 };
 
 type Picturestore = {

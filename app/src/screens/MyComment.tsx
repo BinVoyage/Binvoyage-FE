@@ -5,6 +5,7 @@ import ArrowPrevSvg from 'assets/images/ArrowPrevSvg';
 import BinSvg from 'assets/images/BinSvg';
 import {Typo} from 'constants/typo';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
+import {ScrollView} from 'react-native-gesture-handler';
 
 export default function MyComment() {
   const CommentNavigator = useNavigation<NavigationProp<RootMyParamList>>();
@@ -68,7 +69,7 @@ export default function MyComment() {
 
   const Item = ({feedback_id, registration_dt, change_dt, content, bin_id, bin_address, bin_type_name}: ItemProps) => (
     <ItemWrapper>
-      <ItemTopWrapper>
+      {/* <ItemTopWrapper>
         <MyImage source={require('assets/images/s_bin.png')} style={{alignItems: 'center'}} />
         <Text>{bin_type_name}</Text>
         <ItemName>
@@ -81,7 +82,11 @@ export default function MyComment() {
       </ItemTopWrapper>
       <AddressText>{bin_address}</AddressText>
       <ContentText>{content}</ContentText>
-      <Line />
+      <Line /> */}
+      <Text>{feedback_id}</Text>
+      <Text> {registration_dt} </Text>
+      <Text>{content}</Text>
+      <Text>{bin_address}</Text>
     </ItemWrapper>
   );
 

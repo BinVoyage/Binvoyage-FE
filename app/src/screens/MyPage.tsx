@@ -58,7 +58,7 @@ export default function MyPage() {
         </FeedbackButton>
         <SettingWrapper>
           {/* cmc 웹 노션 테스트로 연결해봤는데 실제기기에서 잘나옴 - 구글로 바꿔놓음 */}
-          <SettingButton onPress={() => Linking.openURL(`https://google.com`)}>
+          <SettingButton onPress={() => Linking.openURL(`https://www.notion.so/oneg1107/About-us-473ef656d31148ba87cf4d43ca2e2579`)}>
             <TextWrapper>
               <SettingTexts>
                 <OtherText>About</OtherText>
@@ -66,7 +66,7 @@ export default function MyPage() {
               <ArrowNextSvg width="24px" height="24px" fill="#BEC1C7" />
             </TextWrapper>
           </SettingButton>
-          <SettingButton>
+          <SettingButton onPress={() => Linking.openURL(`https://www.notion.so/oneg1107/Terms-of-service-49be66fa52b94ac9a5d937c0a2d341ba`)}>
             <TextWrapper>
               <SettingTexts2>
                 <OtherText>Terms of service</OtherText>
@@ -74,7 +74,7 @@ export default function MyPage() {
               <ArrowNextSvg width="24px" height="24px" fill="#BEC1C7" />
             </TextWrapper>
           </SettingButton>
-          <SettingButton>
+          <SettingButton onPress={() => Linking.openURL(`https://www.notion.so/oneg1107/Privacy-policy-43cb8c8cfe3941fabc84097c693f8c6f`)}>
             <TextWrapper>
               <SettingTexts3>
                 <OtherText>Privacy policy</OtherText>

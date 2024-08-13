@@ -22,6 +22,7 @@ type RootHomeParamList = {
   NewTrash: undefined;
   NewTrashDetail: undefined;
   tabBarStyle?: undefined;
+  OnBoarding: undefined;
 };
 
 type RootBinDetailParamList = {
