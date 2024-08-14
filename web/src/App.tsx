@@ -17,7 +17,7 @@ type VerifyLocation = {
 };
 
 function App() {
-  const [isLocationSet, setIsLocationSet] = useState<boolean>(false);
+  const [_, setIsLocationSet] = useState<boolean>(false);
   const [currentLocation, setCurrentLocation] = useState<CurrentLocation | null>({latitude:37.563685889,longitude:126.975584404});
   const { setFilterMode } = mapStore();
   const [triggerSearch, setTriggerSearch] = useState<number>(0);

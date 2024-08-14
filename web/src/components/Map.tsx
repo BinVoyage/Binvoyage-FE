@@ -2,7 +2,6 @@ import { MutableRefObject, useEffect, useRef, useState } from "react";
 import { mapStore } from "../store/Store";
 import debounce from "lodash.debounce";
 import { BinInfo } from "../types/types";
-import axios from "axios";
 import api from "../api/api";
 
 type CurrentLocation = {
@@ -50,7 +49,8 @@ const Map = ({ latitude, longitude, triggerSearch, triggerRefresh }: CurrentLoca
     myMarker.setMap(map);
     setCurrentMarker(myMarker); 
     
-    fetchBinData(latitude, longitude); // 지도 초기화 시 데이터 가져오기
+    // fetchBinData(latitude, longitude);
+    fetchBinData(); // 지도 초기화 시 데이터 가져오기
 
     // 중심 좌표 변경 이벤트 리스너 추가
     window.kakao.maps.event.addListener(map, 'center_changed', debounce(handleCenterChanged, 500));
@@ -68,7 +68,7 @@ const Map = ({ latitude, longitude, triggerSearch, triggerRefresh }: CurrentLoca
   };
 
    // API를 통해 실제 데이터를 가져오는 함수
-   const fetchBinData = async (lat: number, lng: number) => {
+   const fetchBinData = async () => {
     try {
       const response = await api.get(`/bin/search?lat=37.563685889&lng=126.975584404&radius=1000&filter=0`);
 
