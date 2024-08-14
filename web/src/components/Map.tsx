@@ -56,13 +56,13 @@ const Map = ({ latitude, longitude, triggerSearch, triggerRefresh }: CurrentLoca
     window.kakao.maps.event.addListener(map, 'center_changed', debounce(handleCenterChanged, 500));
 
     // 사용자가 확대/축소할 때 최대 레벨을 제한하는 이벤트 리스너 추가
-    window.kakao.maps.event.addListener(map, 'zoom_changed', function() {
-      const currentLevel = map.getLevel();
-      if (currentLevel > 7) { // 최대 레벨을 7로 제한
-        map.setLevel(7); // 다시 레벨 7로 되돌림
-      }
-      map.setCenter(currentPosition); // 현재 위치를 중심으로 설정
-    });
+    // window.kakao.maps.event.addListener(map, 'zoom_changed', function() {
+    //   const currentLevel = map.getLevel();
+    //   if (currentLevel > 7) { // 최대 레벨을 7로 제한
+    //     map.setLevel(7); // 다시 레벨 7로 되돌림
+    //   }
+    //   map.setCenter(currentPosition); // 현재 위치를 중심으로 설정
+    // });
 
     // 맵 클릭 이벤트 리스너 추가
     window.kakao.maps.event.addListener(map, 'click', function() {
@@ -77,8 +77,6 @@ const Map = ({ latitude, longitude, triggerSearch, triggerRefresh }: CurrentLoca
 
    // API를 통해 실제 데이터를 가져오는 함수
    const fetchBinData = async (lat: number, lng: number) => {
-    let message = "fetchBinData: " + lat + lng;
-    alert(message);
     try {
       const response = await api.get(`/bin/search?lat=${lat}&lng=${lng}&radius=1000&filter=0`);
   
