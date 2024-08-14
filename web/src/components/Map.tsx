@@ -80,10 +80,13 @@ const Map = ({ latitude, longitude, triggerSearch, triggerRefresh }: CurrentLoca
         console.log(response.data);
       }
       
-    } catch (error) {
-      console.error('Failed to fetch bin data:', error);
-    }
-  };
+    } catch (error: any) {
+        console.log('Failed to fetch bin data:', error.message);
+        if (error.response) {
+          console.log('Error response data:', error.response.data);
+        }
+      }
+    };
 
   const initMarkers = (binList: BinInfo[]) => {
     markersRef.current = []; // 이전 마커 초기화
