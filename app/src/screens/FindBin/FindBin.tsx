@@ -149,6 +149,8 @@ export default function FindBin() {
       } else if (data.type === 'markerClick') {
         console.log('click: ', data.payload.bin_id);
         setSelectedMarker(data.payload.bin_id);
+      } else if (data.type === 'mapClick') {
+        setSelectedMarker(null);
       }
     } catch (err) {
       console.log(err);

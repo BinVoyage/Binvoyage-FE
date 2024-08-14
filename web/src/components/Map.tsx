@@ -64,6 +64,14 @@ const Map = ({ latitude, longitude, triggerSearch, triggerRefresh }: CurrentLoca
       map.setCenter(currentPosition); // 현재 위치를 중심으로 설정
     });
 
+    // 맵 클릭 이벤트 리스너 추가
+    window.kakao.maps.event.addListener(map, 'click', function() {
+      const message = {
+        type: 'mapClick',
+      };
+      window.ReactNativeWebView?.postMessage(JSON.stringify(message));
+    });
+
     setIsMapLoaded(true);
   };
 
