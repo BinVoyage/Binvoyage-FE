@@ -77,7 +77,8 @@ const Map = ({ latitude, longitude, triggerSearch, triggerRefresh }: CurrentLoca
 
    // API를 통해 실제 데이터를 가져오는 함수
    const fetchBinData = async (lat: number, lng: number) => {
-    console.log("fetchBinData: " + lat, lng);
+    let message = "fetchBinData: " + lat + lng;
+    alert(message);
     try {
       const response = await api.get(`/bin/search?lat=${lat}&lng=${lng}&radius=1000&filter=0`);
   
