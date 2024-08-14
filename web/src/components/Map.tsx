@@ -73,8 +73,8 @@ const Map = ({ latitude, longitude, triggerSearch, triggerRefresh }: CurrentLoca
       const response = await api.get(`/bin/search?lat=37.563685889&lng=126.975584404&radius=1000&filter=0`);
 
       if (response.data.success) {
-        setData(response.data.data);
-        initMarkers(response.data.data);
+        setData(response.data.data.bin_list);
+        initMarkers(response.data.data.bin_list);
         filterMarkers(filterMode);
       } else {
         console.log(response.data);
