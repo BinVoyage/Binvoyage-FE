@@ -75,7 +75,7 @@ const Map = ({ latitude, longitude, triggerSearch, triggerRefresh }: CurrentLoca
       if (response.data.success) {
         setData(response.data.data.bin_list);
         initMarkers(response.data.data.bin_list);
-        filterMarkers(filterMode);
+        // filterMarkers(filterMode);
       } else {
         console.log(response.data);
       }
@@ -88,39 +88,47 @@ const Map = ({ latitude, longitude, triggerSearch, triggerRefresh }: CurrentLoca
       }
     };
 
-  const initMarkers = (binList: BinInfo[]) => {
-    markersRef.current = []; // 이전 마커 초기화
-
-    binList.forEach(bin => {
-      const binLocation = new window.kakao.maps.LatLng(bin.coordinate[0], bin.coordinate[1]);
-      const markerImageSrc = bin.type_no === 1 ? "image/trashmark.svg" : "image/recyclemark.svg";
-
-      const marker = new window.kakao.maps.Marker({
-        position: binLocation,
-        image: new window.kakao.maps.MarkerImage(markerImageSrc, new window.kakao.maps.Size(30, 30)),
-        map: null, // 처음에는 표시하지 않음
-      });
-
-      // 마커에 클릭 이벤트 추가
-      window.kakao.maps.event.addListener(marker, 'click', () => {
-        // React Native로 메시지 보내기
-        const message = {
-          type: 'markerClick',
-          payload: {
-            bin_id: bin.bin_id
-          }
-        };
-        window.ReactNativeWebView?.postMessage(JSON.stringify(message));
-      });
-
-      markersRef.current.push({
-        marker: marker,
-        type_no: bin.type_no,
-        map: mapRef.current!,
-        distance: calculateDistance(binLocation),
-      });
-    });
-  };
+    const initMarkers = (binList: BinInfo[]) => {
+      // 마커 초기화
+      markersRef.current = [];
+    
+      if (mapRef.current) {
+        binList.forEach(bin => {
+          const binLocation = new window.kakao.maps.LatLng(bin.coordinate[0], bin.coordinate[1]);
+          const markerImageSrc = bin.type_no === 1 ? "image/trashmark.svg" : "image/recyclemark.svg";
+    
+          const marker = new window.kakao.maps.Marker({
+            position: binLocation,
+            image: new window.kakao.maps.MarkerImage(markerImageSrc, new window.kakao.maps.Size(30, 30)),
+            map: mapRef.current, // 초기 맵에 마커 표시
+          });
+    
+          // 마커에 클릭 이벤트 추가
+          window.kakao.maps.event.addListener(marker, 'click', () => {
+            const message = {
+              type: 'markerClick',
+              payload: {
+                bin_id: bin.bin_id
+              }
+            };
+            window.ReactNativeWebView?.postMessage(JSON.stringify(message));
+          });
+    
+          markersRef.current.push({
+            marker: marker,
+            type_no: bin.type_no,
+            map: mapRef.current!,
+            distance: calculateDistance(binLocation),
+          });
+        });
+    
+        // 마커 필터링
+        filterMarkers(filterMode);
+      } else {
+        console.error("Map object is not initialized.");
+      }
+    };
+    
 
   const calculateDistance = (binLocation: any) => {
     const currentPosition = new window.kakao.maps.LatLng(latitude, longitude);
