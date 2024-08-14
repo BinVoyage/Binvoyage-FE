@@ -32,6 +32,7 @@ export default function FindBin() {
   const [data, setData] = useState<BinItemProps[]>([]);
   const {currentPosition, setCurrentPosition} = mapStore();
   const [binBottomSheetOpen, setBinBottomSheetOpen] = useState<boolean>(false);
+  const [selectedMarker, setSelectedMarker] = useState<number | null>(null);
 
   const isFocused = useIsFocused();
 
@@ -146,6 +147,8 @@ export default function FindBin() {
         setCurrentAddress(data.payload.address);
       } else if (data.type === 'centerMoved') {
         setIsSearchShow(true);
+      } else if (data.type === 'markerClick') {
+        setSelectedMarker(data.payload.bin_id);
       }
     } catch (err) {
       console.log(err);
@@ -270,27 +273,29 @@ export default function FindBin() {
         </S.BtnSearchThisArea>
       </Animated.View>
 
-      {binBottomSheetOpen ? null : <MyBottomSheet onSheetChange={setBottomSheetOffset}>
-        {data.length ? (
-          <NativeViewGestureHandler disallowInterruption={true}>
-            <Carousel
-              ref={carouselRef}
-              data={data}
-              renderItem={renderItem}
-              sliderWidth={width}
-              itemWidth={itemWidth + itemSpacing}
-              inactiveSlideScale={1}
-              inactiveSlideOpacity={1}
-              firstItem={0} // 첫번째 아이템이 슬라이더의 왼쪽에 위치하도록 설정
-              activeSlideAlignment="start" // 슬라이드가 왼쪽 정렬되도록 설정
-            />
-          </NativeViewGestureHandler>
-        ) : (
-          <EmptyItem />
-        )}
-      </MyBottomSheet>}
+      {binBottomSheetOpen ? null : (
+        <MyBottomSheet onSheetChange={setBottomSheetOffset}>
+          {data.length ? (
+            <NativeViewGestureHandler disallowInterruption={true}>
+              <Carousel
+                ref={carouselRef}
+                data={data}
+                renderItem={renderItem}
+                sliderWidth={width}
+                itemWidth={itemWidth + itemSpacing}
+                inactiveSlideScale={1}
+                inactiveSlideOpacity={1}
+                firstItem={0} // 첫번째 아이템이 슬라이더의 왼쪽에 위치하도록 설정
+                activeSlideAlignment="start" // 슬라이드가 왼쪽 정렬되도록 설정
+              />
+            </NativeViewGestureHandler>
+          ) : (
+            <EmptyItem />
+          )}
+        </MyBottomSheet>
+      )}
 
-      {data && <BinBottomSheet bin_id={236} isOpen={binBottomSheetOpen} onSheetChange={setBottomSheetOffset}/>}
+      {data && selectedMarker && <BinBottomSheet bin_id={selectedMarker} isOpen={binBottomSheetOpen} onSheetChange={setBottomSheetOffset} />}
     </View>
   );
 }
