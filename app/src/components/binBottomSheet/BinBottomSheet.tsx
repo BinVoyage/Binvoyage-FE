@@ -13,15 +13,15 @@ import {NavigationProp, useNavigation} from '@react-navigation/native';
 
 interface Props {
   bin_id: number;
-  isOpen: boolean;
+  // isOpen: boolean;
   onSheetChange: (offset: number) => void;
 }
 
-export default function BinBottomSheet({bin_id, isOpen, onSheetChange}: Props) {
+export default function BinBottomSheet({bin_id, onSheetChange}: Props) {
   const height = Dimensions.get('window').height;
   const bottomSheetRef = useRef<BottomSheet>(null);
-  const bottomSheetHeight = Math.round(137 / 689 * height); 
-  const bottomSheetHeightWithImg = Math.round(269 / 689 * height); 
+  const bottomSheetHeight = Math.round((137 / 689) * height);
+  const bottomSheetHeightWithImg = Math.round((269 / 689) * height);
   const snapPointsWithImg = useMemo(() => [bottomSheetHeightWithImg, bottomSheetHeightWithImg], []);
   const snapPoints = useMemo(() => [bottomSheetHeight, bottomSheetHeight], []);
   const [binData, setBinData] = useState<BinDetail | null>(null);
@@ -36,12 +36,12 @@ export default function BinBottomSheet({bin_id, isOpen, onSheetChange}: Props) {
   // };
 
   useEffect(() => {
-    if (isOpen) {
+    if (bin_id) {
       bottomSheetRef.current?.snapToIndex(0);
       return;
     }
     bottomSheetRef.current?.close();
-  }, [isOpen])
+  }, [bin_id]);
 
   useEffect(() => {
     const getBinData = async () => {
@@ -58,73 +58,73 @@ export default function BinBottomSheet({bin_id, isOpen, onSheetChange}: Props) {
     };
 
     getBinData();
-  }, []);
+  }, [bin_id]);
 
   return (
-      <BottomSheet
-        ref={bottomSheetRef}
-        index={isOpen ? 0 : -1}
-        snapPoints={hasImg ? snapPointsWithImg : snapPoints}
-        backgroundStyle={styles.container}
-        // onChange={handleSheetChanges}
-        // backdropComponent={renderBackdrop}
-        handleIndicatorStyle={{display: 'none'}}
-        enableHandlePanningGesture={false}
-        enableOverDrag={false}
-        enablePanDownToClose={false}>
-        <BottomSheetView style={styles.wrapper}>
-          <S.RowWrapper style={{justifyContent: 'space-between'}}>
-            <S.TopLabel>
-              <S.TopLabelText>Most users found this bin!</S.TopLabelText>
-            </S.TopLabel>
-            <S.ArrowUpWrapper
-              onPress={() => {
-                console.log(bin_id);
-                navigation.navigate('BinDetailNavigator', {
-                  screen: 'BinDetail',
-                  params: {bin_id},
-                });
-              }}>
-              <ArrowUpBtnSvg width="32" height="32" />
-            </S.ArrowUpWrapper>
-          </S.RowWrapper>
-          {isLoading ? <S.Title>isLoading...</S.Title> : <S.Title>{binData?.address}</S.Title>}
-          <S.RowWrapper style={{justifyContent: 'space-between'}}>
+    <BottomSheet
+      ref={bottomSheetRef}
+      index={bin_id ? 0 : -1}
+      snapPoints={hasImg ? snapPointsWithImg : snapPoints}
+      backgroundStyle={styles.container}
+      // onChange={handleSheetChanges}
+      // backdropComponent={renderBackdrop}
+      handleIndicatorStyle={{display: 'none'}}
+      enableHandlePanningGesture={false}
+      enableOverDrag={false}
+      enablePanDownToClose={false}>
+      <BottomSheetView style={styles.wrapper}>
+        <S.RowWrapper style={{justifyContent: 'space-between'}}>
+          <S.TopLabel>
+            <S.TopLabelText>Most users found this bin!</S.TopLabelText>
+          </S.TopLabel>
+          <S.ArrowUpWrapper
+            onPress={() => {
+              console.log(bin_id);
+              navigation.navigate('BinDetailNavigator', {
+                screen: 'BinDetail',
+                params: {bin_id},
+              });
+            }}>
+            <ArrowUpBtnSvg width="32" height="32" />
+          </S.ArrowUpWrapper>
+        </S.RowWrapper>
+        {isLoading ? <S.Title>isLoading...</S.Title> : <S.Title>{binData?.address}</S.Title>}
+        <S.RowWrapper style={{justifyContent: 'space-between'}}>
+          <S.RowWrapper>
             <S.RowWrapper>
-              <S.RowWrapper>
-                <BinSvg width="18" height="18" fill={Palette.Gray4} />
-                {isLoading ? <S.TextInfo1>isLoading...</S.TextInfo1> : <S.TextInfo1>{binData?.type_name}</S.TextInfo1>}
-              </S.RowWrapper>
-              <S.Division />
-              <S.RowWrapper>
-                <FootPrintSvg width="24" height="24" fill={Palette.Gray4} />
-                {isLoading ? <S.TextInfo1>isLoading...</S.TextInfo1> : <S.TextInfo1>{Math.round(binData!.distance)}m</S.TextInfo1> }
-              </S.RowWrapper>
+              <BinSvg width="18" height="18" fill={Palette.Gray4} />
+              {isLoading ? <S.TextInfo1>isLoading...</S.TextInfo1> : <S.TextInfo1>{binData?.type_name}</S.TextInfo1>}
             </S.RowWrapper>
-            <TouchableOpacity
-              onPress={() =>
-                navigation.navigate('BinDetailNavigator', {
-                  screen: 'ReportWrongInfo', 
-                  params: {
-                    bin_id: binData?.bin_id ?? -1,
-                    type_name: binData?.type_name ?? '',
-                    location_type_name: binData?.location_type_name ?? '',
-                    address: binData?.address ?? '',
-                    detail: binData?.detail ?? '',
-                    image: binData?.image ?? '',
-                    isVerifyVisit: false,
-                  }
-                })
-              }>
-              <S.RowWrapper>
-                <S.TextWrongInfo>Wrong Info?</S.TextWrongInfo>
-                <ArrowNextSvg width="14" height="14" fill={Palette.Primary} />
-              </S.RowWrapper>
-            </TouchableOpacity>
+            <S.Division />
+            <S.RowWrapper>
+              <FootPrintSvg width="24" height="24" fill={Palette.Gray4} />
+              {isLoading ? <S.TextInfo1>isLoading...</S.TextInfo1> : <S.TextInfo1>{Math.round(binData!.distance)}m</S.TextInfo1>}
+            </S.RowWrapper>
           </S.RowWrapper>
-          {!isLoading && hasImg ? <S.ImageArea /> : null}
-        </BottomSheetView>
-      </BottomSheet>
+          <TouchableOpacity
+            onPress={() =>
+              navigation.navigate('BinDetailNavigator', {
+                screen: 'ReportWrongInfo',
+                params: {
+                  bin_id: binData?.bin_id ?? -1,
+                  type_name: binData?.type_name ?? '',
+                  location_type_name: binData?.location_type_name ?? '',
+                  address: binData?.address ?? '',
+                  detail: binData?.detail ?? '',
+                  image: binData?.image ?? '',
+                  isVerifyVisit: false,
+                },
+              })
+            }>
+            <S.RowWrapper>
+              <S.TextWrongInfo>Wrong Info?</S.TextWrongInfo>
+              <ArrowNextSvg width="14" height="14" fill={Palette.Primary} />
+            </S.RowWrapper>
+          </TouchableOpacity>
+        </S.RowWrapper>
+        {!isLoading && hasImg ? <S.ImageArea /> : null}
+      </BottomSheetView>
+    </BottomSheet>
   );
 }
 
@@ -145,9 +145,9 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 16,
     paddingVertical: 10,
-    zIndex:3
+    zIndex: 3,
   },
   bottomSheetBackground: {
-    backgroundColor: 'transparent'
+    backgroundColor: 'transparent',
   },
 });

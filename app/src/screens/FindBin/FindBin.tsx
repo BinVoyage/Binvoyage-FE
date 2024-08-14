@@ -31,7 +31,6 @@ export default function FindBin() {
   const carouselRef = useRef(null);
   const [data, setData] = useState<BinItemProps[]>([]);
   const {currentPosition, setCurrentPosition} = mapStore();
-  const [binBottomSheetOpen, setBinBottomSheetOpen] = useState<boolean>(false);
   const [selectedMarker, setSelectedMarker] = useState<number | null>(null);
 
   const isFocused = useIsFocused();
@@ -148,6 +147,7 @@ export default function FindBin() {
       } else if (data.type === 'centerMoved') {
         setIsSearchShow(true);
       } else if (data.type === 'markerClick') {
+        console.log('click: ', data.payload.bin_id);
         setSelectedMarker(data.payload.bin_id);
       }
     } catch (err) {
@@ -273,7 +273,7 @@ export default function FindBin() {
         </S.BtnSearchThisArea>
       </Animated.View>
 
-      {binBottomSheetOpen ? null : (
+      {selectedMarker ? null : (
         <MyBottomSheet onSheetChange={setBottomSheetOffset}>
           {data.length ? (
             <NativeViewGestureHandler disallowInterruption={true}>
@@ -295,7 +295,7 @@ export default function FindBin() {
         </MyBottomSheet>
       )}
 
-      {data && selectedMarker && <BinBottomSheet bin_id={selectedMarker} isOpen={binBottomSheetOpen} onSheetChange={setBottomSheetOffset} />}
+      {selectedMarker && <BinBottomSheet bin_id={selectedMarker} onSheetChange={setBottomSheetOffset} />}
     </View>
   );
 }

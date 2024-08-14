@@ -166,7 +166,7 @@ export default function BinDetail({route}: BinDetailProps) {
                 address: binData?.address ?? '',
                 detail: binData?.detail ?? '',
                 image: binData?.image ?? '',
-                coordinate: binData?.coordinate ?? [0, 0],
+                coordinate: binData?.coordinate!,
               })
             }>
             <S.ButtonText>Verify visit</S.ButtonText>
@@ -176,7 +176,7 @@ export default function BinDetail({route}: BinDetailProps) {
           </S.Button>
         </S.BtnContainer>
       </S.Container>
-      {isModalOpen ? <ModalOpenMap setIsModalOpen={setIsModalOpen} coords={binData?.coordinate} /> : null}
+      {isModalOpen ? <ModalOpenMap setIsModalOpen={setIsModalOpen} label={binData?.address ?? 'Destination'} coords={binData?.coordinate} /> : null}
     </>
   );
 }
