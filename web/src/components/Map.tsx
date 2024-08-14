@@ -3,6 +3,7 @@ import { mapStore } from "../store/Store";
 import debounce from "lodash.debounce";
 import { BinInfo } from "../types/types";
 import axios from "axios";
+import api from "../api/api";
 
 type CurrentLocation = {
   latitude: number;
@@ -69,14 +70,14 @@ const Map = ({ latitude, longitude, triggerSearch, triggerRefresh }: CurrentLoca
    // API를 통해 실제 데이터를 가져오는 함수
    const fetchBinData = async (lat: number, lng: number) => {
     try {
-      const response = await axios.get(`/bin/search?lat=${lat}&lng=${lng}&radius=2000&filter=0`);
+      const response = await api.get(`/bin/search?lat=37.563685889&lng=126.975584404&radius=1000&filter=0`);
 
       if (response.data.success) {
         setData(response.data.data);
         initMarkers(response.data.data);
         filterMarkers(filterMode);
       } else {
-        console.log('실패 ㅜㅜ');
+        console.log(response.data);
       }
       
     } catch (error) {

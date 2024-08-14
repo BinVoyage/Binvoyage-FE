@@ -18,7 +18,7 @@ type VerifyLocation = {
 
 function App() {
   const [isLocationSet, setIsLocationSet] = useState<boolean>(false);
-  const [currentLocation, setCurrentLocation] = useState<CurrentLocation | null>(null);
+  const [currentLocation, setCurrentLocation] = useState<CurrentLocation | null>({latitude:37.563685889,longitude:126.975584404});
   const { setFilterMode } = mapStore();
   const [triggerSearch, setTriggerSearch] = useState<number>(0);
   const [triggerRefresh, setTriggerRefresh] = useState<number>(0);
@@ -27,14 +27,14 @@ function App() {
   const [verifyLocation, setVerifyLocation] = useState<VerifyLocation | null>(null);
 
   useEffect(() => {
-    let lastUpdateTime = Date.now();
+    // let lastUpdateTime = Date.now();
 
     const handleMessage = (event: any) => {
       try {
         const message = JSON.parse(event.data);
-        const currentTime = Date.now();
+        // const currentTime = Date.now();
 
-        if (message.type === 'location' && currentTime - lastUpdateTime >= 15000) { // 15초 간격으로 업데이트
+        if (message.type === 'location') {
           const { latitude, longitude } = message.payload;
 
           setCurrentLocation({
@@ -42,7 +42,7 @@ function App() {
             longitude: longitude,
           });
           setIsLocationSet(true);
-          lastUpdateTime = currentTime;
+          // lastUpdateTime = currentTime;
 
           const geocoder = new window.kakao.maps.services.Geocoder();
           const coord = new window.kakao.maps.LatLng(latitude, longitude);
@@ -106,14 +106,14 @@ function App() {
         <Route
           path="/"
           element={
-            currentLocation && isLocationSet && (
+            // currentLocation && isLocationSet && (
               <Map
-                latitude={currentLocation.latitude}
-                longitude={currentLocation.longitude}
+                latitude={currentLocation!.latitude}
+                longitude={currentLocation!.longitude}
                 triggerSearch={triggerSearch}
                 triggerRefresh={triggerRefresh}
               />
-            )
+            // )
           }
         />
         <Route

@@ -24,7 +24,7 @@ export default ({ mode }:types) => {
     server: {
       proxy: {
         "/api": {
-          target: "http://3.37.135.150:8000",
+          target: "https://binvoyage.net",
           changeOrigin: true,
           rewrite: (path: string) => path.replace(/^\/api/, ""),
         },
