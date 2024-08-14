@@ -156,17 +156,11 @@ const Map = ({ latitude, longitude, triggerSearch, triggerRefresh }: CurrentLoca
   const filterMarkers = (filterMode: number) => {
     markersRef.current.forEach(markerObj => {
       if (filterMode === -1 || filterMode === 0) {
-        if (markerObj.distance <= 2000) {
           markerObj.marker.setMap(markerObj.map);
-        }
       } else if (filterMode === 1 && markerObj.type_no === 1) {
-        if (markerObj.distance <= 2000) {
           markerObj.marker.setMap(markerObj.map);
-        }
       } else if (filterMode === 2 && markerObj.type_no === 2) {
-        if (markerObj.distance <= 2000) {
           markerObj.marker.setMap(markerObj.map);
-        }
       } else {
         markerObj.marker.setMap(null);
       }
