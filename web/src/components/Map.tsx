@@ -69,7 +69,7 @@ const Map = ({ latitude, longitude, triggerSearch, triggerRefresh }: CurrentLoca
    // API를 통해 실제 데이터를 가져오는 함수
    const fetchBinData = async (lat: number, lng: number) => {
     try {
-      const response = await axios.get(`/bin/search?lat=${lat}?lng=${lng}&radius=2000&filter=0`);
+      const response = await axios.get(`/bin/search?lat=${lat}&lng=${lng}&radius=2000&filter=0`);
 
       if (response.data.success) {
         setData(response.data.data);
