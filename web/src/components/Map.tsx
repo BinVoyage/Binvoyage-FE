@@ -207,7 +207,7 @@ const Map = ({ latitude, longitude, triggerSearch, triggerRefresh }: CurrentLoca
 
   useEffect(() => {
     if (triggerSearch) {
-      alert(`center: 룰루랄라`)
+      fetchBinData();
     }
   }, [triggerSearch])
 
