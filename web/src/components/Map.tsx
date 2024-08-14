@@ -50,7 +50,7 @@ const Map = ({ latitude, longitude, triggerSearch, triggerRefresh }: CurrentLoca
     setCurrentMarker(myMarker); 
     
     // fetchBinData(latitude, longitude);
-    fetchBinData(); // 지도 초기화 시 데이터 가져오기
+    fetchBinData(37.563685889, 126.975584404); // 지도 초기화 시 데이터 가져오기
 
     // 중심 좌표 변경 이벤트 리스너 추가
     window.kakao.maps.event.addListener(map, 'center_changed', debounce(handleCenterChanged, 500));
@@ -76,9 +76,9 @@ const Map = ({ latitude, longitude, triggerSearch, triggerRefresh }: CurrentLoca
   };
 
    // API를 통해 실제 데이터를 가져오는 함수
-   const fetchBinData = async () => {
+   const fetchBinData = async (lat: number, lng: number) => {
     try {
-      const response = await api.get(`/bin/search?lat=37.563685889&lng=126.975584404&radius=1000&filter=0`);
+      const response = await api.get(`/bin/search?lat=${lat}&lng=${lng}&radius=1000&filter=0`);
   
       console.log(response.data);  // 전체 응답 데이터 구조 확인
       console.log(response.data.data);  // data 속성 확인
@@ -206,8 +206,10 @@ const Map = ({ latitude, longitude, triggerSearch, triggerRefresh }: CurrentLoca
   }, [filterMode]);
 
   useEffect(() => {
-    if (triggerSearch) {
-      fetchBinData();
+    if (triggerSearch && center) {
+      const lat= center.getLat();
+      const lng = center.getLng();
+      fetchBinData(lat, lng);
     }
   }, [triggerSearch])
 
