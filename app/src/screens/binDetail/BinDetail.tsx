@@ -38,9 +38,8 @@ export default function BinDetail({route}: BinDetailProps) {
 
     const getFeedbackData = async () => {
       try {
-        const response = await api.get<FeedbackResponse>(`/bin/feedback/${bin_id}`);
+        const response = await api.get(`/bin/feedback/${bin_id}`);
         setFeedbackList(response.data.data.feedback_list);
-        console.log('3.' + response.data.msg);
       } catch (error) {
         console.error('4.' + error);
       }
@@ -92,7 +91,7 @@ export default function BinDetail({route}: BinDetailProps) {
                 </S.RowWrapper>
               </TouchableOpacity>
             </S.RowWrapper>
-            <S.ImageArea />
+            {binData?.image ?? <S.ImageArea />}
           </S.TopContainer>
           <S.GrayContainer>
             <S.DetailWrapper>

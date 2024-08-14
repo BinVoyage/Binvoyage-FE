@@ -26,7 +26,7 @@ export default function FeedbackList({route}: FeedbackListProps) {
   useEffect(() => {
     const getData = async () => {
       try {
-        const response = await api.get<FeedbackResponse>(`/bin/feedback/${bin_id}/?page=1`);
+        const response = await api.get(`/bin/feedback/${bin_id}?page=1`);
 
         if (response.data.success) {
           setFeedbackList(response.data.data.feedback_list);

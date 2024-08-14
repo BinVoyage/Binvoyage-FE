@@ -18,6 +18,7 @@ import {NativeViewGestureHandler} from 'react-native-gesture-handler';
 import {useIsFocused} from '@react-navigation/native';
 import api from 'api/api';
 import {mapStore} from 'store/Store';
+import BinBottomSheet from 'components/binBottomSheet/BinBottomSheet';
 
 export default function FindBin() {
   const webViewRef = useRef<WebView>(null);
@@ -30,6 +31,7 @@ export default function FindBin() {
   const carouselRef = useRef(null);
   const [data, setData] = useState<BinItemProps[]>([]);
   const {currentPosition, setCurrentPosition} = mapStore();
+  const [binBottomSheetOpen, setBinBottomSheetOpen] = useState<boolean>(false);
 
   const isFocused = useIsFocused();
 
@@ -268,7 +270,7 @@ export default function FindBin() {
         </S.BtnSearchThisArea>
       </Animated.View>
 
-      <MyBottomSheet onSheetChange={setBottomSheetOffset}>
+      {binBottomSheetOpen ? null : <MyBottomSheet onSheetChange={setBottomSheetOffset}>
         {data.length ? (
           <NativeViewGestureHandler disallowInterruption={true}>
             <Carousel
@@ -286,7 +288,9 @@ export default function FindBin() {
         ) : (
           <EmptyItem />
         )}
-      </MyBottomSheet>
+      </MyBottomSheet>}
+
+      {data && <BinBottomSheet bin_id={236} isOpen={binBottomSheetOpen} onSheetChange={setBottomSheetOffset}/>}
     </View>
   );
 }
