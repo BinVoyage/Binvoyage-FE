@@ -25,7 +25,7 @@ const Map = ({ latitude, longitude, triggerSearch, triggerRefresh }: CurrentLoca
   const [currentMarker, setCurrentMarker] = useState<kakao.maps.Marker | null>(null);
   const [center, setCenter] = useState<kakao.maps.LatLng | null>(null);
   const [isMapLoaded, setIsMapLoaded] = useState<boolean>(false);
-  const [data, setData] = useState<BinInfo[]>([]);
+  const [_, setData] = useState<BinInfo[]>([]);
 
   const initMap = () => {
     const container = document.getElementById('map');
