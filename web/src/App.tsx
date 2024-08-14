@@ -38,8 +38,10 @@ function App() {
           const { latitude, longitude } = message.payload;
 
           setCurrentLocation({
-            latitude: latitude,
-            longitude: longitude,
+            // latitude: latitude,
+            // longitude: longitude,
+            latitude: 37.563685889,
+            longitude: 126.975584404,
           });
           setIsLocationSet(true);
           // lastUpdateTime = currentTime;

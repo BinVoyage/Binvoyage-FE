@@ -94,13 +94,14 @@ const Map = ({ latitude, longitude, triggerSearch, triggerRefresh }: CurrentLoca
     
       if (mapRef.current) {
         binList.forEach(bin => {
+          console.log(bin.bin_id);
           const binLocation = new window.kakao.maps.LatLng(bin.coordinate[0], bin.coordinate[1]);
           const markerImageSrc = bin.type_no === 1 ? "image/trashmark.svg" : "image/recyclemark.svg";
     
           const marker = new window.kakao.maps.Marker({
             position: binLocation,
             image: new window.kakao.maps.MarkerImage(markerImageSrc, new window.kakao.maps.Size(30, 30)),
-            map: mapRef.current, // 초기 맵에 마커 표시
+            map: null,
           });
     
           // 마커에 클릭 이벤트 추가
