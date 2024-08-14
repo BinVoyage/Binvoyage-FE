@@ -71,23 +71,26 @@ const Map = ({ latitude, longitude, triggerSearch, triggerRefresh }: CurrentLoca
    const fetchBinData = async () => {
     try {
       const response = await api.get(`/bin/search?lat=37.563685889&lng=126.975584404&radius=1000&filter=0`);
-
-      if (response.data.success) {
-        console.log(response.data.data.bin_list);
+  
+      console.log(response.data);  // 전체 응답 데이터 구조 확인
+      console.log(response.data.data);  // data 속성 확인
+  
+      if (response.data.code === 12000) {
+        console.log(response.data.data.bin_list);  // bin_list 출력
         setData(response.data.data.bin_list);
         initMarkers(response.data.data.bin_list);
-        // filterMarkers(filterMode);
       } else {
-        console.log(response.data);
+        console.log(response.data.message);
       }
-      
+  
     } catch (error: any) {
-        console.log('Failed to fetch bin data:', error.message);
-        if (error.response) {
-          console.log('Error response data:', error.response.data);
-        }
+      console.log('Failed to fetch bin data:', error.message);
+      if (error.response) {
+        console.log('Error response data:', error.response.data);
       }
-    };
+    }
+  };
+  
 
     const initMarkers = (binList: BinInfo[]) => {
       // 마커 초기화
