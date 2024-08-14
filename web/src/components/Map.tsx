@@ -1,7 +1,8 @@
 import { MutableRefObject, useEffect, useRef, useState } from "react";
-import { bin_list } from './Places';
 import { mapStore } from "../store/Store";
 import debounce from "lodash.debounce";
+import { BinInfo } from "../types/types";
+import axios from "axios";
 
 type CurrentLocation = {
   latitude: number;
@@ -24,6 +25,7 @@ const Map = ({ latitude, longitude, triggerSearch, triggerRefresh }: CurrentLoca
   const [currentMarker, setCurrentMarker] = useState<kakao.maps.Marker | null>(null);
   const [center, setCenter] = useState<kakao.maps.LatLng | null>(null);
   const [isMapLoaded, setIsMapLoaded] = useState<boolean>(false);
+  const [data, setData] = useState<BinInfo[]>([]);
 
   const initMap = () => {
     const container = document.getElementById('map');
@@ -47,27 +49,10 @@ const Map = ({ latitude, longitude, triggerSearch, triggerRefresh }: CurrentLoca
     myMarker.setMap(map);
     setCurrentMarker(myMarker); 
     
-    initMarkers(map);
-    filterMarkers(filterMode);
+    fetchBinData(latitude, longitude); // 지도 초기화 시 데이터 가져오기
 
     // 중심 좌표 변경 이벤트 리스너 추가
     window.kakao.maps.event.addListener(map, 'center_changed', debounce(handleCenterChanged, 500));
-
-    // Yellow circle to represent the 2000 meter range from current position
-    const circle = new window.kakao.maps.Circle({
-      center: currentPosition,
-      radius: 2000, // 2000 meters
-      strokeWeight: 2,
-      strokeColor: '#FFD700',
-      strokeOpacity: 1,
-      strokeStyle: 'solid',
-      fillColor: '#FFD700',
-      fillOpacity: 0.3
-    });
-    circle.setMap(map);
-
-    initMarkers(map);
-    filterMarkers(filterMode);
 
     // 사용자가 확대/축소할 때 최대 레벨을 제한하는 이벤트 리스너 추가
     window.kakao.maps.event.addListener(map, 'zoom_changed', function() {
@@ -81,8 +66,28 @@ const Map = ({ latitude, longitude, triggerSearch, triggerRefresh }: CurrentLoca
     setIsMapLoaded(true);
   };
 
-  const initMarkers = (map: any) => {
-    bin_list.forEach(bin => {
+   // API를 통해 실제 데이터를 가져오는 함수
+   const fetchBinData = async (lat: number, lng: number) => {
+    try {
+      const response = await axios.get(`/bin/search?lat=${lat}?lng=${lng}&radius=2000&filter=0`);
+
+      if (response.data.success) {
+        setData(response.data.data);
+        initMarkers(response.data.data);
+        filterMarkers(filterMode);
+      } else {
+        console.log('실패 ㅜㅜ');
+      }
+      
+    } catch (error) {
+      console.error('Failed to fetch bin data:', error);
+    }
+  };
+
+  const initMarkers = (binList: BinInfo[]) => {
+    markersRef.current = []; // 이전 마커 초기화
+
+    binList.forEach(bin => {
       const binLocation = new window.kakao.maps.LatLng(bin.coordinate[0], bin.coordinate[1]);
       const markerImageSrc = bin.type_no === 1 ? "image/trashmark.svg" : "image/recyclemark.svg";
 
@@ -92,10 +97,22 @@ const Map = ({ latitude, longitude, triggerSearch, triggerRefresh }: CurrentLoca
         map: null, // 처음에는 표시하지 않음
       });
 
+      // 마커에 클릭 이벤트 추가
+      window.kakao.maps.event.addListener(marker, 'click', () => {
+        // React Native로 메시지 보내기
+        const message = {
+          type: 'markerClick',
+          payload: {
+            bin_id: bin.bin_id
+          }
+        };
+        window.ReactNativeWebView?.postMessage(JSON.stringify(message));
+      });
+
       markersRef.current.push({
         marker: marker,
         type_no: bin.type_no,
-        map: map,
+        map: mapRef.current!,
         distance: calculateDistance(binLocation),
       });
     });
