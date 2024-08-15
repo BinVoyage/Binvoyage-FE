@@ -7,6 +7,8 @@ import Onboarding from 'screens/OnBoarding';
 import BinDetailNavigator from './BinDetailNavigator';
 import {useState, useEffect} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import MyComment from 'screens/MyComment';
+import DeleteAccount from 'screens/DeleteAccount';
 
 type StackNavigatorProps = {
   isLoggedIn: boolean;
@@ -23,6 +25,8 @@ export default function StackNavigator({isLoggedIn}: StackNavigatorProps) {
         <Stack.Screen name="OnBoarding" component={Onboarding} />
         <Stack.Screen name="UserInput" component={UserInput} />
         <Stack.Screen name="BinDetailNavigator" component={BinDetailNavigator} />
+        <Stack.Screen name="MyComment" component={MyComment} />
+        <Stack.Screen name="DeleteAccount" component={DeleteAccount} />
       </Stack.Navigator>
     </NavigationContainer>
   );

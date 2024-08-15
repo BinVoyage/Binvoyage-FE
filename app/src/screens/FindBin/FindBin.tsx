@@ -274,7 +274,7 @@ export default function FindBin() {
           <S.TextSearchThisArea>Search this area</S.TextSearchThisArea>
         </S.BtnSearchThisArea>
       </Animated.View>
-
+ 
       {selectedMarker ? null : (
         <MyBottomSheet onSheetChange={setBottomSheetOffset}>
           {data.length ? (
