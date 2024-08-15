@@ -14,7 +14,7 @@ export default function MyComment() {
   const commentNavigator = useNavigation<NavigationProp<RootMyParamList>>();
   const [comment, setComment] = useState<Mycomment[]>([]);
 
-  const CommentsData = async () => {
+  const getData = async () => {
     try {
       const response = await api.get('user/feedback');
       setComment(response.data.data.feedback_list);
@@ -24,8 +24,21 @@ export default function MyComment() {
     }
   };
 
+  const deleteComment = async (feedback_id: number) => {
+    try {
+      const response = await api.delete(`bin/feedback/${feedback_id}`);
+      if (response.status === 200) {
+        setComment(prevComments => prevComments.filter(comment => comment.feedback_id !== feedback_id));
+      } else {
+        console.log('Failed to delete the comment');
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   useEffect(() => {
-    CommentsData();
+    getData();
   }, []);
 
   type ItemProps = {
@@ -39,20 +52,22 @@ export default function MyComment() {
     [key: string]: any;
   };
 
-  const CommentItem = ({registration_dt, content, bin_address, bin_type_name}: ItemProps) => (
+  const CommentItem = ({feedback_id, registration_dt, content, bin_address, bin_type_name}: ItemProps) => (
     <ItemWrapper>
-      <ItemTopWrapper>
-        {bin_type_name === 'Trash' && <S_Bin />}
-        {bin_type_name === 'Recycling' && <S_Recycling />}
-        <BinText>{bin_type_name}</BinText>
-        <ItemName>
-          <Text>|</Text>
-        </ItemName>
-        <Text>{registration_dt?.substring(0, 10)}</Text>
-        <Deleted>
+      <RowWrapper style={{justifyContent: 'space-between'}}>
+        <RowWrapper>
+          {bin_type_name === 'Trash' && <S_Bin />}
+          {bin_type_name === 'Recycling' && <S_Recycling />}
+          <BinText>{bin_type_name}</BinText>
+          <ItemName>
+            <Text>|</Text>
+          </ItemName>
+          <Text>{registration_dt?.substring(0, 10)}</Text>
+        </RowWrapper>
+        <Deleted onPress={() => deleteComment(feedback_id)}>
           <BinSvg width="15px" height="17px" fill="#9DA0A8" />
         </Deleted>
-      </ItemTopWrapper>
+      </RowWrapper>
       <AddressText>{bin_address}</AddressText>
       <ContentText>{content}</ContentText>
       <Line />
@@ -85,38 +100,31 @@ export default function MyComment() {
 
 const CommentWrapper = styled.View`
   width: 100%;
-  height: 800px;
+  flex: 1;
   background: ${Palette.White};
-  display: flex;
+  padding: 13px 16px;
 `;
 
 const BackDropBox = styled.TouchableOpacity`
-  align-items: left;
-  padding-left: 16px;
-  padding-top: 13px;
-`;
-
-const ListBox = styled.FlatList`
-  padding-top: 16px;
-  flex-grow: 1;
+  width: 24px;
+  height: 24px;
+  margin-bottom: 16px;
 `;
 
 const ItemWrapper = styled.View`
   width: 100%;
-  padding-left: 16px;
-  padding-right: 16px;
-  padding-bottom: 12px;
+  margin-bottom: 12px;
   border-bottom: 1px solid;
 `;
 
-const ItemTopWrapper = styled.View`
+const RowWrapper = styled.View`
   display: flex;
   flex-direction: row;
+  align-items: center;
 `;
 
 const ItemName = styled.View`
-  padding-right: 8px;
-  padding-left: 8px;
+  margin: 0px 8px;
 `;
 
 const BinText = styled.Text`
@@ -124,24 +132,22 @@ const BinText = styled.Text`
   font-size: ${Typo.B3.fontSize};
   font-weight: ${Typo.B3.fontWeight};
 `;
-const Deleted = styled.Pressable`
-  padding-left: 330px;
-  padding-right: 16px;
-  align-items: right;
-  position: absolute;
+const Deleted = styled.TouchableOpacity`
+  width: 15px;
+  height: 17px;
 `;
 
 const AddressText = styled.Text`
   font-size: ${Typo.Title2.fontSize};
   font-weight: ${Typo.Title2.fontWeight};
   color: ${Palette.Black};
-  padding-bottom: 8px;
+  margin-bottom: 8px;
 `;
 
 const ContentText = styled.Text`
   font-size: ${Typo.B3.fontSize};
   font-weight: ${Typo.B3.fontWeight};
-  padding-bottom: 8px;
+  margin-bottom: 8px;
 `;
 
 const Line = styled.View`
