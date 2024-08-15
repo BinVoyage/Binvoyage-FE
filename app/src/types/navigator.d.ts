@@ -11,9 +11,6 @@ type RootStackParamList = {
   OnBoarding: undefined;
   UserInput: undefined;
   NewTrashDetail: undefined;
-  BinDetailNavigator: undefined;
-  MyComment: undefined; // 마이페이지 -> 작성한 피드백
-  DeleteAccount: undefined;
   BinDetailNavigator: {
     screen: 'BinDetail' | 'FeedbackList' | 'ReportFeedback' | 'ReportWrongInfo' | 'VerifyVisit';
     params?: {

@@ -20,7 +20,7 @@ interface Props {
 export default function BinBottomSheet({bin_id, onSheetChange}: Props) {
   const height = Dimensions.get('window').height;
   const bottomSheetRef = useRef<BottomSheet>(null);
-  const bottomSheetHeight = Math.round((137 / 689) * height);
+  const bottomSheetHeight = Math.round((160 / 689) * height);
   const bottomSheetHeightWithImg = Math.round((269 / 689) * height);
   const snapPointsWithImg = useMemo(() => [bottomSheetHeightWithImg, bottomSheetHeightWithImg], []);
   const snapPoints = useMemo(() => [bottomSheetHeight, bottomSheetHeight], []);
@@ -29,11 +29,22 @@ export default function BinBottomSheet({bin_id, onSheetChange}: Props) {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [hasImg, setHasImg] = useState<boolean | null>(false);
+  const [labelText, setLabelText] = useState<string>('');
 
-  // const handleSheetChanges = (index: number) => {
-  //   const offset = index === 0 ? 0 : height * (bottomSheetHeight) / 100;
-  //   onSheetChange(offset);
-  // };
+  const lableTextData = ['Most users found this bin!', 'Some users found this bin!', 'May not always be found here'];
+
+  useEffect(() => {
+    if (binData) {
+      const successRate = binData.success_count / binData.success_count + binData.fail_count * 100;
+      if (successRate >= 70) {
+        setLabelText(lableTextData[0]);
+      } else if (successRate >= 40) {
+        setLabelText(lableTextData[1]);
+      } else {
+        setLabelText(lableTextData[2]);
+      }
+    }
+  }, [binData]);
 
   useEffect(() => {
     if (bin_id) {
@@ -75,7 +86,7 @@ export default function BinBottomSheet({bin_id, onSheetChange}: Props) {
       <BottomSheetView style={styles.wrapper}>
         <S.RowWrapper style={{justifyContent: 'space-between'}}>
           <S.TopLabel>
-            <S.TopLabelText>Most users found this bin!</S.TopLabelText>
+            <S.TopLabelText>{labelText}</S.TopLabelText>
           </S.TopLabel>
           <S.ArrowUpWrapper
             onPress={() => {
