@@ -1,17 +1,23 @@
-import WebView from 'react-native-webview';
 import {create} from 'zustand';
 
-type userStore = {
-  webViewRef: React.RefObject<WebView> | null;
-  setWebViewRef: (ref: React.RefObject<WebView>) => void;
-  addressList?: String[];
-  setAddressList: (list: String[]) => void;
-};
+interface mapStore {
+  currentPosition: CurrentPosition | null;
+  setCurrentPosition: (position: CurrentPosition) => void;
+}
 
-export const mapStore = create<userStore>(set => ({
-  webViewRef: null,
-  setWebViewRef: (ref: React.RefObject<WebView>) => set({webViewRef: ref}),
-  setAddressList: (list: String[]) => set({addressList: list}),
+interface userStore {
+  userInfo: UserInfo | null;
+  setUserInfo: (info: UserInfo) => void;
+}
+
+export const mapStore = create<mapStore>(set => ({
+  currentPosition: null,
+  setCurrentPosition: position => set({currentPosition: position}),
+}));
+
+export const userStore = create<userStore>(set => ({
+  userInfo: null,
+  setUserInfo: info => set({userInfo: info}),
 }));
 
 type Image = {

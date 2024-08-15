@@ -3,13 +3,13 @@ import {Alert, Image, Linking, Platform, TouchableOpacity} from 'react-native';
 
 interface Props {
   setIsModalOpen: (value: boolean) => void;
+  label: string;
   coords: [number, number] | undefined;
 }
 
-export default function ModalMap({setIsModalOpen, coords}: Props) {
+export default function ModalMap({setIsModalOpen, label, coords}: Props) {
   const openNaverMap = () => {
-    const [latitude, longitude] = coords ?? [37.563685889, 126.975584404];
-    const label = 'Destination'; // 목적지의 레이블
+    const [longitude, latitude] = coords ?? [126.975584404, 37.563685889];
     const appname = 'com.binvoyage.app';
 
     const url = `nmap://place?lat=${latitude}&lng=${longitude}&name=${label}&appname=${appname}`;
@@ -21,6 +21,7 @@ export default function ModalMap({setIsModalOpen, coords}: Props) {
     Linking.canOpenURL(url)
       .then(supported => {
         if (supported) {
+          console.log('navermap: ', latitude, longitude);
           return Linking.openURL(url);
         } else {
           if (storeUrl) {

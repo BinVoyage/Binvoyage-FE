@@ -16,6 +16,9 @@ import EmptyItem from 'components/binItem/EmptyItem';
 import Animated, {useAnimatedStyle, withTiming} from 'react-native-reanimated';
 import {NativeViewGestureHandler} from 'react-native-gesture-handler';
 import {useIsFocused} from '@react-navigation/native';
+import api from 'api/api';
+import {mapStore} from 'store/Store';
+import BinBottomSheet from 'components/binBottomSheet/BinBottomSheet';
 
 export default function FindBin() {
   const webViewRef = useRef<WebView>(null);
@@ -26,6 +29,9 @@ export default function FindBin() {
   const [bottomSheetOffset, setBottomSheetOffset] = useState<number>(0); // BottomSheet의 높이 또는 offset 상태
   const [isSearchShow, setIsSearchShow] = useState<boolean>(false);
   const carouselRef = useRef(null);
+  const [data, setData] = useState<BinItemProps[]>([]);
+  const {currentPosition, setCurrentPosition} = mapStore();
+  const [selectedMarker, setSelectedMarker] = useState<number | null>(null);
 
   const isFocused = useIsFocused();
 
@@ -55,12 +61,17 @@ export default function FindBin() {
           const message = {
             type: 'location',
             payload: {
-              latitude: coords.latitude,
-              longitude: coords.longitude,
-              // latitude: 37.563685889,
-              // longitude: 126.975584404,
+              // latitude: coords.latitude,
+              // longitude: coords.longitude,
+              latitude: 37.563685889,
+              longitude: 126.975584404,
             },
           };
+          if (currentPosition === null) {
+            /* 애뮬레이터 테스트용 */
+            // setCurrentPosition({latitude: coords.latitude, longitude: coords.longitude});
+            setCurrentPosition({latitude: 37.563685889, longitude: 126.975584404});
+          }
 
           console.log('Sending message:', JSON.stringify(message)); // 메시지 전송 확인
 
@@ -135,6 +146,11 @@ export default function FindBin() {
         setCurrentAddress(data.payload.address);
       } else if (data.type === 'centerMoved') {
         setIsSearchShow(true);
+      } else if (data.type === 'markerClick') {
+        console.log('click: ', data.payload.bin_id);
+        setSelectedMarker(data.payload.bin_id);
+      } else if (data.type === 'mapClick') {
+        setSelectedMarker(null);
       }
     } catch (err) {
       console.log(err);
@@ -189,60 +205,31 @@ export default function FindBin() {
   const itemWidth = (width / 375) * 232;
   const itemSpacing = 16; // 슬라이드 간 간격 설정
 
-  const data: BinItemProps[] = [
-    {
-      bin_id: 1,
-      type_no: 1,
-      type_name: 'Trash',
-      location_type_no: 1,
-      location_type_name: 'Subway Entrance',
-      coordinate: [37.54397760413326, 127.12560598299282],
-      distance: 100,
-      visit_success_rate: 70,
-      address: '702, Olympic-ro, Gangdong-gu,  Seoul',
-      detail: 'Near the busstop',
-      visit_count: 3,
-    },
-    {
-      bin_id: 2,
-      type_no: 1,
-      type_name: 'Trash',
-      location_type_no: 1,
-      location_type_name: 'Subway Entrance',
-      coordinate: [37.5663174209601, 126.977829174031],
-      distance: 200,
-      visit_success_rate: 69,
-      address: '702, Olympic-ro, Gangdong-gu,  Seoul',
-      detail: 'Near the busstop',
-      visit_count: 3,
-    },
-    {
-      bin_id: 3,
-      type_no: 1,
-      type_name: 'Trash',
-      location_type_no: 1,
-      location_type_name: 'Subway Entrance',
-      coordinate: [37.5674198878673, 126.977873671097],
-      distance: 300,
-      visit_success_rate: 40,
-      address: '702, Olympic-ro, Gangdong-gu,  Seoul',
-      detail: 'Near the busstop',
-      visit_count: 3,
-    },
-    {
-      bin_id: 4,
-      type_no: 1,
-      type_name: 'Trash',
-      location_type_no: 1,
-      location_type_name: 'Subway Entrance',
-      coordinate: [37.5674198878673, 126.977873671097],
-      distance: 300,
-      visit_success_rate: 0,
-      address: '702, Olympic-ro, Gangdong-gu,  Seoul',
-      detail: 'Near the busstop',
-      visit_count: 0,
-    },
-  ];
+  useEffect(() => {
+    console.log('currentPositon:' + currentPosition?.latitude, currentPosition?.longitude);
+    const getData = async () => {
+      try {
+        const response = await api.get(`/bin/search?lat=${currentPosition?.latitude}&lng=${currentPosition?.longitude}&radius=2000&filter=0`);
+
+        if (response.status === 200) {
+          setData(response.data.data.bin_list);
+        } else {
+          console.log('실패 ㅜㅜ');
+        }
+      } catch (error: any) {
+        console.log(error.response.data);
+      }
+    };
+
+    if (currentPosition) {
+      console.log('get data!!!');
+      getData();
+    }
+  }, [currentPosition]);
+
+  useEffect(() => {
+    console.log(data.length);
+  }, [data]);
 
   return (
     <View style={styles.container}>
@@ -287,26 +274,30 @@ export default function FindBin() {
           <S.TextSearchThisArea>Search this area</S.TextSearchThisArea>
         </S.BtnSearchThisArea>
       </Animated.View>
+ 
+      {selectedMarker ? null : (
+        <MyBottomSheet onSheetChange={setBottomSheetOffset}>
+          {data.length ? (
+            <NativeViewGestureHandler disallowInterruption={true}>
+              <Carousel
+                ref={carouselRef}
+                data={data}
+                renderItem={renderItem}
+                sliderWidth={width}
+                itemWidth={itemWidth + itemSpacing}
+                inactiveSlideScale={1}
+                inactiveSlideOpacity={1}
+                firstItem={0} // 첫번째 아이템이 슬라이더의 왼쪽에 위치하도록 설정
+                activeSlideAlignment="start" // 슬라이드가 왼쪽 정렬되도록 설정
+              />
+            </NativeViewGestureHandler>
+          ) : (
+            <EmptyItem />
+          )}
+        </MyBottomSheet>
+      )}
 
-      <MyBottomSheet onSheetChange={setBottomSheetOffset}>
-        {data.length ? (
-          <NativeViewGestureHandler disallowInterruption={true}>
-            <Carousel
-              ref={carouselRef}
-              data={data}
-              renderItem={renderItem}
-              sliderWidth={width}
-              itemWidth={itemWidth + itemSpacing}
-              inactiveSlideScale={1}
-              inactiveSlideOpacity={1}
-              firstItem={0} // 첫번째 아이템이 슬라이더의 왼쪽에 위치하도록 설정
-              activeSlideAlignment="start" // 슬라이드가 왼쪽 정렬되도록 설정
-            />
-          </NativeViewGestureHandler>
-        ) : (
-          <EmptyItem />
-        )}
-      </MyBottomSheet>
+      {selectedMarker && <BinBottomSheet bin_id={selectedMarker} onSheetChange={setBottomSheetOffset} />}
     </View>
   );
 }

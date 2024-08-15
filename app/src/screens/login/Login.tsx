@@ -50,9 +50,9 @@ export default function Login() {
       });
       // Alert.alert(`${appleAuthRequestResponse.identityToken}`);
 
-      const {identityToken} = appleAuthRequestResponse;
+      const {identityToken, authorizationCode} = appleAuthRequestResponse;
       if (identityToken) {
-        const response = await api.post(`/login/oauth2?type=apple&token=${identityToken}`);
+        const response = await api.post(`/login/oauth2?type=apple&token=${identityToken}&authorizationCode=${authorizationCode}`);
 
         if (response.data.success) {
           await AsyncStorage.setItem('authToken', identityToken);

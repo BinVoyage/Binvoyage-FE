@@ -8,8 +8,9 @@ import ModalOpenMap from 'components/modalOpenMap/ModalOpenMap';
 import ReviewItem from 'components/reviewItem/ReviewItem';
 import {Palette} from 'constants/palette';
 import {useEffect, useState} from 'react';
-import {ScrollView, Text, TouchableOpacity, View, Linking, Platform, Alert} from 'react-native';
+import {ScrollView, Text, TouchableOpacity, View} from 'react-native';
 import * as S from 'screens/binDetail/BinDetail.style';
+import {mapStore} from 'store/Store';
 import {formatDate} from 'utils/formatDate';
 
 type BinDetailProps = {
@@ -22,25 +23,25 @@ export default function BinDetail({route}: BinDetailProps) {
   const [binData, setBinData] = useState<BinDetail | null>(null);
   const [feedbackList, setFeedbackList] = useState<Feedback[]>([]);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const currentLocation = mapStore(state => state.currentPosition);
 
   useEffect(() => {
     const getBinData = async () => {
       try {
-        const response = await api.get<BinDetailResponse>(`/bin/${bin_id}`);
+        // const response = await api.get<BinDetailResponse>(`/bin/search/${bin_id}`);
+        const response = await api.get<BinDetailResponse>(`/bin/search/${bin_id}?lat=${currentLocation?.latitude}&lng=${currentLocation?.longitude}`);
         setBinData(response.data.data);
-        console.log(response.data.msg);
-      } catch (error) {
-        console.error(error);
+      } catch (error: any) {
+        console.log(error);
       }
     };
 
     const getFeedbackData = async () => {
       try {
-        const response = await api.get<FeedbackResponse>(`/bin/feedback/${bin_id}`);
+        const response = await api.get(`/bin/feedback/${bin_id}`);
         setFeedbackList(response.data.data.feedback_list);
-        console.log(response.data.msg);
       } catch (error) {
-        console.error(error);
+        console.error('4.' + error);
       }
     };
 
@@ -69,7 +70,7 @@ export default function BinDetail({route}: BinDetailProps) {
                 <S.Division />
                 <S.RowWrapper>
                   <FootPrintSvg width="24" height="24" fill={Palette.Gray4} />
-                  <S.TextInfo1>100m</S.TextInfo1>
+                  {binData?.distance ? <S.TextInfo1>{Math.round(binData.distance)}m</S.TextInfo1> : <S.TextInfo1>isLoading...</S.TextInfo1>}
                 </S.RowWrapper>
               </S.RowWrapper>
               <TouchableOpacity
@@ -90,7 +91,7 @@ export default function BinDetail({route}: BinDetailProps) {
                 </S.RowWrapper>
               </TouchableOpacity>
             </S.RowWrapper>
-            <S.ImageArea />
+            {binData?.image ?? <S.ImageArea />}
           </S.TopContainer>
           <S.GrayContainer>
             <S.DetailWrapper>
@@ -142,7 +143,12 @@ export default function BinDetail({route}: BinDetailProps) {
                   />
                 ))}
               </View>
-              <S.SeeAllWrapper onPress={() => navigation.navigate('FeedbackList')}>
+              <S.SeeAllWrapper
+                onPress={() =>
+                  navigation.navigate('FeedbackList', {
+                    bin_id,
+                  })
+                }>
                 <S.TextSeeAll>See All</S.TextSeeAll>
                 <ArrowDownSvg width="24" height="24" fill={Palette.Gray4} />
               </S.SeeAllWrapper>
@@ -160,7 +166,7 @@ export default function BinDetail({route}: BinDetailProps) {
                 address: binData?.address ?? '',
                 detail: binData?.detail ?? '',
                 image: binData?.image ?? '',
-                coordinate: binData?.coordinate ?? [0, 0],
+                coordinate: binData?.coordinate!,
               })
             }>
             <S.ButtonText>Verify visit</S.ButtonText>
@@ -170,7 +176,7 @@ export default function BinDetail({route}: BinDetailProps) {
           </S.Button>
         </S.BtnContainer>
       </S.Container>
-      {isModalOpen ? <ModalOpenMap setIsModalOpen={setIsModalOpen} coords={binData?.coordinate} /> : null}
+      {isModalOpen ? <ModalOpenMap setIsModalOpen={setIsModalOpen} label={binData?.address ?? 'Destination'} coords={binData?.coordinate} /> : null}
     </>
   );
 }

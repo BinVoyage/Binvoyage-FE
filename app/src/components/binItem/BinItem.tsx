@@ -16,17 +16,18 @@ export default function BinItem({item}: {item: BinItemProps}) {
   }
   return (
     <S.Container
-      onPress={() =>
+      onPress={() => {
+        console.log(item.bin_id);
         navigation.navigate('BinDetailNavigator', {
           screen: 'BinDetail',
-          params: {bin_id: 1},
-        })
-      }>
+          params: {bin_id: item.bin_id},
+        });
+      }}>
       <S.TextAddress numberOfLines={2} ellipsizeMode="tail">
         {item.address}
       </S.TextAddress>
       <S.TextType>{item.type_name}</S.TextType>
-      <S.TextDistance>{`${item.distance}m away`}</S.TextDistance>
+      <S.TextDistance>{`${Math.round(item.distance)}m away`}</S.TextDistance>
       {visitMessage ? (
         <S.VisitWrapper>
           <S.TextVisit>{visitMessage}</S.TextVisit>

@@ -1,7 +1,8 @@
 import { MutableRefObject, useEffect, useRef, useState } from "react";
-import { bin_list } from './Places';
-import { useStore } from "../store/Store";
+import { mapStore } from "../store/Store";
 import debounce from "lodash.debounce";
+import { BinInfo } from "../types/types";
+import api from "../api/api";
 
 type CurrentLocation = {
   latitude: number;
@@ -20,10 +21,11 @@ type MarkerInfo = {
 const Map = ({ latitude, longitude, triggerSearch, triggerRefresh }: CurrentLocation) => {
   const mapRef = useRef<kakao.maps.Map | null>(null);
   const markersRef = useRef<MarkerInfo[]>([]);
-  const filterMode = useStore(state => state.filterMode);
+  const filterMode = mapStore(state => state.filterMode);
   const [currentMarker, setCurrentMarker] = useState<kakao.maps.Marker | null>(null);
   const [center, setCenter] = useState<kakao.maps.LatLng | null>(null);
   const [isMapLoaded, setIsMapLoaded] = useState<boolean>(false);
+  const [_, setData] = useState<BinInfo[]>([]);
 
   const initMap = () => {
     const container = document.getElementById('map');
@@ -47,59 +49,99 @@ const Map = ({ latitude, longitude, triggerSearch, triggerRefresh }: CurrentLoca
     myMarker.setMap(map);
     setCurrentMarker(myMarker); 
     
-    initMarkers(map);
-    filterMarkers(filterMode);
+    // fetchBinData(latitude, longitude);
+    fetchBinData(37.563685889, 126.975584404); // 지도 초기화 시 데이터 가져오기
 
     // 중심 좌표 변경 이벤트 리스너 추가
     window.kakao.maps.event.addListener(map, 'center_changed', debounce(handleCenterChanged, 500));
 
-    // Yellow circle to represent the 2000 meter range from current position
-    const circle = new window.kakao.maps.Circle({
-      center: currentPosition,
-      radius: 2000, // 2000 meters
-      strokeWeight: 2,
-      strokeColor: '#FFD700',
-      strokeOpacity: 1,
-      strokeStyle: 'solid',
-      fillColor: '#FFD700',
-      fillOpacity: 0.3
-    });
-    circle.setMap(map);
-
-    initMarkers(map);
-    filterMarkers(filterMode);
-
     // 사용자가 확대/축소할 때 최대 레벨을 제한하는 이벤트 리스너 추가
-    window.kakao.maps.event.addListener(map, 'zoom_changed', function() {
-      const currentLevel = map.getLevel();
-      if (currentLevel > 7) { // 최대 레벨을 7로 제한
-        map.setLevel(7); // 다시 레벨 7로 되돌림
-      }
-      map.setCenter(currentPosition); // 현재 위치를 중심으로 설정
+    // window.kakao.maps.event.addListener(map, 'zoom_changed', function() {
+    //   const currentLevel = map.getLevel();
+    //   if (currentLevel > 7) { // 최대 레벨을 7로 제한
+    //     map.setLevel(7); // 다시 레벨 7로 되돌림
+    //   }
+    //   map.setCenter(currentPosition); // 현재 위치를 중심으로 설정
+    // });
+
+    // 맵 클릭 이벤트 리스너 추가
+    window.kakao.maps.event.addListener(map, 'click', function() {
+      const message = {
+        type: 'mapClick',
+      };
+      window.ReactNativeWebView?.postMessage(JSON.stringify(message));
     });
 
     setIsMapLoaded(true);
   };
 
-  const initMarkers = (map: any) => {
-    bin_list.forEach(bin => {
-      const binLocation = new window.kakao.maps.LatLng(bin.coordinate[0], bin.coordinate[1]);
-      const markerImageSrc = bin.type_no === 1 ? "image/trashmark.svg" : "image/recyclemark.svg";
-
-      const marker = new window.kakao.maps.Marker({
-        position: binLocation,
-        image: new window.kakao.maps.MarkerImage(markerImageSrc, new window.kakao.maps.Size(30, 30)),
-        map: null, // 처음에는 표시하지 않음
-      });
-
-      markersRef.current.push({
-        marker: marker,
-        type_no: bin.type_no,
-        map: map,
-        distance: calculateDistance(binLocation),
-      });
-    });
+   // API를 통해 실제 데이터를 가져오는 함수
+   const fetchBinData = async (lat: number, lng: number) => {
+    try {
+      const response = await api.get(`/bin/search?lat=${lat}&lng=${lng}&radius=1000&filter=0`);
+  
+      console.log(response.data);  // 전체 응답 데이터 구조 확인
+      console.log(response.data.data);  // data 속성 확인
+  
+      if (response.data.code === 12000) {
+        console.log(response.data.data.bin_list);  // bin_list 출력
+        setData(response.data.data.bin_list);
+        initMarkers(response.data.data.bin_list);
+      } else {
+        console.log(response.data.message);
+      }
+  
+    } catch (error: any) {
+      console.log('Failed to fetch bin data:', error.message);
+      if (error.response) {
+        console.log('Error response data:', error.response.data);
+      }
+    }
   };
+  
+
+    const initMarkers = (binList: BinInfo[]) => {
+      // 마커 초기화
+      markersRef.current = [];
+    
+      if (mapRef.current) {
+        binList.forEach(bin => {
+          console.log(bin.bin_id);
+          const binLocation = new window.kakao.maps.LatLng(bin.coordinate[1], bin.coordinate[0]);
+          const markerImageSrc = bin.type_no === 1 ? "image/trashmark.svg" : "image/recyclemark.svg";
+    
+          const marker = new window.kakao.maps.Marker({
+            position: binLocation,
+            image: new window.kakao.maps.MarkerImage(markerImageSrc, new window.kakao.maps.Size(30, 30)),
+            map: null,
+          });
+    
+          // 마커에 클릭 이벤트 추가
+          window.kakao.maps.event.addListener(marker, 'click', () => {
+            const message = {
+              type: 'markerClick',
+              payload: {
+                bin_id: bin.bin_id
+              }
+            };
+            window.ReactNativeWebView?.postMessage(JSON.stringify(message));
+          });
+    
+          markersRef.current.push({
+            marker: marker,
+            type_no: bin.type_no,
+            map: mapRef.current!,
+            distance: calculateDistance(binLocation),
+          });
+        });
+    
+        // 마커 필터링
+        filterMarkers(filterMode);
+      } else {
+        console.error("Map object is not initialized.");
+      }
+    };
+    
 
   const calculateDistance = (binLocation: any) => {
     const currentPosition = new window.kakao.maps.LatLng(latitude, longitude);
@@ -112,17 +154,11 @@ const Map = ({ latitude, longitude, triggerSearch, triggerRefresh }: CurrentLoca
   const filterMarkers = (filterMode: number) => {
     markersRef.current.forEach(markerObj => {
       if (filterMode === -1 || filterMode === 0) {
-        if (markerObj.distance <= 2000) {
           markerObj.marker.setMap(markerObj.map);
-        }
       } else if (filterMode === 1 && markerObj.type_no === 1) {
-        if (markerObj.distance <= 2000) {
           markerObj.marker.setMap(markerObj.map);
-        }
       } else if (filterMode === 2 && markerObj.type_no === 2) {
-        if (markerObj.distance <= 2000) {
           markerObj.marker.setMap(markerObj.map);
-        }
       } else {
         markerObj.marker.setMap(null);
       }
@@ -164,8 +200,10 @@ const Map = ({ latitude, longitude, triggerSearch, triggerRefresh }: CurrentLoca
   }, [filterMode]);
 
   useEffect(() => {
-    if (triggerSearch) {
-      alert(`center: 룰루랄라`)
+    if (triggerSearch && center) {
+      const lat= center.getLat();
+      const lng = center.getLng();
+      fetchBinData(lat, lng);
     }
   }, [triggerSearch])
 

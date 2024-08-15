@@ -13,7 +13,7 @@ export const Container = styled.View`
 `;
 
 export const TopContainer = styled.View`
-  padding: 0px 16px;
+  padding: 0px 16px 20px;
   background: ${Palette.White};
 `;
 

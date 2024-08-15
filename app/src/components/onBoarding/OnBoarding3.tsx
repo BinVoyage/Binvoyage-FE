@@ -7,7 +7,9 @@ interface Props {
 export default function Onboarding3({onStart}: Props) {
   return (
     <S.Container>
-      <S.Background></S.Background>
+      <S.Background>
+        <S.BgImg source={require('assets/images/img-onboarding3.png')} />
+      </S.Background>
       <S.Modal>
         <S.Pagination>
           <S.Dot />

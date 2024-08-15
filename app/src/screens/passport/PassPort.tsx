@@ -1,23 +1,37 @@
 import {NavigationProp, useNavigation} from '@react-navigation/native';
+import api from 'api/api';
 import ArrowPrevSvg from 'assets/images/ArrowPrevSvg';
 import PassPortPage from 'components/passPort/PassPortPage';
 import {Palette} from 'constants/palette';
-import {useRef} from 'react';
+import {useEffect, useRef, useState} from 'react';
 import Swiper from 'react-native-swiper';
 import * as S from 'screens/passport/PassPort.style';
 
 export default function PassPort() {
   const swiperRef = useRef<Swiper>(null);
   const navigation = useNavigation<NavigationProp<RootHomeParamList>>();
+  // const [stampList, setStampList] = useState<StampInfo[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const dummy = [
-    {"id": 1},
-    {"id": 2},
-    {"id": 3},
-    {"id": 4},
-    {"id": 5},
-    {"id": 0},
-  ];
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        const response = await api.get('/stamp');
+        // setStampList(response.data.data.user_stamp_list);
+        // setIsLoading(false);
+      } catch (error: any) {
+        console.log('error: ' + error.response);
+      }
+    };
+
+    getData();
+  }, []);
+
+  const stampList = [{stamp_id: 1}, {stamp_id: 2}, {stamp_id: 3}, {stamp_id: 4}, {stamp_id: 5}, {stamp_id: 6}, {stamp_id: 6}, {stamp_id: 6}];
+  const dummy = [{stamp_id: 1}, {stamp_id: 2}, {stamp_id: 3}, {stamp_id: 4}, {stamp_id: 5}, {stamp_id: 6}];
+
+  const stampsPerPage = 6;
+  const totalPages = Math.ceil(stampList.length / stampsPerPage);
 
   return (
     <S.Container>
@@ -30,14 +44,19 @@ export default function PassPort() {
       <Swiper
         ref={swiperRef}
         loop={false}
-        renderPagination={(index, total) => {
+        renderPagination={index => {
           return (
-            <S.Pagination>{Array.from({length: total}).map((_, i) => (i === index ? <S.CurrentDot key={i} /> : <S.Dot key={i} />))}</S.Pagination>
+            <S.Pagination>
+              {Array.from({length: totalPages}).map((_, i) => (i === index ? <S.CurrentDot key={i} /> : <S.Dot key={i} />))}
+            </S.Pagination>
           );
         }}>
-        {Array.from({length: 5}).map((page, index) => (
-          <PassPortPage key={index} stampList={dummy}/>
-        ))}
+        {Array.from({length: totalPages}).map((_, pageIndex) => {
+          const start = pageIndex * stampsPerPage;
+          const end = start + stampsPerPage;
+          const stampsForPage = (stampList.length ? stampList : dummy).slice(start, end);
+          return <PassPortPage key={pageIndex} stampList={stampsForPage} isLoading={isLoading} />;
+        })}
       </Swiper>
     </S.Container>
   );

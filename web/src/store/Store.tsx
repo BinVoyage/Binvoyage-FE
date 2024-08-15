@@ -4,7 +4,7 @@ interface store {
   filterMode : number;
   setFilterMode : (mode : number) => void;
 }
-export const useStore = create<store>((set)=>({
-  filterMode: -1,
+export const mapStore = create<store>((set)=>({
+  filterMode: 0,
   setFilterMode: (mode: number) => set(() => ({ filterMode: mode })),
 }))

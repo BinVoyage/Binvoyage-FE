@@ -94,6 +94,7 @@ interface BinDetail {
   fail_count: number;
   last_visit_dt: string;
   visit_list: Visit[];
+  distance: number;
 }
 
 interface BinDetailResponse {
@@ -116,3 +117,26 @@ interface BinItemProps {
   detail: string;
   visit_count: number;
 }
+
+type CurrentPosition = {
+  latitude: number;
+  longitude: number;
+};
+
+type UserInfo = {
+  user_name: string;
+  nationality: string;
+  stamp_cnt: string;
+  newly_found_cnt: number;
+  report_cnt: number;
+  feedback_cnt: number;
+};
+
+type StampInfo = {
+  user_stamp_id: number;
+  stamp_id: number;
+  registration_dt: string;
+  region_name: string;
+  local_no: number;
+  image: number;
+};

@@ -20,8 +20,8 @@ export default function ModalSuccess({bin_id, address, coordinate, handleStampMo
   const handleReviewMode = async () => {
     try {
       const response = await api.post(`/bin/visit/${bin_id}`, {
-        lat: coordinate[0],
-        lng: coordinate[1],
+        lat: 37.563685889,
+        lng: 126.975584404,
         is_visit: true,
       });
       if (response.data.success) {
@@ -29,8 +29,18 @@ export default function ModalSuccess({bin_id, address, coordinate, handleStampMo
       } else {
         Alert.alert('실패 ㅜㅜ');
       }
-    } catch (error) {
-      Alert.alert(`${error}`);
+    } catch (error: any) {
+      if (error.response) {
+        const statusCode = error.response.status;
+        if (statusCode === 403 || statusCode === 404) {
+          Alert.alert('에러 발생', `${error.message}`);
+          console.log('로그인이 필요합니다.' + statusCode);
+        } else if (statusCode === 400) {
+          console.log('방문인증을 이미 하셨습니다.');
+        }
+      } else {
+        Alert.alert('에러 발생', `${error.message}`);
+      }
     }
   };
 

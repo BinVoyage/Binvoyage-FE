@@ -47,12 +47,12 @@ export default function VerifyVisit({route}: VerifyVisitProps) {
           const message = {
             type: 'verify',
             payload: {
-              latitude: coords.latitude,
-              longitude: coords.longitude,
-              bin_lat: coordinate[0],
-              bin_lng: coordinate[1],
-              // latitude: 37.563685889,
-              // longitude: 126.975584404,
+              // latitude: coords.latitude,
+              // longitude: coords.longitude,
+              bin_lat: coordinate[1],
+              bin_lng: coordinate[0],
+              latitude: 37.563685889,
+              longitude: 126.975584404,
               // bin_lat: 37.568677620456,
               // bin_lng: 126.977657083792,
             },
@@ -111,43 +111,48 @@ export default function VerifyVisit({route}: VerifyVisitProps) {
   const handleReportIssue = async () => {
     try {
       const response = await api.post(`/bin/visit/${bin_id}`, {
-        lat: coordinate[0],
-        lng: coordinate[1],
+        lat: 37.563685889,
+        lng: 126.975584404,
         is_visit: false,
       });
-      if (response.data.success) {
-        navigation.navigate('ReportWrongInfo', {
-          bin_id,
-          type_name,
-          location_type_name,
-          address,
-          detail,
-          image,
-          isVerifyVisit: true,
-        });
+    } catch (error: any) {
+      if (error.response) {
+        const statusCode = error.response.status;
+        if (statusCode === 400 || statusCode === 403 || statusCode === 404) {
+          console.log('로그인이 필요합니다.' + statusCode);
+        } else {
+          console.log('방문인증을 이미 하셨습니다.');
+        }
       } else {
-        Alert.alert('실패 ㅜㅜ');
+        Alert.alert('에러 발생', `${error.message}`);
       }
-    } catch (error) {
-      Alert.alert(`${error}`);
     }
   };
 
   const handleStampModal = async (isVisit: boolean) => {
     try {
       const response = await api.post(`/bin/visit/${bin_id}`, {
-        lat: coordinate[0],
-        lng: coordinate[1],
+        lat: 37.563685889,
+        lng: 126.975584404,
         is_visit: true,
       });
-      if (response.data.success) {
+      if (response.data.code === 32013) {
         isVisit ? setModalSuccess(false) : setModalFailed(false);
         setModalStamp(true);
       } else {
-        Alert.alert('실패 ㅜㅜ');
+        console.log(response.data.code);
       }
-    } catch (error) {
-      Alert.alert(`${error}`);
+    } catch (error: any) {
+      if (error.response) {
+        const statusCode = error.response.status;
+        if (statusCode === 400 || statusCode === 403 || statusCode === 404) {
+          console.log('로그인이 필요합니다.' + statusCode);
+        } else {
+          console.log('방문인증을 이미 하셨습니다.');
+        }
+      } else {
+        Alert.alert('에러 발생', `${error.message}`);
+      }
     }
   };
 
@@ -196,6 +201,7 @@ export default function VerifyVisit({route}: VerifyVisitProps) {
               source={{uri: URL}}
               javaScriptEnabled={true}
               onMessage={handleMessage}
+              nestedScrollEnabled={true}
               onLoad={() => {
                 console.log('WebView loaded');
                 setIsWebViewLoaded(true);
