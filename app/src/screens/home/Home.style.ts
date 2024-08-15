@@ -1,14 +1,30 @@
 import DefaultText from 'components/DefaultText';
 import {Palette} from 'constants/palette';
 import {Typo} from 'constants/typo';
-import useResponsiveFontSize from 'hooks/useResponsiveFontSize';
 import {Dimensions} from 'react-native';
 import styled from 'styled-components/native';
 
-const {width, height} = Dimensions.get('window');
+const screenWidth = Dimensions.get('window').width;
+const width = screenWidth - 40;
+const widthPassport = (width * 284) / 343;
+const heightPassport = (widthPassport * 363) / 264;
+
+// 기준 너비 (디자인 시안의 너비)
+const guidelineBaseWidth = 375;
+
+// 너비 비율에 따른 폰트 크기 조정
+const scale = (size: number) => (screenWidth / guidelineBaseWidth) * size;
 
 export const Container = styled.View`
   flex: 1;
+  background: ${Palette.Gray1};
+`;
+
+export const Inner = styled.ScrollView`
+  flex: 1;
+`;
+
+export const TopWrapper = styled.View`
   background: ${Palette.Primary};
   padding-top: 18px;
 `;
@@ -27,33 +43,26 @@ export const Bridge = styled.TouchableOpacity`
 `;
 
 export const BridgeIconWrapper = styled.ImageBackground`
-  width: ${(height - 200) / 7}px;
-  height: ${(height - 200) / 7}px;
+  width: 93px;
+  height: 92px;
   justify-content: center;
   align-items: center;
-  /* width: ${(width / 375) * 93}px;
-  height: ${(height / 812) * 92}px; */
 `;
 
 export const BridgeIcon = styled.ImageBackground`
-  position: relative;
-  left: 5%;
-  width: ${((height - 200) / 7) * 0.8}px;
-  height: ${((height - 200) / 7) * 0.8}px;
-  /* width: ${(width / 375) * 92}px;
-  height: ${(height / 812) * 92}px; */
+  width: 40px;
+  height: 66px;
 `;
 
 export const BridgeTextWrapper = styled.ImageBackground`
   flex: 1;
-  height: ${(height - 200) / 7}px;
-  /* height: ${(height / 812) * 92}px; */
+  height: 92px;
   justify-content: center;
   padding-left: 12px;
 `;
 
 export const BridgeText = styled(DefaultText)`
-  font-size: ${useResponsiveFontSize(Typo.Button1.fontSize)};
+  font-size: ${Typo.Button1.fontSize};
   font-weight: ${Typo.Button1.fontWeight};
   color: ${Palette.Black};
 `;
@@ -80,49 +89,48 @@ export const BodyDescription = styled(DefaultText)`
 
 export const PassPortBg = styled.View`
   position: relative;
-  width: ${((height - 200) / 2.2) * 0.78 + 50}px;
-  height: ${(height - 200) / 2.2}px;
+  width: ${width};
+  height: ${Math.round(heightPassport)};
   background: ${Palette.White};
   border-radius: 0px 18px 18px 0px;
   align-self: center;
 `;
 
 export const PassPort = styled.View`
-  width: ${((height - 200) / 2.2) * 0.78}px;
-  height: ${(height - 200) / 2.2}px;
+  width: ${Math.round(widthPassport)};
+  height: ${Math.round(heightPassport)};
   background: ${Palette.Secondary};
   border-radius: 0px 18px 18px 0px;
-  padding: ${(height / 812) * 24}px ${(height / 812) * 10}px;
   align-items: center;
+  padding: 32px 13px;
 `;
 
 export const PassPortTitle = styled(DefaultText)`
   font-family: 'PTSerif-Bold';
-  font-size: ${useResponsiveFontSize(32)}px;
+  font-size: ${scale(32)}px;
   font-weight: 700;
   color: ${Palette.White};
   text-align: center;
 `;
 
 export const ImagePassPort = styled.ImageBackground`
-  width: 100%;
-  height: ${((height - 200) / 2.2) * 0.33}px;
-  margin-top: ${(height / 812) * 20}px;
-  margin-bottom: ${(height / 812) * 12}px;
+  width: ${Math.round(widthPassport - 26)}px;
+  height: ${Math.round(((widthPassport - 26) * 120) / 258)};
+  margin: 24px 0px 14px;
 `;
 
 export const PassPortSubTitle = styled(DefaultText)`
   font-family: 'PTSerif-Italic';
-  font-size: ${useResponsiveFontSize(16)}px;
+  font-size: ${scale(18)}px;
   font-weight: 700;
   color: ${Palette.White};
   text-align: center;
-  margin-bottom: ${(height / 812) * 10}px;
+  margin-bottom: 30px;
 `;
 
 export const IconPassPort = styled.ImageBackground`
-  width: ${(width / 375) * 34}px;
-  height: ${(height / 812) * 19}px;
+  width: ${Math.round(((widthPassport - 26) * 34) / 284)}px;
+  height: ${Math.round(((widthPassport - 26) * 19) / 284)};
 `;
 
 export const ArrowNextWrapper = styled.TouchableOpacity`
@@ -130,7 +138,7 @@ export const ArrowNextWrapper = styled.TouchableOpacity`
   width: 24px;
   height: 24px;
   top: 50%;
-  right: 8px;
+  right: ${(13 * width) / 343};
   margin-top: -12px;
 `;
 
