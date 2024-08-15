@@ -140,3 +140,12 @@ type StampInfo = {
   local_no: number;
   image: number;
 };
+
+type Image = {
+  path?: string;
+  modificationDate?: string;
+  data?: string | number | undefined | any;
+  base64?: any;
+  image?: any;
+  mime?: string | undefined;
+};

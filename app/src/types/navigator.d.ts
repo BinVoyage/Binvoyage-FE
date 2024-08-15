@@ -2,7 +2,7 @@
 type RootTabParamList = {
   HomeNavigator: undefined;
   FindBin: undefined;
-  MyPage: undefined;
+  MyNavigator: undefined;
 };
 
 type RootStackParamList = {
@@ -64,11 +64,5 @@ type RootBinDetailParamList = {
 type RootMyParamList = {
   MyPage: undefined;
   MyComment: undefined;
-  DeleteAccount: undefined;
-};
-
-type RootMyParamList = {
-  MyPage: undefined;
-  MyComment: undefined;
-  DeleteAccount: undefined;
+  LoginInProcess: undefined;
 };

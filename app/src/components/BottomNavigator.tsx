@@ -1,13 +1,13 @@
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import Home from 'screens/home/Home';
 import FindBin from 'screens/FindBin/FindBin';
-import MyPage from 'screens/MyPage';
+import MyPage from 'screens/myPage/MyPage';
 import HomeSvg from 'assets/images/HomeSvg';
 import MySvg from 'assets/images/MySvg';
 import BinSvg from 'assets/images/BinSvg';
 import {Palette} from 'constants/palette';
 import {StyleSheet} from 'react-native';
 import HomeNavigator from './HomeNavigator';
+import MyNavigator from './MyNavigator';
 
 export default function BottomNavigator() {
   const Tab = createBottomTabNavigator<RootTabParamList>();
@@ -40,8 +40,8 @@ export default function BottomNavigator() {
           }}
         />
         <Tab.Screen
-          name="MyPage"
-          component={MyPage}
+          name="MyNavigator"
+          component={MyNavigator}
           options={{
             headerShown: false,
             tabBarLabel: 'MY',

@@ -99,3 +99,17 @@ export const TextFooterLink = styled(DefaultText)`
   text-decoration: underline;
   text-decoration-color: ${Palette.Primary};
 `;
+
+export const ArrowPrevWrapper = styled.TouchableOpacity`
+  position: absolute;
+  top: 30px;
+  left: 16px;
+  width: 24px;
+  height: 24px;
+`;
+
+export const LogoWrapper = styled.ImageBackground`
+  width: 64px;
+  height: 64px;
+  margin-bottom: 18px;
+`;

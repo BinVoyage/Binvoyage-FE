@@ -7,16 +7,18 @@ import {Typo} from 'constants/typo';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {useEffect, useRef, useState} from 'react';
 import api from 'api/api';
+import S_Bin from 'assets/images/S_Bin';
+import S_Recycling from 'assets/images/S_Recycling';
 
 export default function MyComment() {
-  const CommentNavigator = useNavigation<NavigationProp<RootMyParamList>>();
+  const commentNavigator = useNavigation<NavigationProp<RootMyParamList>>();
   const [comment, setComment] = useState<Mycomment[]>([]);
 
   const CommentsData = async () => {
     try {
-      const response = await api.get<MyCommentResponse>('/user/feedback');
+      const response = await api.get('user/feedback');
       setComment(response.data.data.feedback_list);
-      console.log(response.data.data.feedback_list);
+      console.log(response.data.data);
     } catch (error) {
       console.error(error);
     }
@@ -27,26 +29,28 @@ export default function MyComment() {
   }, []);
 
   type ItemProps = {
-    bin_type_name: string;
+    bin_type_name: string | any;
     feedback_id: number;
     registration_dt?: string;
     change_dt?: string;
     content?: string;
     bin_id?: number;
     bin_address?: string;
+    [key: string]: any;
   };
 
   const CommentItem = ({registration_dt, content, bin_address, bin_type_name}: ItemProps) => (
     <ItemWrapper>
       <ItemTopWrapper>
-        <MyImage source={require('assets/images/s_bin.png')} style={{alignItems: 'center'}} />
-        <Text>{bin_type_name}</Text>
+        {bin_type_name === 'Trash' && <S_Bin />}
+        {bin_type_name === 'Recycling' && <S_Recycling />}
+        <BinText>{bin_type_name}</BinText>
         <ItemName>
           <Text>|</Text>
         </ItemName>
         <Text>{registration_dt?.substring(0, 10)}</Text>
         <Deleted>
-          <BinSvg width="24px" height="24px" fill="#9DA0A8" />
+          <BinSvg width="15px" height="17px" fill="#9DA0A8" />
         </Deleted>
       </ItemTopWrapper>
       <AddressText>{bin_address}</AddressText>
@@ -57,7 +61,7 @@ export default function MyComment() {
 
   return (
     <CommentWrapper>
-      <BackDropBox onPress={() => CommentNavigator.navigate('MyPage')}>
+      <BackDropBox onPress={() => commentNavigator.navigate('MyPage')}>
         <ArrowPrevSvg width="24px" height="24px" fill="#5A5E6A" />
       </BackDropBox>
       <FlatList
@@ -98,8 +102,7 @@ const ListBox = styled.FlatList`
 `;
 
 const ItemWrapper = styled.View`
-  width: 343px;
-  height: 117px;
+  width: 100%;
   padding-left: 16px;
   padding-right: 16px;
   padding-bottom: 12px;
@@ -115,11 +118,13 @@ const ItemName = styled.View`
   padding-right: 8px;
   padding-left: 8px;
 `;
-const MyImage = styled.Image`
-  align-content: center;
-  padding-right: 8px;
+
+const BinText = styled.Text`
+  align-content: space-between;
+  font-size: ${Typo.B3.fontSize};
+  font-weight: ${Typo.B3.fontWeight};
 `;
-const Deleted = styled.View`
+const Deleted = styled.Pressable`
   padding-left: 330px;
   padding-right: 16px;
   align-items: right;
@@ -129,6 +134,7 @@ const Deleted = styled.View`
 const AddressText = styled.Text`
   font-size: ${Typo.Title2.fontSize};
   font-weight: ${Typo.Title2.fontWeight};
+  color: ${Palette.Black};
   padding-bottom: 8px;
 `;
 

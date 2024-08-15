@@ -1,15 +1,16 @@
 import {Palette} from 'constants/palette';
-import {Image, Text, View} from 'react-native';
 import styled from 'styled-components/native';
-import NewTrashLocation from 'assets/images/NewTrashLocation';
-import DefaultText from 'components/DefaultText';
 import {Typo} from 'constants/typo';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 import api from 'api/api';
 
-export default function DeleteAccount() {
+interface Props {
+  setDeleteModal: (value: boolean) => void;
+}
+
+export default function DeleteAccount({setDeleteModal}: Props) {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
-  const CommentNavigator = useNavigation<NavigationProp<RootMyParamList>>();
+
   const DeleteAccount = async () => {
     try {
       await api.delete('/user');
@@ -24,18 +25,16 @@ export default function DeleteAccount() {
       <Wrapper>
         <Header>
           <HeadText>Hey, wait!</HeadText>
-          <HeadText> Where are you going?</HeadText>
+          <HeadText>Where are you going?</HeadText>
         </Header>
         <Body>
-          <ContentText>
-            <FirstText>
-              By proceeding, you will delete your BinVoyage account and erase all your personal data stored by BinVoyage. You will lose your stamps
-              and achievements. This action can’t be undone.
-            </FirstText>
-            <SecondText>Are you sure you want to delete your account?</SecondText>
-          </ContentText>
+          <FirstText>
+            By proceeding, you will delete your BinVoyage account and erase all your personal data stored by BinVoyage. You will lose your stamps and
+            achievements. This action can’t be undone.
+          </FirstText>
+          <SecondText>{`Are you sure you want to\ndelete your account?`}</SecondText>
           <ButtonWrapper>
-            <ActiveButton onPress={() => CommentNavigator.navigate('MyPage')}>
+            <ActiveButton onPress={() => setDeleteModal(false)}>
               <ButtonText>Keep my account</ButtonText>
             </ActiveButton>
             <DeleteButton onPress={DeleteAccount}>
@@ -61,6 +60,7 @@ const Background = styled.View`
 const Wrapper = styled.View`
   width: 100%;
   height: 428px;
+  padding: 34px 18px 38px;
   border-radius: 20px 20px 0px 0px;
   background: ${Palette.White};
   gap: 6px;
@@ -68,45 +68,30 @@ const Wrapper = styled.View`
 `;
 
 const Header = styled.View`
-  padding-left: 18px;
-  padding-bottom: 8px;
-  padding-top: 34px;
   align-items: left;
-  border-radius: 20px 20px 0px 0px;
   background: ${Palette.White};
 `;
 
 const HeadText = styled.Text`
-  width: 183px;
-  height: 25px;
   font-weight: ${Typo.Title2.fontWeight};
   font-size: ${Typo.Title2.fontSize};
   color: ${Palette.Black};
 `;
 
-const ContentText = styled.View`
-  width: 336px;
-  height: 166px;
-`;
-
 const FirstText = styled.Text`
-  padding-bottom: 20px;
+  margin-bottom: 20px;
   font-weight: ${Typo.B3.fontWeight};
   font-size: ${Typo.B3.fontSize};
   color: ${Palette.Black};
 `;
 
 const SecondText = styled.Text`
-  width: 230px;
-  padding-bottom: 8px;
+  margin-bottom: 30px;
   font-weight: ${Typo.B3.fontWeight};
   font-size: ${Typo.B3.fontSize};
   color: ${Palette.Black};
 `;
 const Body = styled.View`
-  padding-left: 18px;
-  padding-bottom: 8px;
-  padding-top: 8px;
   flex: 1;
   background: ${Palette.White};
 `;
@@ -119,8 +104,7 @@ const ButtonWrapper = styled.View`
 `;
 
 const ActiveButton = styled.TouchableOpacity`
-  width: 343px;
-  height: 48px;
+  width: 100%;
   padding: 13px 30px;
   border-radius: 10px;
   background: ${Palette.Primary};
@@ -128,8 +112,7 @@ const ActiveButton = styled.TouchableOpacity`
   margin-bottom: 12px;
 `;
 const DeleteButton = styled.TouchableOpacity`
-  width: 343px;
-  height: 48px;
+  width: 100%;
   padding: 14px 30px;
   border-radius: 10px;
   background: ${Palette.Gray3};
