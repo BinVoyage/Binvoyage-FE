@@ -61,16 +61,16 @@ export default function FindBin() {
           const message = {
             type: 'location',
             payload: {
-              // latitude: coords.latitude,
-              // longitude: coords.longitude,
-              latitude: 37.563685889,
-              longitude: 126.975584404,
+              latitude: coords.latitude,
+              longitude: coords.longitude,
+              // latitude: 37.563685889,
+              // longitude: 126.975584404,
             },
           };
           if (currentPosition === null) {
             /* 애뮬레이터 테스트용 */
-            // setCurrentPosition({latitude: coords.latitude, longitude: coords.longitude});
-            setCurrentPosition({latitude: 37.563685889, longitude: 126.975584404});
+            setCurrentPosition({latitude: coords.latitude, longitude: coords.longitude});
+            // setCurrentPosition({latitude: 37.563685889, longitude: 126.975584404});
           }
 
           console.log('Sending message:', JSON.stringify(message)); // 메시지 전송 확인
