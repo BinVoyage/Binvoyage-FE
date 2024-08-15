@@ -116,11 +116,11 @@ export default function MyPage() {
               </S.TextB1>
               <ArrowNextSvg width="24px" height="24px" fill="#BEC1C7" />
             </S.SettingButton>
-            <S.SettingButton onPress={() => setDeleteModal(true)}>
-              <S.TextWrapper>
+            {userInfo ? (
+              <S.SettingButton onPress={() => setDeleteModal(true)}>
                 <S.DeleteText>Delete account</S.DeleteText>
-              </S.TextWrapper>
-            </S.SettingButton>
+              </S.SettingButton>
+            ) : null}
           </S.SettingWrapper>
         </ScrollView>
       </S.MyWrapper>

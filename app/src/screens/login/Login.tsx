@@ -70,6 +70,7 @@ export default function Login() {
     <>
       <S.Container>
         <S.Wrapper>
+          <S.LogoWrapper source={require('assets/images/logo.png')} />
           <S.Title>{'No more wandering.\nStart your BinVoyage!'}</S.Title>
           <S.SignInButtonWrapper>
             <S.AppleSignInButton onPress={handleAppleLogin}>

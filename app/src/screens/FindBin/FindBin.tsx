@@ -251,9 +251,9 @@ export default function FindBin() {
           <S.LocationText>{currentAddress || 'loading...'}</S.LocationText>
         </S.LocationWrapper>
         <S.RowWrapper>
-          <S.FilterWrapperNoIcon onPress={() => handleFilter(0)} isSelected={filterMode === 0} isTrash={false}>
+          {/* <S.FilterWrapperNoIcon onPress={() => handleFilter(0)} isSelected={filterMode === 0} isTrash={false}>
             <S.FilterText isSelected={filterMode === 0}>Recently visited</S.FilterText>
-          </S.FilterWrapperNoIcon>
+          </S.FilterWrapperNoIcon> */}
           <S.FilterWrapper onPress={() => handleFilter(2)} isSelected={filterMode === 2} isTrash={false}>
             <RecyclingFilterSvg width="26" height="26" fill={Palette.Primary} />
             <S.FilterText isSelected={filterMode === 2}>Recycling</S.FilterText>
@@ -274,7 +274,7 @@ export default function FindBin() {
           <S.TextSearchThisArea>Search this area</S.TextSearchThisArea>
         </S.BtnSearchThisArea>
       </Animated.View>
- 
+
       {selectedMarker ? null : (
         <MyBottomSheet onSheetChange={setBottomSheetOffset}>
           {data.length ? (
