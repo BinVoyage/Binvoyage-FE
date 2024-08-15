@@ -7,7 +7,7 @@ interface mapStore {
 
 interface userStore {
   userInfo: UserInfo | null;
-  setUserInfo: (info: UserInfo) => void;
+  setUserInfo: (info: UserInfo | null) => void;
 }
 
 interface Picturestore {

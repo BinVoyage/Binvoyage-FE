@@ -39,7 +39,7 @@ export default function MyPage() {
   const Logout = async () => {
     try {
       await api.delete('/login/logout');
-      console.log('성공');
+      setUserInfo(null);
       navigation.navigate('Login');
     } catch (error) {
       console.log(error);

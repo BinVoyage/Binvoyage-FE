@@ -9,7 +9,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 function App(): React.JSX.Element {
   const [isInitializing, setIsInitializing] = useState(true);
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null);
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
 
   const checkLoginStatus = async () => {
     const token = await AsyncStorage.getItem('authToken');
@@ -31,8 +31,7 @@ function App(): React.JSX.Element {
   return (
     <GestureHandlerRootView style={styles.flex1}>
       <SafeAreaView style={styles.flex1}>
-        {isLoggedIn !== null && <StackNavigator isLoggedIn={isLoggedIn} />}
-
+        {!isInitializing && <StackNavigator isLoggedIn={isLoggedIn} />}
         <Toast config={CustomToastConfig} />
       </SafeAreaView>
     </GestureHandlerRootView>
