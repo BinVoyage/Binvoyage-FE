@@ -85,3 +85,12 @@ type UserInfo = {
   report_cnt: number;
   feedback_cnt: number;
 };
+
+type StampInfo = {
+  user_stamp_id: number;
+  stamp_id: number;
+  registration_dt: string;
+  region_name: string;
+  local_no: number;
+  image: number;
+};
