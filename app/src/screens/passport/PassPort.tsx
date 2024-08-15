@@ -10,15 +10,15 @@ import * as S from 'screens/passport/PassPort.style';
 export default function PassPort() {
   const swiperRef = useRef<Swiper>(null);
   const navigation = useNavigation<NavigationProp<RootHomeParamList>>();
-  // const [stampList, setStampList] = useState<StampInfo[]>([]);
+  const [stampList, setStampList] = useState<StampInfo[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   useEffect(() => {
     const getData = async () => {
       try {
         const response = await api.get('/stamp');
-        // setStampList(response.data.data.user_stamp_list);
-        // setIsLoading(false);
+        setStampList(response.data.data.user_stamp_list);
+        setIsLoading(false);
       } catch (error: any) {
         console.log('error: ' + error.response);
       }
@@ -27,7 +27,7 @@ export default function PassPort() {
     getData();
   }, []);
 
-  const stampList = [{stamp_id: 1}, {stamp_id: 2}, {stamp_id: 3}, {stamp_id: 4}, {stamp_id: 5}, {stamp_id: 6}, {stamp_id: 6}, {stamp_id: 6}];
+  // const stampList = [{stamp_id: 1}, {stamp_id: 2}, {stamp_id: 3}, {stamp_id: 4}, {stamp_id: 5}, {stamp_id: 6}, {stamp_id: 6}, {stamp_id: 6}];
   const dummy = [{stamp_id: 1}, {stamp_id: 2}, {stamp_id: 3}, {stamp_id: 4}, {stamp_id: 5}, {stamp_id: 6}];
 
   const stampsPerPage = 6;

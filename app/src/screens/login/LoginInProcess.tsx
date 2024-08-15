@@ -7,13 +7,14 @@ import AppleSvg from 'assets/images/AppleSvg';
 import {Palette} from 'constants/palette';
 import {Alert, TouchableOpacity} from 'react-native';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
-import Terms from 'components/terms/Terms';
 import api from 'api/api';
 import appleAuth from '@invertase/react-native-apple-authentication';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import ArrowPrevSvg from 'assets/images/ArrowPrevSvg';
 
-export default function Login() {
+export default function LoginInProcess() {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  const myNavigation = useNavigation<NavigationProp<RootMyParamList>>();
 
   useEffect(() => {
     GoogleSignin.configure({
@@ -38,7 +39,7 @@ export default function Login() {
         }
       }
     } catch (error: any) {
-      console.log(error);
+      console.log(error.response.data);
     }
   };
 
@@ -69,9 +70,12 @@ export default function Login() {
   return (
     <>
       <S.Container>
+        <S.ArrowPrevWrapper onPress={() => myNavigation.goBack()}>
+          <ArrowPrevSvg width="24" height="24" fill={Palette.Gray4} />
+        </S.ArrowPrevWrapper>
         <S.Wrapper>
           <S.LogoWrapper source={require('assets/images/logo.png')} />
-          <S.Title>{'No more wandering.\nStart your BinVoyage!'}</S.Title>
+          <S.Title>{'Login simply\nand continue!'}</S.Title>
           <S.SignInButtonWrapper>
             <S.AppleSignInButton onPress={handleAppleLogin}>
               <AppleSvg width="24" height="24" fill={Palette.White} />
@@ -81,26 +85,9 @@ export default function Login() {
               <GoogleSvg width="25" height="24" />
               <S.GoogleSignInText>Continue with Google</S.GoogleSignInText>
             </S.GoogleSignInButton>
-            <S.PassSignInButton onPress={() => navigation.navigate('BottomNavigator')}>
-              <S.PassSignInText>Continue without logging in</S.PassSignInText>
-            </S.PassSignInButton>
           </S.SignInButtonWrapper>
-          <S.TextFooterWrapper>
-            <S.TextFooter>By continuing, you agree to our </S.TextFooter>
-            <TouchableOpacity>
-              <S.TextFooterLink>Terms</S.TextFooterLink>
-            </TouchableOpacity>
-          </S.TextFooterWrapper>
-
-          <S.TextFooterWrapper>
-            <S.TextFooter>See how we use your data in our </S.TextFooter>
-            <TouchableOpacity>
-              <S.TextFooterLink>Privacy Policy</S.TextFooterLink>
-            </TouchableOpacity>
-          </S.TextFooterWrapper>
         </S.Wrapper>
       </S.Container>
-      <Terms />
     </>
   );
 }

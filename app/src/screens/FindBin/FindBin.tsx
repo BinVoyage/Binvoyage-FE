@@ -61,16 +61,16 @@ export default function FindBin() {
           const message = {
             type: 'location',
             payload: {
-              // latitude: coords.latitude,
-              // longitude: coords.longitude,
-              latitude: 37.563685889,
-              longitude: 126.975584404,
+              latitude: coords.latitude,
+              longitude: coords.longitude,
+              // latitude: 37.563685889,
+              // longitude: 126.975584404,
             },
           };
           if (currentPosition === null) {
             /* 애뮬레이터 테스트용 */
-            // setCurrentPosition({latitude: coords.latitude, longitude: coords.longitude});
-            setCurrentPosition({latitude: 37.563685889, longitude: 126.975584404});
+            setCurrentPosition({latitude: coords.latitude, longitude: coords.longitude});
+            // setCurrentPosition({latitude: 37.563685889, longitude: 126.975584404});
           }
 
           console.log('Sending message:', JSON.stringify(message)); // 메시지 전송 확인
@@ -251,9 +251,9 @@ export default function FindBin() {
           <S.LocationText>{currentAddress || 'loading...'}</S.LocationText>
         </S.LocationWrapper>
         <S.RowWrapper>
-          <S.FilterWrapperNoIcon onPress={() => handleFilter(0)} isSelected={filterMode === 0} isTrash={false}>
+          {/* <S.FilterWrapperNoIcon onPress={() => handleFilter(0)} isSelected={filterMode === 0} isTrash={false}>
             <S.FilterText isSelected={filterMode === 0}>Recently visited</S.FilterText>
-          </S.FilterWrapperNoIcon>
+          </S.FilterWrapperNoIcon> */}
           <S.FilterWrapper onPress={() => handleFilter(2)} isSelected={filterMode === 2} isTrash={false}>
             <RecyclingFilterSvg width="26" height="26" fill={Palette.Primary} />
             <S.FilterText isSelected={filterMode === 2}>Recycling</S.FilterText>
@@ -274,7 +274,7 @@ export default function FindBin() {
           <S.TextSearchThisArea>Search this area</S.TextSearchThisArea>
         </S.BtnSearchThisArea>
       </Animated.View>
- 
+
       {selectedMarker ? null : (
         <MyBottomSheet onSheetChange={setBottomSheetOffset}>
           {data.length ? (

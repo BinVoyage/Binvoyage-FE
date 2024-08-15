@@ -25,8 +25,6 @@ export default function StackNavigator({isLoggedIn}: StackNavigatorProps) {
         <Stack.Screen name="OnBoarding" component={Onboarding} />
         <Stack.Screen name="UserInput" component={UserInput} />
         <Stack.Screen name="BinDetailNavigator" component={BinDetailNavigator} />
-        <Stack.Screen name="MyComment" component={MyComment} />
-        <Stack.Screen name="DeleteAccount" component={DeleteAccount} />
       </Stack.Navigator>
     </NavigationContainer>
   );

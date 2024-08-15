@@ -7,7 +7,12 @@ interface mapStore {
 
 interface userStore {
   userInfo: UserInfo | null;
-  setUserInfo: (info: UserInfo) => void;
+  setUserInfo: (info: UserInfo | null) => void;
+}
+
+interface Picturestore {
+  images: Image[];
+  addImages: (newImage: Image) => void;
 }
 
 export const mapStore = create<mapStore>(set => ({
@@ -20,19 +25,6 @@ export const userStore = create<userStore>(set => ({
   setUserInfo: info => set({userInfo: info}),
 }));
 
-type Image = {
-  path?: string;
-  modificationDate?: string;
-  data?: string | number | undefined | any;
-  base64?: any;
-  image?: any;
-  mime?: string | undefined;
-};
-
-type Picturestore = {
-  images: Image[];
-  addImages: (newImage: Image) => void;
-};
 export const pictureStore = create<Picturestore>(set => ({
   images: [],
   addImages: (newImage: Image) =>

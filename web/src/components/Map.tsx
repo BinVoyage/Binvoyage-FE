@@ -49,8 +49,8 @@ const Map = ({ latitude, longitude, triggerSearch, triggerRefresh }: CurrentLoca
     myMarker.setMap(map);
     setCurrentMarker(myMarker); 
     
-    // fetchBinData(latitude, longitude);
-    fetchBinData(37.563685889, 126.975584404); // 지도 초기화 시 데이터 가져오기
+    fetchBinData(latitude, longitude);
+    // fetchBinData(37.563685889, 126.975584404); // 지도 초기화 시 데이터 가져오기
 
     // 중심 좌표 변경 이벤트 리스너 추가
     window.kakao.maps.event.addListener(map, 'center_changed', debounce(handleCenterChanged, 500));

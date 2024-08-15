@@ -25,6 +25,10 @@ export default function BinDetail({route}: BinDetailProps) {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const currentLocation = mapStore(state => state.currentPosition);
 
+  const [labelText, setLabelText] = useState<string>('');
+
+  const lableTextData = ['Most users found this bin!', 'Some users found this bin!', 'May not always be found here'];
+
   useEffect(() => {
     const getBinData = async () => {
       try {
@@ -49,6 +53,19 @@ export default function BinDetail({route}: BinDetailProps) {
     getFeedbackData();
   }, []);
 
+  useEffect(() => {
+    if (binData) {
+      const successRate = binData.success_count / binData.success_count + binData.fail_count * 100;
+      if (successRate >= 70) {
+        setLabelText(lableTextData[0]);
+      } else if (successRate >= 40) {
+        setLabelText(lableTextData[1]);
+      } else {
+        setLabelText(lableTextData[2]);
+      }
+    }
+  }, [binData]);
+
   return (
     <>
       <S.Container>
@@ -58,7 +75,7 @@ export default function BinDetail({route}: BinDetailProps) {
         <ScrollView bounces={false} style={{flex: 1, backgroundColor: Palette.Gray1}}>
           <S.TopContainer>
             <S.TopLabel>
-              <S.TopLabelText>Most users found this bin!</S.TopLabelText>
+              <S.TopLabelText>{labelText}</S.TopLabelText>
             </S.TopLabel>
             <S.Title>{binData?.address}</S.Title>
             <S.RowWrapper style={{justifyContent: 'space-between'}}>

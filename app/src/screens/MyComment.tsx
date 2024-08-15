@@ -7,48 +7,67 @@ import {Typo} from 'constants/typo';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {useEffect, useRef, useState} from 'react';
 import api from 'api/api';
+import S_Bin from 'assets/images/S_Bin';
+import S_Recycling from 'assets/images/S_Recycling';
 
 export default function MyComment() {
-  const CommentNavigator = useNavigation<NavigationProp<RootMyParamList>>();
+  const commentNavigator = useNavigation<NavigationProp<RootMyParamList>>();
   const [comment, setComment] = useState<Mycomment[]>([]);
 
-  const CommentsData = async () => {
+  const getData = async () => {
     try {
-      const response = await api.get<MyCommentResponse>('/user/feedback');
+      const response = await api.get('user/feedback');
       setComment(response.data.data.feedback_list);
-      console.log(response.data.data.feedback_list);
+      console.log(response.data.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const deleteComment = async (feedback_id: number) => {
+    try {
+      const response = await api.delete(`bin/feedback/${feedback_id}`);
+      if (response.status === 200) {
+        setComment(prevComments => prevComments.filter(comment => comment.feedback_id !== feedback_id));
+      } else {
+        console.log('Failed to delete the comment');
+      }
     } catch (error) {
       console.error(error);
     }
   };
 
   useEffect(() => {
-    CommentsData();
+    getData();
   }, []);
 
   type ItemProps = {
-    bin_type_name: string;
+    bin_type_name: string | any;
     feedback_id: number;
     registration_dt?: string;
     change_dt?: string;
     content?: string;
     bin_id?: number;
     bin_address?: string;
+    [key: string]: any;
   };
 
-  const CommentItem = ({registration_dt, content, bin_address, bin_type_name}: ItemProps) => (
+  const CommentItem = ({feedback_id, registration_dt, content, bin_address, bin_type_name}: ItemProps) => (
     <ItemWrapper>
-      <ItemTopWrapper>
-        <MyImage source={require('assets/images/s_bin.png')} style={{alignItems: 'center'}} />
-        <Text>{bin_type_name}</Text>
-        <ItemName>
-          <Text>|</Text>
-        </ItemName>
-        <Text>{registration_dt?.substring(0, 10)}</Text>
-        <Deleted>
-          <BinSvg width="24px" height="24px" fill="#9DA0A8" />
+      <RowWrapper style={{justifyContent: 'space-between'}}>
+        <RowWrapper>
+          {bin_type_name === 'Trash' && <S_Bin />}
+          {bin_type_name === 'Recycling' && <S_Recycling />}
+          <BinText>{bin_type_name}</BinText>
+          <ItemName>
+            <Text>|</Text>
+          </ItemName>
+          <Text>{registration_dt?.substring(0, 10)}</Text>
+        </RowWrapper>
+        <Deleted onPress={() => deleteComment(feedback_id)}>
+          <BinSvg width="15px" height="17px" fill="#9DA0A8" />
         </Deleted>
-      </ItemTopWrapper>
+      </RowWrapper>
       <AddressText>{bin_address}</AddressText>
       <ContentText>{content}</ContentText>
       <Line />
@@ -57,7 +76,7 @@ export default function MyComment() {
 
   return (
     <CommentWrapper>
-      <BackDropBox onPress={() => CommentNavigator.navigate('MyPage')}>
+      <BackDropBox onPress={() => commentNavigator.navigate('MyPage')}>
         <ArrowPrevSvg width="24px" height="24px" fill="#5A5E6A" />
       </BackDropBox>
       <FlatList
@@ -81,61 +100,54 @@ export default function MyComment() {
 
 const CommentWrapper = styled.View`
   width: 100%;
-  height: 800px;
+  flex: 1;
   background: ${Palette.White};
-  display: flex;
+  padding: 13px 16px;
 `;
 
 const BackDropBox = styled.TouchableOpacity`
-  align-items: left;
-  padding-left: 16px;
-  padding-top: 13px;
-`;
-
-const ListBox = styled.FlatList`
-  padding-top: 16px;
-  flex-grow: 1;
+  width: 24px;
+  height: 24px;
+  margin-bottom: 16px;
 `;
 
 const ItemWrapper = styled.View`
-  width: 343px;
-  height: 117px;
-  padding-left: 16px;
-  padding-right: 16px;
-  padding-bottom: 12px;
+  width: 100%;
+  margin-bottom: 12px;
   border-bottom: 1px solid;
 `;
 
-const ItemTopWrapper = styled.View`
+const RowWrapper = styled.View`
   display: flex;
   flex-direction: row;
+  align-items: center;
 `;
 
 const ItemName = styled.View`
-  padding-right: 8px;
-  padding-left: 8px;
+  margin: 0px 8px;
 `;
-const MyImage = styled.Image`
-  align-content: center;
-  padding-right: 8px;
+
+const BinText = styled.Text`
+  align-content: space-between;
+  font-size: ${Typo.B3.fontSize};
+  font-weight: ${Typo.B3.fontWeight};
 `;
-const Deleted = styled.View`
-  padding-left: 330px;
-  padding-right: 16px;
-  align-items: right;
-  position: absolute;
+const Deleted = styled.TouchableOpacity`
+  width: 15px;
+  height: 17px;
 `;
 
 const AddressText = styled.Text`
   font-size: ${Typo.Title2.fontSize};
   font-weight: ${Typo.Title2.fontWeight};
-  padding-bottom: 8px;
+  color: ${Palette.Black};
+  margin-bottom: 8px;
 `;
 
 const ContentText = styled.Text`
   font-size: ${Typo.B3.fontSize};
   font-weight: ${Typo.B3.fontWeight};
-  padding-bottom: 8px;
+  margin-bottom: 8px;
 `;
 
 const Line = styled.View`
