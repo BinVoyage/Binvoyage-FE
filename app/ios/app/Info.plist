@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
-	<string>app</string>
+	<string>BinVoyage</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -60,33 +60,20 @@
 	<dict>
 		<key> NSExceptionDomains </key>
 		<dict>
-			<key>*</key>
-			<dict>
-				<key> NSTemporaryExceptionAllowsInsecureHTTPLoads </key>
-				<true/>
-			</dict>
-			<key>localhost</key>
-			<dict>
-				<key> NSTemporaryExceptionAllowsInsecureHTTPLoads </key>
-				<true/>
-			</dict>
-		</dict>
-		<key>NSAllowsArbitraryLoads</key>
-		<true/>
-		<key> NSExceptionDomains </key>
-    	<dict>
-        	<key>3.37.135.150</key>
+			<key>3.37.135.150</key>
 			<dict>
 				<key> NSTemporaryExceptionAllowsInsecureHTTPLoads </key>
 				<true/>
 				<key>NSTemporaryExceptionMinimumTLSVersion</key>
-				<string>TLSv1.0</string> <!-- TLS 버전을 지정하지 않으면 기본적으로 TLS 1.2 이상을 요구합니다 -->
+				<string>TLSv1.0</string>
 				<key>NSIncludesSubdomains</key>
 				<true/>
 				<key>NSTemporaryExceptionRequiresForwardSecrecy</key>
 				<false/>
 			</dict>
-    	</dict>
+		</dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
 		<key>NSAllowsLocalNetworking</key>
 		<true/>
 	</dict>
