@@ -51,6 +51,7 @@ export default function FindBin() {
     let result;
     if (Platform.OS === 'android') {
       result = await request(PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION);
+      console.log('Android Permission result:', result); // 권한 요청 결과 로그 추가
     } else if (Platform.OS === 'ios') {
       result = await request(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE);
     }
@@ -67,6 +68,7 @@ export default function FindBin() {
               // longitude: 126.975584404,
             },
           };
+
           if (currentPosition === null) {
             /* 애뮬레이터 테스트용 */
             setCurrentPosition({latitude: coords.latitude, longitude: coords.longitude});
@@ -83,9 +85,9 @@ export default function FindBin() {
           }
         },
         error => {
-          console.log(error);
+          console.log('Geolocation error:', error.code, error.message); // 상세한 에러 로그 추가
         },
-        {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000, distanceFilter: 10},
+        {enableHighAccuracy: false, timeout: 20000, maximumAge: 10000, distanceFilter: 10},
       );
       setWatcherId(Ids); // Watcher ID를 상태로 저장
     } else {
@@ -116,6 +118,28 @@ export default function FindBin() {
       }
     };
   }, [isFocused, isWebViewLoaded]);
+
+  useEffect(() => {
+    console.log('currentPositon:' + currentPosition?.latitude, currentPosition?.longitude);
+    const getData = async () => {
+      try {
+        const response = await api.get(`/bin/search?lat=${currentPosition?.latitude}&lng=${currentPosition?.longitude}&radius=2000&filter=0`);
+
+        if (response.status === 200) {
+          setData(response.data.data.bin_list);
+        } else {
+          console.log('실패 ㅜㅜ');
+        }
+      } catch (error: any) {
+        console.log(error.response.data);
+      }
+    };
+
+    if (currentPosition) {
+      console.log('get data!!!');
+      getData();
+    }
+  }, [currentPosition]);
 
   const refreshLocationWatching = () => {
     // 기존의 위치 감시 중지
@@ -205,31 +229,9 @@ export default function FindBin() {
   const itemWidth = (width / 375) * 232;
   const itemSpacing = 16; // 슬라이드 간 간격 설정
 
-  useEffect(() => {
-    console.log('currentPositon:' + currentPosition?.latitude, currentPosition?.longitude);
-    const getData = async () => {
-      try {
-        const response = await api.get(`/bin/search?lat=${currentPosition?.latitude}&lng=${currentPosition?.longitude}&radius=2000&filter=0`);
-
-        if (response.status === 200) {
-          setData(response.data.data.bin_list);
-        } else {
-          console.log('실패 ㅜㅜ');
-        }
-      } catch (error: any) {
-        console.log(error.response.data);
-      }
-    };
-
-    if (currentPosition) {
-      console.log('get data!!!');
-      getData();
-    }
-  }, [currentPosition]);
-
-  useEffect(() => {
-    console.log(data.length);
-  }, [data]);
+  // useEffect(() => {
+  //   console.log(data.length);
+  // }, [data]);
 
   return (
     <View style={styles.container}>
