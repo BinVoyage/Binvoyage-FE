@@ -7,20 +7,12 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:204702405694:android:4e8b0e3fac9accd9282d6f",
+        "mobilesdk_app_id": "1:204702405694:android:a4c10d6a50befc4b282d6f",
         "android_client_info": {
-          "package_name": "com.app"
+          "package_name": "com.binvoyage"
         }
       },
       "oauth_client": [
-        {
-          "client_id": "204702405694-3ffs8igck5vkdnpc1unmkrtkkq9pid3b.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.app",
-            "certificate_hash": "a33a59946c325501eb2af88f3de2327c75643b59"
-          }
-        },
         {
           "client_id": "204702405694-r3ve6275j1le6qbg4cs4nvstsfdkid93.apps.googleusercontent.com",
           "client_type": 3
