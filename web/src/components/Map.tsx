@@ -37,12 +37,13 @@ const Map = ({ latitude, longitude, triggerSearch, triggerRefresh }: CurrentLoca
     const map = new window.kakao.maps.Map(container as HTMLElement, options);
     (mapRef as MutableRefObject<kakao.maps.Map | null>).current = map;
     
-    // fetchBinData를 호출하여 데이터를 먼저 가져옵니다.
-    fetchBinData(latitude, longitude).then(() => {
-      // 데이터가 도착한 후 addMarkersAndOverlays를 호출합니다.
+    setIsMapLoaded(true);
+    fetchBinData(latitude, longitude);
+
+    // 마커 및 기타 오버레이는 맵 로드 후 지연 추가
+    setTimeout(() => {
       addMarkersAndOverlays(map);
-      setIsMapLoaded(true);
-    });
+    }, 500); // 0.5초 지연 후 추가
 
     // 중심 좌표 변경 이벤트 리스너 추가
     window.kakao.maps.event.addListener(map, 'center_changed', debounce(handleCenterChanged, 500));
