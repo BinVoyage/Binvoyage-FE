@@ -6,8 +6,10 @@ import api from 'api/api';
 import {useEffect, useState} from 'react';
 import {userStore} from 'store/Store';
 import DeleteAccount from 'screens/DeleteAccount';
+import {useBackHandler} from 'hooks/useBackHandler';
 
 export default function MyPage() {
+  useBackHandler();
   const commentNavigator = useNavigation<NavigationProp<RootMyParamList>>();
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const {userInfo, setUserInfo} = userStore();

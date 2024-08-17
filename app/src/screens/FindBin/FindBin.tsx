@@ -2,7 +2,6 @@ import {View, Alert, Platform, StyleSheet, Dimensions, TouchableOpacity} from 'r
 import {WebView, WebViewMessageEvent} from 'react-native-webview';
 import {useEffect, useRef, useState} from 'react';
 import {PERMISSIONS, RESULTS, request} from 'react-native-permissions';
-import Geolocation from '@react-native-community/geolocation';
 import * as S from 'screens/FindBin/FindBin.style';
 import LocationSvg from 'assets/images/LocationSvg';
 import {Palette} from 'constants/palette';
@@ -19,8 +18,10 @@ import {useIsFocused} from '@react-navigation/native';
 import api from 'api/api';
 import {mapStore} from 'store/Store';
 import BinBottomSheet from 'components/binBottomSheet/BinBottomSheet';
+import {useBackHandler} from 'hooks/useBackHandler';
 
 export default function FindBin() {
+  useBackHandler();
   const webViewRef = useRef<WebView>(null);
   const [filterMode, setFilterMode] = useState<number>(-1);
   const [currentAddress, setCurrentAddress] = useState<string>('');

@@ -1,4 +1,4 @@
-import {NavigationProp, useNavigation} from '@react-navigation/native';
+import {CommonActions, NavigationProp, useNavigation} from '@react-navigation/native';
 import api from 'api/api';
 import CountryInput from 'components/userInput/CountryInput';
 import NameInput from 'components/userInput/NameInput';
@@ -18,7 +18,12 @@ export default function UserInput() {
       });
 
       if (response.status === 200) {
-        navigation.navigate('BottomNavigator');
+        navigation.dispatch(
+          CommonActions.reset({
+            index: 0,
+            routes: [{name: 'BottomNavigator'}],
+          }),
+        );
       } else {
         console.log('회원정보 등록 실패');
       }
