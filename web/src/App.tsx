@@ -26,6 +26,10 @@ function App() {
 
   // VerifyVisit
   const [verifyLocation, setVerifyLocation] = useState<VerifyLocation | null>(null);
+  // const [verifyLocation, setVerifyLocation] = useState<VerifyLocation | null>({
+  //   latitude: 37.563685889,
+  //   longitude: 126.975584404,
+  // });
 
   useEffect(() => {
     const handleMessage = (event: any) => {
@@ -118,7 +122,8 @@ function App() {
         <Route
           path="/verify"
           element={
-            verifyLocation && <VerifyVisit verifyLocation={verifyLocation} />
+            // verifyLocation && <VerifyVisit verifyLocation={verifyLocation} />
+            <VerifyVisit verifyLocation={verifyLocation!} />
           }
         />
       </Routes>

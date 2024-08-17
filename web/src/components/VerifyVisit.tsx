@@ -1,4 +1,5 @@
 import { MutableRefObject, useEffect, useRef, useState } from "react";
+import { Palette } from "../constants/palette";
 
 type VerifyVisitProps = {
     verifyLocation: VerifyLocationType
@@ -121,7 +122,7 @@ const VerifyVisit = ({ verifyLocation }: VerifyVisitProps) => {
   }, [latitude, longitude, isMapLoaded]);
 
   return (
-    <div id="verifyVisitMap" style={{ width: "100vw", height: "100vh" }}></div>
+    <div id="verifyVisitMap" style={{ width: "100vw", height: "100vh", background: Palette.Gray1 }}></div>
   );
 };
 

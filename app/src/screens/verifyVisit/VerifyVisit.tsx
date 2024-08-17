@@ -28,7 +28,7 @@ export default function VerifyVisit({route}: VerifyVisitProps) {
   const webViewRef = useRef<WebView>(null);
   const [watcherId, setWatcherId] = useState<number | null>(null); // Watcher ID를 저장할 상태
   const [isWebViewLoaded, setIsWebViewLoaded] = useState<boolean>(false); // WebView 로드 상태
-  // const isFocused = useIsFocused();
+  const [currentLocation, setCurrentLocation] = useState<CurrentPosition | null>(null);
 
   const URL = 'https://binvoyage.netlify.app/verify';
 
@@ -44,6 +44,7 @@ export default function VerifyVisit({route}: VerifyVisitProps) {
       const Ids = Geolocation.watchPosition(
         position => {
           const {coords} = position;
+          setCurrentLocation({latitude: coords.latitude, longitude: coords.latitude});
           const message = {
             type: 'verify',
             payload: {
@@ -71,7 +72,7 @@ export default function VerifyVisit({route}: VerifyVisitProps) {
         error => {
           console.log('Error in watchPosition:', error); // 에러 로그 출력
         },
-        {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000, distanceFilter: 10},
+        {enableHighAccuracy: false, timeout: 15000, maximumAge: 10000, distanceFilter: 10},
       );
       console.log('Watcher ID set:', Ids); // Watcher ID 설정 확인
       setWatcherId(Ids); // Watcher ID를 상태로 저장
@@ -111,8 +112,8 @@ export default function VerifyVisit({route}: VerifyVisitProps) {
   const handleReportIssue = async () => {
     try {
       const response = await api.post(`/bin/visit/${bin_id}`, {
-        lat: 37.563685889,
-        lng: 126.975584404,
+        lat: currentLocation?.latitude,
+        lng: currentLocation?.longitude,
         is_visit: false,
       });
     } catch (error: any) {
@@ -132,8 +133,8 @@ export default function VerifyVisit({route}: VerifyVisitProps) {
   const handleStampModal = async (isVisit: boolean) => {
     try {
       const response = await api.post(`/bin/visit/${bin_id}`, {
-        lat: 37.563685889,
-        lng: 126.975584404,
+        lat: currentLocation?.latitude,
+        lng: currentLocation?.longitude,
         is_visit: true,
       });
       if (response.data.code === 32013) {
@@ -183,7 +184,7 @@ export default function VerifyVisit({route}: VerifyVisitProps) {
           <S.AddressWrapper>
             <S.TextInfoB3>{address}</S.TextInfoB3>
           </S.AddressWrapper>
-          <S.ImageArea />
+          {image ?? <S.ImageArea />}
           <S.DetailWrapper style={{marginBottom: 16}}>
             <S.RowWrapper style={{justifyContent: 'flex-start'}}>
               <S.TextLocation>Location details</S.TextLocation>
@@ -202,11 +203,12 @@ export default function VerifyVisit({route}: VerifyVisitProps) {
               javaScriptEnabled={true}
               onMessage={handleMessage}
               nestedScrollEnabled={true}
-              onLoad={() => {
+              onLoadEnd={() => {
                 console.log('WebView loaded');
                 setIsWebViewLoaded(true);
               }}
             />
+            {!isWebViewLoaded && <S.TextWebViewLoading>isLoading...</S.TextWebViewLoading>}
           </S.WebViewContainer>
         </ScrollView>
         <S.BtnContainer>

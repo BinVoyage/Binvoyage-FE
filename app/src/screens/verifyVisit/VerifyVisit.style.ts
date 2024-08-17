@@ -52,16 +52,13 @@ export const AddressWrapper = styled.View`
   align-items: center;
   border-radius: 100px;
   background: ${Palette.Gray1};
-  margin-top: 14px;
+  margin: 14px 0px 16px;
   align-self: center;
 `;
 
 export const ImageArea = styled.ImageBackground`
   width: ${width}px;
   height: ${(width * 186) / 343}px;
-  border: 1px solid red;
-  border-radius: 10px;
-  margin: 18px 0px;
 `;
 
 export const DetailWrapper = styled.View`
@@ -123,4 +120,10 @@ export const WebViewContainer = styled.View`
   width: ${width}px;
   height: ${Math.round((width * 238) / 348)}px;
   border-radius: 10px;
+`;
+
+export const TextWebViewLoading = styled(DefaultText)`
+  font-size: ${Typo.B1.fontSize};
+  font-weight: ${Typo.B1.fontWeight};
+  color: ${Palette.Black};
 `;
