@@ -122,8 +122,7 @@ function App() {
         <Route
           path="/verify"
           element={
-            // verifyLocation && <VerifyVisit verifyLocation={verifyLocation} />
-            <VerifyVisit verifyLocation={verifyLocation!} />
+            verifyLocation && <VerifyVisit verifyLocation={verifyLocation} />
           }
         />
       </Routes>
