@@ -26,6 +26,10 @@ function App() {
 
   // VerifyVisit
   const [verifyLocation, setVerifyLocation] = useState<VerifyLocation | null>(null);
+  // const [verifyLocation, setVerifyLocation] = useState<VerifyLocation | null>({
+  //   latitude: 37.563685889,
+  //   longitude: 126.975584404,
+  // });
 
   useEffect(() => {
     const handleMessage = (event: any) => {

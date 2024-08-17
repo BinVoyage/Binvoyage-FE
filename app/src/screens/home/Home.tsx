@@ -2,11 +2,13 @@ import {NavigationProp, useNavigation} from '@react-navigation/native';
 import api from 'api/api';
 import ArrowNextSvg from 'assets/images/ArrowNextSvg';
 import {Palette} from 'constants/palette';
+import {useBackHandler} from 'hooks/useBackHandler';
 import {useEffect, useState} from 'react';
 import * as S from 'screens/home/Home.style';
 import {userStore} from 'store/Store';
 
 export default function Home() {
+  useBackHandler();
   const navigation1 = useNavigation<NavigationProp<RootTabParamList>>();
   const navigation2 = useNavigation<NavigationProp<RootHomeParamList>>();
   const {userInfo, setUserInfo} = userStore();

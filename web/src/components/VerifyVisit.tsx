@@ -1,4 +1,5 @@
 import { MutableRefObject, useEffect, useRef, useState } from "react";
+import { Palette } from "../constants/palette";
 
 type VerifyVisitProps = {
     verifyLocation: VerifyLocationType
@@ -26,8 +27,21 @@ const VerifyVisit = ({ verifyLocation }: VerifyVisitProps) => {
       level: 3,
     };
 
+    const map = new window.kakao.maps.Map(container as HTMLElement, options);
+    (mapRef as MutableRefObject<kakao.maps.Map | null>).current = map;
+
+    setIsMapLoaded(true);
+
+    // 마커 및 기타 오버레이는 맵 로드 후 지연 추가
+    setTimeout(() => {
+      addMarkersAndOverlays(map);
+    }, 500); // 0.5초 지연 후 추가
+
+  };
+
+  const addMarkersAndOverlays = (map: kakao.maps.Map) => {
     const currentImageSrc = "image/Current.svg";
-    const binImageSrc = "image/targetMarker.svg"; // 쓰레기통 마커 이미지
+    const binImageSrc = "image/targetMarker.svg";
     const imageSize = new window.kakao.maps.Size(30, 30);
     const imageOption = { offset: new window.kakao.maps.Point(15, 15) };
     const currentImage = new window.kakao.maps.MarkerImage(currentImageSrc, imageSize, imageOption);
@@ -48,23 +62,19 @@ const VerifyVisit = ({ verifyLocation }: VerifyVisitProps) => {
       zIndex: 1,
     });
 
-    const map = new window.kakao.maps.Map(container as HTMLElement, options);
-    (mapRef as MutableRefObject<kakao.maps.Map | null>).current = map;
     myMarker.setMap(map);
     myBinMarker.setMap(map);
     setBinMarker(myBinMarker);
     setCurrentMarker(myMarker);
-    setIsMapLoaded(true);
 
-    // 50m 반경의 노란색 원을 쓰레기통 주변에 표시
     const circle = new window.kakao.maps.Circle({
       center: binPosition,
-      radius: 50, // 반경 50미터
+      radius: 50,
       strokeWeight: 2,
-      strokeColor: '#FFD700',
+      strokeColor: "#FFD700",
       strokeOpacity: 0.8,
-      strokeStyle: 'solid',
-      fillColor: '#FFD700',
+      strokeStyle: "solid",
+      fillColor: "#FFD700",
       fillOpacity: 0.3,
     });
     circle.setMap(map);
@@ -74,8 +84,6 @@ const VerifyVisit = ({ verifyLocation }: VerifyVisitProps) => {
       path: [currentPosition, binPosition],
     });
     const calculatedDistance = poly.getLength(); // 미터 단위 거리 계산
-
-    // 현재 위치가 50m 반경 내에 있는지 확인 및 상태 설정
     checkProximity(calculatedDistance);
   };
 
@@ -121,7 +129,7 @@ const VerifyVisit = ({ verifyLocation }: VerifyVisitProps) => {
   }, [latitude, longitude, isMapLoaded]);
 
   return (
-    <div id="verifyVisitMap" style={{ width: "100vw", height: "100vh" }}></div>
+    <div id="verifyVisitMap" style={{ width: "100vw", height: "100vh", background: Palette.Gray1 }}></div>
   );
 };
 

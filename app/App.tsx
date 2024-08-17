@@ -18,7 +18,9 @@ function App(): React.JSX.Element {
   };
 
   useEffect(() => {
-    checkLoginStatus().finally(() => {
+    // 3초 대기 시간과 로그인 상태 확인을 병렬로 처리
+    Promise.all([checkLoginStatus(), new Promise(resolve => setTimeout(resolve, 3000))]).finally(() => {
+      setIsInitializing(false);
       SplashScreen.hide();
     });
   }, []);

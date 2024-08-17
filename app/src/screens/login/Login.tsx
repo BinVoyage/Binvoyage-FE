@@ -11,8 +11,10 @@ import Terms from 'components/terms/Terms';
 import api from 'api/api';
 import appleAuth from '@invertase/react-native-apple-authentication';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useBackHandler} from 'hooks/useBackHandler';
 
 export default function Login() {
+  useBackHandler();
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
   useEffect(() => {

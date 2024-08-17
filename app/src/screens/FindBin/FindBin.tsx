@@ -2,7 +2,6 @@ import {View, Alert, Platform, StyleSheet, Dimensions, TouchableOpacity} from 'r
 import {WebView, WebViewMessageEvent} from 'react-native-webview';
 import {useEffect, useRef, useState} from 'react';
 import {PERMISSIONS, RESULTS, request} from 'react-native-permissions';
-import Geolocation from '@react-native-community/geolocation';
 import * as S from 'screens/FindBin/FindBin.style';
 import LocationSvg from 'assets/images/LocationSvg';
 import {Palette} from 'constants/palette';
@@ -19,21 +18,23 @@ import {useIsFocused} from '@react-navigation/native';
 import api from 'api/api';
 import {mapStore} from 'store/Store';
 import BinBottomSheet from 'components/binBottomSheet/BinBottomSheet';
+import {useBackHandler} from 'hooks/useBackHandler';
 
 export default function FindBin() {
+  useBackHandler();
   const webViewRef = useRef<WebView>(null);
   const [filterMode, setFilterMode] = useState<number>(-1);
   const [currentAddress, setCurrentAddress] = useState<string>('');
-  const [watcherId, setWatcherId] = useState<number | null>(null); // Watcher ID를 저장할 상태
   const [isWebViewLoaded, setIsWebViewLoaded] = useState<boolean>(false); // WebView 로드 상태
   const [bottomSheetOffset, setBottomSheetOffset] = useState<number>(0); // BottomSheet의 높이 또는 offset 상태
   const [isSearchShow, setIsSearchShow] = useState<boolean>(false);
   const carouselRef = useRef(null);
   const [data, setData] = useState<BinItemProps[]>([]);
-  const {currentPosition, setCurrentPosition} = mapStore();
+  const currentPosition = mapStore(state => state.currentPosition);
+  const {startWatchingPosition, stopWatchingPosition} = mapStore();
   const [selectedMarker, setSelectedMarker] = useState<number | null>(null);
 
-  const isFocused = useIsFocused();
+  // const isFocused = useIsFocused();
 
   const {width, height} = Dimensions.get('window');
   const refreshWrapperBottom = bottomSheetOffset > 0 ? bottomSheetOffset + 10 : 40;
@@ -56,40 +57,25 @@ export default function FindBin() {
       result = await request(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE);
     }
     if (result === RESULTS.GRANTED) {
-      const Ids = Geolocation.watchPosition(
-        position => {
-          const {coords} = position;
-          const message = {
-            type: 'location',
-            payload: {
-              latitude: coords.latitude,
-              longitude: coords.longitude,
-              // latitude: 37.563685889,
-              // longitude: 126.975584404,
-            },
-          };
+      startWatchingPosition(position => {
+        const message = {
+          type: 'location',
+          payload: {
+            latitude: position.latitude,
+            longitude: position.longitude,
+            // latitude: 37.563685889,
+            // longitude: 126.975584404,
+          },
+        };
+        console.log('Sending message:', JSON.stringify(message)); // 메시지 전송 확인
 
-          if (currentPosition === null) {
-            /* 애뮬레이터 테스트용 */
-            setCurrentPosition({latitude: coords.latitude, longitude: coords.longitude});
-            // setCurrentPosition({latitude: 37.563685889, longitude: 126.975584404});
-          }
-
-          console.log('Sending message:', JSON.stringify(message)); // 메시지 전송 확인
-
-          if (isWebViewLoaded && webViewRef.current) {
-            setTimeout(() => {
-              // 지연을 주고 메시지 전송
-              webViewRef.current?.postMessage(JSON.stringify(message));
-            }, 500); // 0.5초 지연
-          }
-        },
-        error => {
-          console.log('Geolocation error:', error.code, error.message); // 상세한 에러 로그 추가
-        },
-        {enableHighAccuracy: false, timeout: 20000, maximumAge: 10000, distanceFilter: 10},
-      );
-      setWatcherId(Ids); // Watcher ID를 상태로 저장
+        if (isWebViewLoaded && webViewRef.current) {
+          setTimeout(() => {
+            // 지연을 주고 메시지 전송
+            webViewRef.current?.postMessage(JSON.stringify(message));
+          }, 500); // 0.5초 지연
+        }
+      });
     } else {
       Alert.alert('위치 권한이 필요합니다!', '위치 권한을 켜주세요!', [
         {
@@ -101,23 +87,12 @@ export default function FindBin() {
   };
 
   useEffect(() => {
-    if (isFocused && isWebViewLoaded) {
-      requestPermissionAndSendLocation();
-    } else {
-      // 다른 페이지로 이동한 경우 위치 감지를 중지
-      if (watcherId !== null) {
-        Geolocation.clearWatch(watcherId);
-        setWatcherId(null);
-      }
-    }
+    requestPermissionAndSendLocation();
 
     return () => {
-      if (!isFocused && watcherId !== null) {
-        Geolocation.clearWatch(watcherId);
-        setWatcherId(null);
-      }
+      stopWatchingPosition(); // 컴포넌트가 언마운트될 때만 위치 추적을 중지
     };
-  }, [isFocused, isWebViewLoaded]);
+  }, [isWebViewLoaded]);
 
   useEffect(() => {
     console.log('currentPositon:' + currentPosition?.latitude, currentPosition?.longitude);

@@ -1,4 +1,3 @@
-import Geolocation from '@react-native-community/geolocation';
 import {NavigationProp, RouteProp, useIsFocused, useNavigation} from '@react-navigation/native';
 import api from 'api/api';
 import ArrowPrevSvg from 'assets/images/ArrowPrevSvg';
@@ -9,9 +8,9 @@ import ModalSuccess from 'components/modalVerifyVisit/ModalSuccess';
 import {Palette} from 'constants/palette';
 import {useEffect, useRef, useState} from 'react';
 import {Alert, Platform, ScrollView} from 'react-native';
-import {request, PERMISSIONS, RESULTS} from 'react-native-permissions';
 import WebView, {WebViewMessageEvent} from 'react-native-webview';
 import * as S from 'screens/verifyVisit/VerifyVisit.style';
+import {mapStore} from 'store/Store';
 
 type VerifyVisitProps = {
   route: RouteProp<RootBinDetailParamList, 'VerifyVisit'>;
@@ -26,79 +25,39 @@ export default function VerifyVisit({route}: VerifyVisitProps) {
   const [modalFailed, setModalFailed] = useState<boolean>(false);
   const [modalStamp, setModalStamp] = useState<boolean>(false);
   const webViewRef = useRef<WebView>(null);
-  const [watcherId, setWatcherId] = useState<number | null>(null); // Watcher ID를 저장할 상태
   const [isWebViewLoaded, setIsWebViewLoaded] = useState<boolean>(false); // WebView 로드 상태
-  // const isFocused = useIsFocused();
+  const {startWatchingPosition, stopWatchingPosition} = mapStore();
+  const currentPosition = mapStore(state => state.currentPosition);
 
   const URL = 'https://binvoyage.netlify.app/verify';
 
-  const requestPermissionAndSendLocation = async () => {
-    console.log('requestPermissionAndSendLocation called');
-    let result;
-    if (Platform.OS === 'android') {
-      result = await request(PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION);
-    } else if (Platform.OS === 'ios') {
-      result = await request(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE);
-    }
-    if (result === RESULTS.GRANTED) {
-      const Ids = Geolocation.watchPosition(
-        position => {
-          const {coords} = position;
-          const message = {
-            type: 'verify',
-            payload: {
-              latitude: coords.latitude,
-              longitude: coords.longitude,
-              bin_lat: coordinate[1],
-              bin_lng: coordinate[0],
-              // latitude: 37.563685889,
-              // longitude: 126.975584404,
-              // bin_lat: 37.568677620456,
-              // bin_lng: 126.977657083792,
-            },
-          };
-
-          console.log('Location updated:', coords); // 위치 정보 로그 출력
-          console.log('Sending message:', JSON.stringify(message)); // 메시지 전송 확인
-
-          if (isWebViewLoaded && webViewRef.current) {
-            setTimeout(() => {
-              // 지연을 주고 메시지 전송
-              webViewRef.current?.postMessage(JSON.stringify(message));
-            }, 500); // 0.5초 지연
-          }
-        },
-        error => {
-          console.log('Error in watchPosition:', error); // 에러 로그 출력
-        },
-        {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000, distanceFilter: 10},
-      );
-      console.log('Watcher ID set:', Ids); // Watcher ID 설정 확인
-      setWatcherId(Ids); // Watcher ID를 상태로 저장
-    } else {
-      Alert.alert('위치 권한이 필요합니다!', '위치 권한을 켜주세요!', [
-        {
-          text: 'OK',
-          onPress: () => requestPermissionAndSendLocation(),
-        },
-      ]);
-    }
-  };
-
   useEffect(() => {
-    console.log('useEffect triggered:', {isWebViewLoaded}); // useEffect 트리거 로그
-    if (isWebViewLoaded && watcherId === null) {
-      requestPermissionAndSendLocation();
-    }
+    startWatchingPosition();
 
     return () => {
-      console.log('Component unmounted, clearing watcher if exists'); // 언마운트 로그
-      if (watcherId !== null) {
-        Geolocation.clearWatch(watcherId);
-        setWatcherId(null);
-      }
+      stopWatchingPosition();
     };
-  }, [isWebViewLoaded, watcherId]);
+  }, []);
+
+  useEffect(() => {
+    if (isWebViewLoaded && currentPosition) {
+      const message = {
+        type: 'verify',
+        payload: {
+          latitude: currentPosition.latitude,
+          longitude: currentPosition.longitude,
+          bin_lat: coordinate[1],
+          bin_lng: coordinate[0],
+        },
+      };
+
+      setTimeout(() => {
+        // 지연을 주고 메시지 전송
+        webViewRef.current?.postMessage(JSON.stringify(message));
+        console.log('Sending message:', JSON.stringify(message)); // 메시지 전송 확인
+      }, 500); // 0.5초 지연
+    }
+  }, [isWebViewLoaded, currentPosition]);
 
   useEffect(() => {
     if (isValid) {
@@ -111,8 +70,8 @@ export default function VerifyVisit({route}: VerifyVisitProps) {
   const handleReportIssue = async () => {
     try {
       const response = await api.post(`/bin/visit/${bin_id}`, {
-        lat: 37.563685889,
-        lng: 126.975584404,
+        lat: currentPosition?.latitude,
+        lng: currentPosition?.longitude,
         is_visit: false,
       });
     } catch (error: any) {
@@ -132,8 +91,8 @@ export default function VerifyVisit({route}: VerifyVisitProps) {
   const handleStampModal = async (isVisit: boolean) => {
     try {
       const response = await api.post(`/bin/visit/${bin_id}`, {
-        lat: 37.563685889,
-        lng: 126.975584404,
+        lat: currentPosition?.latitude,
+        lng: currentPosition?.longitude,
         is_visit: true,
       });
       if (response.data.code === 32013) {
@@ -183,7 +142,7 @@ export default function VerifyVisit({route}: VerifyVisitProps) {
           <S.AddressWrapper>
             <S.TextInfoB3>{address}</S.TextInfoB3>
           </S.AddressWrapper>
-          <S.ImageArea />
+          {image ?? <S.ImageArea />}
           <S.DetailWrapper style={{marginBottom: 16}}>
             <S.RowWrapper style={{justifyContent: 'flex-start'}}>
               <S.TextLocation>Location details</S.TextLocation>
@@ -202,11 +161,12 @@ export default function VerifyVisit({route}: VerifyVisitProps) {
               javaScriptEnabled={true}
               onMessage={handleMessage}
               nestedScrollEnabled={true}
-              onLoad={() => {
+              onLoadEnd={() => {
                 console.log('WebView loaded');
                 setIsWebViewLoaded(true);
               }}
             />
+            {!isWebViewLoaded && <S.TextWebViewLoading>isLoading...</S.TextWebViewLoading>}
           </S.WebViewContainer>
         </ScrollView>
         <S.BtnContainer>

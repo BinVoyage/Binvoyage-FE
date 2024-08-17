@@ -191,9 +191,16 @@ const Map = ({ latitude, longitude, triggerSearch, triggerRefresh }: CurrentLoca
     if (mapRef.current && isMapLoaded && currentMarker) {
       const currentPosition = new window.kakao.maps.LatLng(latitude, longitude);
       currentMarker.setPosition(currentPosition);
+    }
+  }, [latitude, longitude, isMapLoaded]);
+
+  // triggerRefresh가 변경될 때만 지도 중심 이동 처리
+  useEffect(() => {
+    if (mapRef.current && isMapLoaded && currentMarker && triggerRefresh) {
+      const currentPosition = new window.kakao.maps.LatLng(latitude, longitude);
       mapRef.current.setCenter(currentPosition);
     }
-  }, [latitude, longitude, isMapLoaded, triggerRefresh]);
+  }, [triggerRefresh, isMapLoaded]);
 
   useEffect(() => {
     filterMarkers(filterMode); // filterMode 변경 시 마커 필터링
