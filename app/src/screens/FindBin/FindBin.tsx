@@ -34,8 +34,6 @@ export default function FindBin() {
   const {startWatchingPosition, stopWatchingPosition} = mapStore();
   const [selectedMarker, setSelectedMarker] = useState<number | null>(null);
 
-  // const isFocused = useIsFocused();
-
   const {width, height} = Dimensions.get('window');
   const refreshWrapperBottom = bottomSheetOffset > 0 ? bottomSheetOffset + 10 : 40;
 
@@ -46,7 +44,6 @@ export default function FindBin() {
   }, [refreshWrapperBottom]);
 
   const URL = 'https://binvoyage.netlify.app/';
-  // const URL = 'http://localhost:5173/';
 
   const requestPermissionAndSendLocation = async () => {
     let result;
@@ -117,13 +114,6 @@ export default function FindBin() {
   }, [currentPosition]);
 
   const refreshLocationWatching = () => {
-    // 기존의 위치 감시 중지
-    // if (watcherId !== null) {
-    //   Geolocation.clearWatch(watcherId);
-    // }
-    // // 새로 위치 감시 시작
-    // requestPermissionAndSendLocation();
-
     if (webViewRef.current) {
       const message = {
         type: 'refresh',
@@ -203,10 +193,6 @@ export default function FindBin() {
   const renderItem = ({item}: {item: BinItemProps}) => <BinItem item={item} />;
   const itemWidth = (width / 375) * 232;
   const itemSpacing = 16; // 슬라이드 간 간격 설정
-
-  // useEffect(() => {
-  //   console.log(data.length);
-  // }, [data]);
 
   return (
     <View style={styles.container}>

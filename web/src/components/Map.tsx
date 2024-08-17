@@ -34,6 +34,29 @@ const Map = ({ latitude, longitude, triggerSearch, triggerRefresh }: CurrentLoca
       level: 3
     };
 
+    const map = new window.kakao.maps.Map(container as HTMLElement, options);
+    (mapRef as MutableRefObject<kakao.maps.Map | null>).current = map;
+    
+    // fetchBinData를 호출하여 데이터를 먼저 가져옵니다.
+    fetchBinData(latitude, longitude).then(() => {
+      // 데이터가 도착한 후 addMarkersAndOverlays를 호출합니다.
+      addMarkersAndOverlays(map);
+      setIsMapLoaded(true);
+    });
+
+    // 중심 좌표 변경 이벤트 리스너 추가
+    window.kakao.maps.event.addListener(map, 'center_changed', debounce(handleCenterChanged, 500));
+
+    // 맵 클릭 이벤트 리스너 추가
+    window.kakao.maps.event.addListener(map, 'click', function() {
+      const message = {
+        type: 'mapClick',
+      };
+      window.ReactNativeWebView?.postMessage(JSON.stringify(message));
+    });
+  };
+
+  const addMarkersAndOverlays = (map: kakao.maps.Map) => {
     const currentImageSrc = "image/Current.svg";
     const imageSize = new window.kakao.maps.Size(30, 30);
     const imageOption = { offset: new window.kakao.maps.Point(15, 15) };
@@ -44,36 +67,9 @@ const Map = ({ latitude, longitude, triggerSearch, triggerRefresh }: CurrentLoca
       image: currentImage,
     });
 
-    const map = new window.kakao.maps.Map(container as HTMLElement, options);
-    (mapRef as MutableRefObject<kakao.maps.Map | null>).current = map;
     myMarker.setMap(map);
-    setCurrentMarker(myMarker); 
-    
-    fetchBinData(latitude, longitude);
-    // fetchBinData(37.563685889, 126.975584404); // 지도 초기화 시 데이터 가져오기
-
-    // 중심 좌표 변경 이벤트 리스너 추가
-    window.kakao.maps.event.addListener(map, 'center_changed', debounce(handleCenterChanged, 500));
-
-    // 사용자가 확대/축소할 때 최대 레벨을 제한하는 이벤트 리스너 추가
-    // window.kakao.maps.event.addListener(map, 'zoom_changed', function() {
-    //   const currentLevel = map.getLevel();
-    //   if (currentLevel > 7) { // 최대 레벨을 7로 제한
-    //     map.setLevel(7); // 다시 레벨 7로 되돌림
-    //   }
-    //   map.setCenter(currentPosition); // 현재 위치를 중심으로 설정
-    // });
-
-    // 맵 클릭 이벤트 리스너 추가
-    window.kakao.maps.event.addListener(map, 'click', function() {
-      const message = {
-        type: 'mapClick',
-      };
-      window.ReactNativeWebView?.postMessage(JSON.stringify(message));
-    });
-
-    setIsMapLoaded(true);
-  };
+    setCurrentMarker(myMarker);
+  }
 
    // API를 통해 실제 데이터를 가져오는 함수
    const fetchBinData = async (lat: number, lng: number) => {
