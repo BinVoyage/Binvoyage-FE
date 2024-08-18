@@ -8,6 +8,7 @@ const width = Dimensions.get('window').width;
 
 export const CustomToastConfig = {
   success: (props: BaseToastProps) => <BaseToast {...props} style={styles.success} text1Style={styles.text1} />,
+  error: (props: BaseToastProps) => <BaseToast {...props} style={styles.error} text1Style={styles.text1} />,
 };
 
 const styles = StyleSheet.create({
@@ -17,6 +18,21 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     borderLeftWidth: 0,
     shadowColor: '#0B0A1E',
+    shadowOffset: {
+      width: 0,
+      height: 5,
+    },
+    shadowOpacity: 0.18,
+    shadowRadius: 12,
+    elevation: 10,
+  },
+
+  error: {
+    width: width - 32,
+    backgroundColor: 'rgba(204, 45, 45, 0.9)',
+    borderRadius: 10,
+    borderLeftWidth: 0,
+    shadowColor: '#B22222',
     shadowOffset: {
       width: 0,
       height: 5,

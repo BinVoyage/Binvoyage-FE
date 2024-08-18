@@ -4,7 +4,7 @@ import {Image} from 'react-native';
 
 interface Props {
   handleReportIssue: () => void;
-  handleStampModal: (isVisit: boolean) => void;
+  handleStampModal: () => void;
 }
 
 export default function ModalFailed({handleReportIssue, handleStampModal}: Props) {
@@ -18,7 +18,7 @@ export default function ModalFailed({handleReportIssue, handleStampModal}: Props
         <S.Button isPrimary style={{marginBottom: 10}} onPress={handleReportIssue}>
           <S.ButtonText isPrimary>Report issue</S.ButtonText>
         </S.Button>
-        <S.Button onPress={() => handleStampModal(false)}>
+        <S.Button onPress={handleStampModal}>
           <S.ButtonText>Maybe next time</S.ButtonText>
         </S.Button>
       </S.Container>
