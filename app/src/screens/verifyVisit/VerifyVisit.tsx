@@ -164,12 +164,12 @@ export default function VerifyVisit({route}: VerifyVisitProps) {
 
   const handleReportIssue = () => {
     navigation.navigate('ReportWrongInfo', {
-      bin_id: bin_id ?? -1,
-      type_name: type_name ?? '',
-      location_type_name: location_type_name ?? '',
-      address: address ?? '',
-      detail: detail ?? '',
-      image: image ?? '',
+      bin_id: bin_id,
+      type_name: type_name,
+      location_type_name: location_type_name,
+      address: address,
+      detail: detail,
+      image: image,
       isVerifyVisit: true,
     });
   };

@@ -37,6 +37,7 @@ export default function ModalSuccess({bin_id, address, coordinate, handleStampMo
           });
           handleStampModal();
         } else {
+          console.log('실패');
           Toast.show({
             type: 'error',
             text1: 'Something went wrong. Please try again later.',
@@ -47,6 +48,7 @@ export default function ModalSuccess({bin_id, address, coordinate, handleStampMo
           handleStampModal();
         }
       } catch (error) {
+        console.log(error);
         Toast.show({
           type: 'error',
           text1: 'Something went wrong. Please try again later.',
