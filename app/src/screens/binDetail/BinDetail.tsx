@@ -137,9 +137,15 @@ export default function BinDetail({route}: BinDetailProps) {
                 ? binData.visit_list.slice(0, 5).map((item, index) => (
                     <S.RowWrapper style={{marginBottom: 2}} key={index}>
                       <S.TextDate>{formatDate(item.visit_dt)}</S.TextDate>
-                      <S.VisitDescription>
-                        Someone <Text style={{color: item.is_success ? Palette.Primary : Palette.Secondary2}}>found</Text> this bin
-                      </S.VisitDescription>
+                      {item.is_success ? (
+                        <S.VisitDescription>
+                          Someone <Text style={{color: Palette.Primary}}>found</Text> this bin
+                        </S.VisitDescription>
+                      ) : (
+                        <S.VisitDescription>
+                          Someone <Text style={{color: Palette.Secondary2}}>couldn't found</Text> this bin
+                        </S.VisitDescription>
+                      )}
                     </S.RowWrapper>
                   ))
                 : null}
