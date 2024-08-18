@@ -52,16 +52,13 @@ export const AddressWrapper = styled.View`
   align-items: center;
   border-radius: 100px;
   background: ${Palette.White};
-  margin-top: 14px;
+  margin: 14px 0px 18px;
   align-self: center;
 `;
 
 export const ImageArea = styled.ImageBackground`
   width: ${width}px;
   height: ${(width * 186) / 343}px;
-  border: 1px solid red;
-  border-radius: 10px;
-  margin: 18px 0px;
 `;
 
 export const DetailWrapper = styled.View`
