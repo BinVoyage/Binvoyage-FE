@@ -31,7 +31,7 @@ export default function PassPort() {
   const dummy = [{stamp_id: 1}, {stamp_id: 2}, {stamp_id: 3}, {stamp_id: 4}, {stamp_id: 5}, {stamp_id: 6}];
 
   const stampsPerPage = 6;
-  const totalPages = Math.ceil(stampList.length / stampsPerPage);
+  const totalPages = Math.max(1, Math.ceil(stampList.length / stampsPerPage));
 
   return (
     <S.Container>
@@ -54,7 +54,7 @@ export default function PassPort() {
         {Array.from({length: totalPages}).map((_, pageIndex) => {
           const start = pageIndex * stampsPerPage;
           const end = start + stampsPerPage;
-          const stampsForPage = (stampList.length ? stampList : dummy).slice(start, end);
+          const stampsForPage = stampList.slice(start, end);
           return <PassPortPage key={pageIndex} stampList={stampsForPage} isLoading={isLoading} />;
         })}
       </Swiper>
