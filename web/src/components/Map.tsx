@@ -128,13 +128,14 @@ const Map = ({ latitude, longitude, triggerSearch, triggerRefresh }: CurrentLoca
     
           if (existingMarkerInfo) {
             // 이미 존재하는 마커가 있으면 해당 마커를 updatedMarkers에 추가
+            existingMarkerInfo.marker.setMap(mapRef.current);
             updatedMarkers.push(existingMarkerInfo);
           } else {
             // 새로 추가된 마커 생성
             const marker = new window.kakao.maps.Marker({
               position: binLocation,
               image: new window.kakao.maps.MarkerImage(markerImageSrc, new window.kakao.maps.Size(30, 30)),
-              map: null,
+              map: mapRef.current!,
             });
     
           // 마커에 클릭 이벤트 추가
