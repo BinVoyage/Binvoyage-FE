@@ -31,7 +31,7 @@ export const Title = styled(DefaultText)`
 
 export const Pagination = styled.View`
   position: absolute;
-  bottom: -20px;
+  bottom: 32px;
   flex-direction: row;
   gap: 6px;
   align-self: center;

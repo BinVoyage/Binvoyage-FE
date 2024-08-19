@@ -11,6 +11,7 @@ import {Alert, Platform, ScrollView} from 'react-native';
 import WebView, {WebViewMessageEvent} from 'react-native-webview';
 import * as S from 'screens/verifyVisit/VerifyVisit.style';
 import {mapStore} from 'store/Store';
+import Toast from 'react-native-toast-message';
 
 type VerifyVisitProps = {
   route: RouteProp<RootBinDetailParamList, 'VerifyVisit'>;
@@ -67,20 +68,46 @@ export default function VerifyVisit({route}: VerifyVisitProps) {
     setTitleMessage(`Get closer to the bin to verify\nyour visit!`);
   }, [isValid]);
 
-  const handleReportIssue = async () => {
+  const handleFoundIt = async () => {
     try {
       const response = await api.post(`/bin/visit/${bin_id}`, {
         lat: currentPosition?.latitude,
         lng: currentPosition?.longitude,
-        is_visit: false,
+        is_visit: true,
       });
+      if (response.data.success) {
+        setModalSuccess(true);
+      } else {
+        console.log('Response failed:', response.data);
+        Toast.show({
+          type: 'error',
+          text1: 'Failed to verify visit. Please try again later.',
+          position: 'bottom',
+          bottomOffset: 100,
+          visibilityTime: 2000,
+        });
+      }
     } catch (error: any) {
       if (error.response) {
         const statusCode = error.response.status;
-        if (statusCode === 400 || statusCode === 403 || statusCode === 404) {
+        if (statusCode === 403) {
           console.log('로그인이 필요합니다.' + statusCode);
+          Toast.show({
+            type: 'error',
+            text1: 'Login required. Please log in from the My Page to continue.',
+            position: 'bottom',
+            bottomOffset: 100,
+            visibilityTime: 2000,
+          });
         } else {
-          console.log('방문인증을 이미 하셨습니다.');
+          console.log('방문인증을 이미 하셨습니다.' + statusCode);
+          Toast.show({
+            type: 'error',
+            text1: 'You have already completed today.',
+            position: 'bottom',
+            bottomOffset: 100,
+            visibilityTime: 2000,
+          });
         }
       } else {
         Alert.alert('에러 발생', `${error.message}`);
@@ -88,31 +115,69 @@ export default function VerifyVisit({route}: VerifyVisitProps) {
     }
   };
 
-  const handleStampModal = async (isVisit: boolean) => {
+  const handleCantFoundIt = async () => {
     try {
       const response = await api.post(`/bin/visit/${bin_id}`, {
         lat: currentPosition?.latitude,
         lng: currentPosition?.longitude,
-        is_visit: true,
+        is_visit: false,
       });
-      if (response.data.code === 32013) {
-        isVisit ? setModalSuccess(false) : setModalFailed(false);
-        setModalStamp(true);
+      if (response.data.success) {
+        setModalFailed(true);
       } else {
-        console.log(response.data.code);
+        console.log('Response failed:', response.data);
+        Toast.show({
+          type: 'error',
+          text1: 'Failed to verify visit. Please try again later.',
+          position: 'bottom',
+          bottomOffset: 100,
+          visibilityTime: 2000,
+        });
       }
     } catch (error: any) {
       if (error.response) {
         const statusCode = error.response.status;
-        if (statusCode === 400 || statusCode === 403 || statusCode === 404) {
+        if (statusCode === 403) {
           console.log('로그인이 필요합니다.' + statusCode);
+          Toast.show({
+            type: 'error',
+            text1: 'Login required. Please log in from the My Page to continue.',
+            position: 'bottom',
+            bottomOffset: 100,
+            visibilityTime: 2000,
+          });
         } else {
           console.log('방문인증을 이미 하셨습니다.');
+          Toast.show({
+            type: 'error',
+            text1: 'You have already completed today.',
+            position: 'bottom',
+            bottomOffset: 100,
+            visibilityTime: 2000,
+          });
         }
       } else {
         Alert.alert('에러 발생', `${error.message}`);
       }
     }
+  };
+
+  const handleReportIssue = () => {
+    navigation.navigate('ReportWrongInfo', {
+      bin_id: bin_id,
+      type_name: type_name,
+      location_type_name: location_type_name,
+      address: address,
+      detail: detail,
+      image: image,
+      isVerifyVisit: true,
+    });
+  };
+
+  const handleStampModal = () => {
+    setModalSuccess(false);
+    setModalFailed(false);
+    setModalStamp(true);
   };
 
   const handleMessage = (e: WebViewMessageEvent) => {
@@ -170,15 +235,23 @@ export default function VerifyVisit({route}: VerifyVisitProps) {
           </S.WebViewContainer>
         </ScrollView>
         <S.BtnContainer>
-          <S.Button isPrimary isValid={isValid} disabled={!isValid} onPress={() => setModalSuccess(true)}>
+          <S.Button isPrimary isValid={isValid} disabled={!isValid} onPress={handleFoundIt}>
             <S.ButtonText isValid={isValid}>Found it!</S.ButtonText>
           </S.Button>
-          <S.Button isValid={isValid} disabled={!isValid} onPress={() => setModalFailed(true)}>
+          <S.Button isValid={isValid} disabled={!isValid} onPress={handleCantFoundIt}>
             <S.ButtonText isValid={isValid}>Can't find it</S.ButtonText>
           </S.Button>
         </S.BtnContainer>
       </S.Container>
-      {modalSuccess ? <ModalSuccess bin_id={bin_id} address={address} coordinate={coordinate} handleStampModal={handleStampModal} /> : null}
+      {modalSuccess ? (
+        <ModalSuccess
+          bin_id={bin_id}
+          address={address}
+          coordinate={coordinate}
+          handleStampModal={handleStampModal}
+          setModalSuccess={setModalSuccess}
+        />
+      ) : null}
       {modalFailed ? <ModalFailed handleReportIssue={handleReportIssue} handleStampModal={handleStampModal} /> : null}
       {modalStamp ? <ModalStamp /> : null}
     </>

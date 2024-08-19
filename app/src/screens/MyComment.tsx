@@ -131,6 +131,7 @@ const BinText = styled.Text`
   align-content: space-between;
   font-size: ${Typo.B3.fontSize};
   font-weight: ${Typo.B3.fontWeight};
+  margin-left: 4px;
 `;
 const Deleted = styled.TouchableOpacity`
   width: 15px;

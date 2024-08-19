@@ -27,7 +27,12 @@ export default function BinDetail({route}: BinDetailProps) {
 
   const [labelText, setLabelText] = useState<string>('');
 
-  const lableTextData = ['Most users found this bin!', 'Some users found this bin!', 'May not always be found here'];
+  const lableTextData = [
+    'Most users found this bin!',
+    'Some users found this bin!',
+    'May not always be found here',
+    'No visitors came here recently',
+  ];
 
   useEffect(() => {
     const getBinData = async () => {
@@ -55,6 +60,10 @@ export default function BinDetail({route}: BinDetailProps) {
 
   useEffect(() => {
     if (binData) {
+      if (!binData.success_count) {
+        setLabelText(lableTextData[3]);
+        return;
+      }
       const successRate = binData.success_count / binData.success_count + binData.fail_count * 100;
       if (successRate >= 70) {
         setLabelText(lableTextData[0]);
@@ -121,7 +130,7 @@ export default function BinDetail({route}: BinDetailProps) {
               <S.TextLocationContents>{binData?.detail}</S.TextLocationContents>
             </S.DetailWrapper>
             <S.DetailWrapper>
-              <S.DetailTitle>Most users found this bin last month!</S.DetailTitle>
+              <S.DetailTitle>{labelText}</S.DetailTitle>
               <S.VisitRecordWrapper>
                 <S.VisitRecordBox>
                   <S.TextVisitNum isSuccessful>{binData?.success_count}</S.TextVisitNum>
@@ -137,9 +146,15 @@ export default function BinDetail({route}: BinDetailProps) {
                 ? binData.visit_list.slice(0, 5).map((item, index) => (
                     <S.RowWrapper style={{marginBottom: 2}} key={index}>
                       <S.TextDate>{formatDate(item.visit_dt)}</S.TextDate>
-                      <S.VisitDescription>
-                        Someone <Text style={{color: item.is_success ? Palette.Primary : Palette.Secondary2}}>found</Text> this bin
-                      </S.VisitDescription>
+                      {item.is_success ? (
+                        <S.VisitDescription>
+                          Someone <Text style={{color: Palette.Primary}}>found</Text> this bin
+                        </S.VisitDescription>
+                      ) : (
+                        <S.VisitDescription>
+                          Someone <Text style={{color: Palette.Secondary2}}>couldn't find</Text> this bin
+                        </S.VisitDescription>
+                      )}
                     </S.RowWrapper>
                   ))
                 : null}

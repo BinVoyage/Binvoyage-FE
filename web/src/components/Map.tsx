@@ -26,6 +26,8 @@ const Map = ({ latitude, longitude, triggerSearch, triggerRefresh }: CurrentLoca
   const [center, setCenter] = useState<kakao.maps.LatLng | null>(null);
   const [isMapLoaded, setIsMapLoaded] = useState<boolean>(false);
   const [_, setData] = useState<BinInfo[]>([]);
+  let selectedMarker: kakao.maps.Marker | null = null;
+  let selectedMarkerSrc: string | null = null;
 
   const initMap = () => {
     const container = document.getElementById('map');
@@ -85,7 +87,16 @@ const Map = ({ latitude, longitude, triggerSearch, triggerRefresh }: CurrentLoca
   
       if (response.data.code === 12000) {
         console.log(response.data.data.bin_list);  // bin_list 출력
-        setData(response.data.data.bin_list);
+        const newBinList = response.data.data.bin_list;
+        setData(prevData => {
+          // 기존 데이터와 새로 가져온 데이터 병합 및 중복 제거
+          const updatedData = [...prevData, ...newBinList].filter((bin, index, self) => 
+              index === self.findIndex((t) => t.bin_id === bin.bin_id)
+          );
+          // 병합된 데이터를 상태에 저장
+          initMarkers(updatedData);
+          return updatedData;
+      });
         initMarkers(response.data.data.bin_list);
       } else {
         console.log(response.data.message);
@@ -101,23 +112,45 @@ const Map = ({ latitude, longitude, triggerSearch, triggerRefresh }: CurrentLoca
   
 
     const initMarkers = (binList: BinInfo[]) => {
-      // 마커 초기화
-      markersRef.current = [];
-    
+      const updatedMarkers: MarkerInfo[] = [];
+
       if (mapRef.current) {
         binList.forEach(bin => {
           console.log(bin.bin_id);
           const binLocation = new window.kakao.maps.LatLng(bin.coordinate[1], bin.coordinate[0]);
           const markerImageSrc = bin.type_no === 1 ? "image/trashmark.svg" : "image/recyclemark.svg";
+
+          // 이미 존재하는 마커인지 확인
+          const existingMarkerInfo = markersRef.current.find(markerObj => 
+            markerObj.marker.getPosition().getLat() === binLocation.getLat() &&
+            markerObj.marker.getPosition().getLng() === binLocation.getLng()
+          );
     
-          const marker = new window.kakao.maps.Marker({
-            position: binLocation,
-            image: new window.kakao.maps.MarkerImage(markerImageSrc, new window.kakao.maps.Size(30, 30)),
-            map: null,
-          });
+          if (existingMarkerInfo) {
+            // 이미 존재하는 마커가 있으면 해당 마커를 updatedMarkers에 추가
+            existingMarkerInfo.marker.setMap(mapRef.current);
+            updatedMarkers.push(existingMarkerInfo);
+          } else {
+            // 새로 추가된 마커 생성
+            const marker = new window.kakao.maps.Marker({
+              position: binLocation,
+              image: new window.kakao.maps.MarkerImage(markerImageSrc, new window.kakao.maps.Size(30, 30)),
+              map: mapRef.current!,
+            });
     
           // 마커에 클릭 이벤트 추가
           window.kakao.maps.event.addListener(marker, 'click', () => {
+            if (selectedMarker && selectedMarkerSrc) {
+              selectedMarker.setImage(new window.kakao.maps.MarkerImage(selectedMarkerSrc, new window.kakao.maps.Size(30, 30)));
+            }
+            
+            // 현재 클릭된 마커의 이미지를 "targetMarker.svg"로 변경
+            marker.setImage(new window.kakao.maps.MarkerImage("image/targetMarker.svg", new window.kakao.maps.Size(30, 30)));
+
+            // 선택된 마커와 이미지 경로 저장
+            selectedMarker = marker;
+            selectedMarkerSrc = markerImageSrc;
+
             const message = {
               type: 'markerClick',
               payload: {
@@ -127,14 +160,15 @@ const Map = ({ latitude, longitude, triggerSearch, triggerRefresh }: CurrentLoca
             window.ReactNativeWebView?.postMessage(JSON.stringify(message));
           });
     
-          markersRef.current.push({
+          updatedMarkers.push({
             marker: marker,
             type_no: bin.type_no,
             map: mapRef.current!,
             distance: calculateDistance(binLocation),
           });
+        }
         });
-    
+        markersRef.current = updatedMarkers;
         // 마커 필터링
         filterMarkers(filterMode);
       } else {

@@ -55,7 +55,7 @@ export default function MyPage() {
             {userInfo ? (
               <S.RowWrapper style={{marginLeft: 13}}>
                 <S.NickName>{userInfo.user_name}</S.NickName>
-                <S.WriteImage source={require('assets/images/WriteProfile.png')} style={{alignItems: 'center'}} />
+                {/* <S.WriteImage source={require('assets/images/WriteProfile.png')} style={{alignItems: 'center'}} /> */}
               </S.RowWrapper>
             ) : (
               <S.NickName style={{marginLeft: 13}}>로그인이 필요합니다.</S.NickName>

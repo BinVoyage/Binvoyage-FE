@@ -4,14 +4,19 @@ import ArrowPrevSvg from 'assets/images/ArrowPrevSvg';
 import PassPortPage from 'components/passPort/PassPortPage';
 import {Palette} from 'constants/palette';
 import {useEffect, useRef, useState} from 'react';
+import {Dimensions} from 'react-native';
+import Carousel from 'react-native-snap-carousel';
 import Swiper from 'react-native-swiper';
 import * as S from 'screens/passport/PassPort.style';
 
 export default function PassPort() {
-  const swiperRef = useRef<Swiper>(null);
+  // const swiperRef = useRef<Swiper>(null);
   const navigation = useNavigation<NavigationProp<RootHomeParamList>>();
   const [stampList, setStampList] = useState<StampInfo[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const {width: screenWidth} = Dimensions.get('window');
+  const width = screenWidth - 32;
 
   useEffect(() => {
     const getData = async () => {
@@ -28,10 +33,28 @@ export default function PassPort() {
   }, []);
 
   // const stampList = [{stamp_id: 1}, {stamp_id: 2}, {stamp_id: 3}, {stamp_id: 4}, {stamp_id: 5}, {stamp_id: 6}, {stamp_id: 6}, {stamp_id: 6}];
-  const dummy = [{stamp_id: 1}, {stamp_id: 2}, {stamp_id: 3}, {stamp_id: 4}, {stamp_id: 5}, {stamp_id: 6}];
+  // const dummy = [{stamp_id: 1}, {stamp_id: 2}, {stamp_id: 3}, {stamp_id: 4}, {stamp_id: 5}, {stamp_id: 6}];
 
   const stampsPerPage = 6;
-  const totalPages = Math.ceil(stampList.length / stampsPerPage);
+  const totalPages = Math.max(1, Math.ceil(stampList.length / stampsPerPage));
+
+  const renderItem = ({item}: {item: StampInfo[]}) => {
+    return <PassPortPage stampList={item} isLoading={isLoading} />;
+  };
+
+  const pagination = () => {
+    return (
+      <S.Pagination>
+        {Array.from({length: totalPages}).map((_, i) => (i === currentIndex ? <S.CurrentDot key={i} /> : <S.Dot key={i} />))}
+      </S.Pagination>
+    );
+  };
+
+  const groupedStamps = Array.from({length: totalPages}).map((_, pageIndex) => {
+    const start = pageIndex * stampsPerPage;
+    const end = start + stampsPerPage;
+    return stampList.slice(start, end);
+  });
 
   return (
     <S.Container>
@@ -41,23 +64,15 @@ export default function PassPort() {
         </S.ArrowPrevWrapper>
         <S.Title>Your BinVoyage so far</S.Title>
       </S.Header>
-      <Swiper
-        ref={swiperRef}
+      <Carousel
+        data={groupedStamps}
+        renderItem={renderItem}
+        sliderWidth={width}
+        itemWidth={width}
+        onSnapToItem={index => setCurrentIndex(index)}
         loop={false}
-        renderPagination={index => {
-          return (
-            <S.Pagination>
-              {Array.from({length: totalPages}).map((_, i) => (i === index ? <S.CurrentDot key={i} /> : <S.Dot key={i} />))}
-            </S.Pagination>
-          );
-        }}>
-        {Array.from({length: totalPages}).map((_, pageIndex) => {
-          const start = pageIndex * stampsPerPage;
-          const end = start + stampsPerPage;
-          const stampsForPage = (stampList.length ? stampList : dummy).slice(start, end);
-          return <PassPortPage key={pageIndex} stampList={stampsForPage} isLoading={isLoading} />;
-        })}
-      </Swiper>
+      />
+      {pagination()}
     </S.Container>
   );
 }

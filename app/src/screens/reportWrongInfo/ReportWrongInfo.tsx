@@ -82,7 +82,7 @@ export default function ReportWrongInfo({route}: ReportWrongInfoProps) {
           <S.AddressWrapper>
             <S.TextInfoB3>{address}</S.TextInfoB3>
           </S.AddressWrapper>
-          <S.ImageArea />
+          {image && <S.ImageArea />}
           <S.DetailWrapper style={{marginBottom: 16}}>
             <S.RowWrapper style={{justifyContent: 'flex-start'}}>
               <S.TextLocationPrimary>Location details</S.TextLocationPrimary>
