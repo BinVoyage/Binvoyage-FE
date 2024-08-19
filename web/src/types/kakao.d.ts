@@ -24,6 +24,7 @@ declare namespace kakao.maps {
         opacity?: number;
     });
       setPosition(position: LatLng): void;
+      getPosition(): LatLng;
       setMap(map: Map | null): void;
       getImage(): MarkerImage | undefined;
       setImage(image: MarkerImage): void;
