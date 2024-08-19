@@ -1,4 +1,4 @@
-import {View, Alert, Platform, StyleSheet, Dimensions, TouchableOpacity} from 'react-native';
+import {View, Alert, Platform, StyleSheet, Dimensions, TouchableOpacity, ImageBackground} from 'react-native';
 import {WebView, WebViewMessageEvent} from 'react-native-webview';
 import {useEffect, useRef, useState} from 'react';
 import {PERMISSIONS, RESULTS, request} from 'react-native-permissions';
@@ -236,7 +236,7 @@ export default function FindBin() {
             <S.FilterText isSelected={filterMode === 2}>Recycling</S.FilterText>
           </S.FilterWrapper>
           <S.FilterWrapper onPress={() => handleFilter(1)} isSelected={filterMode === 1} isTrash={true}>
-            <TrashFilterSvg width="26" height="26" fill={Palette.Secondary2} />
+            <ImageBackground source={require('assets/images/icon-filter-trash.png')} style={{width: 26, height: 26}} />
             <S.FilterText isSelected={filterMode === 1}>Trash</S.FilterText>
           </S.FilterWrapper>
         </S.RowWrapper>

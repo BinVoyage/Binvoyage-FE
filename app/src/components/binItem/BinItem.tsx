@@ -23,7 +23,7 @@ export default function BinItem({item}: {item: BinItemProps}) {
           params: {bin_id: item.bin_id},
         });
       }}>
-      <S.TextAddress numberOfLines={2} ellipsizeMode="tail">
+      <S.TextAddress numberOfLines={1} ellipsizeMode="tail">
         {item.address}
       </S.TextAddress>
       <S.TextType>{item.type_name}</S.TextType>
