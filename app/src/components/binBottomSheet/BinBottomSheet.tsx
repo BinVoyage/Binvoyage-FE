@@ -31,7 +31,7 @@ export default function BinBottomSheet({bin_id, onSheetChange}: Props) {
   const [hasImg, setHasImg] = useState<boolean | null>(false);
   const [labelText, setLabelText] = useState<string>('');
 
-  const lableTextData = ['Most users found this bin!', 'Some users found this bin!', 'May not always be found here'];
+  const lableTextData = ['Most users found this bin!', 'Some users found this bin!', 'May not always be found here', 'No visitors came here recently'];
 
   useEffect(() => {
     if (binData) {
@@ -40,6 +40,8 @@ export default function BinBottomSheet({bin_id, onSheetChange}: Props) {
         setLabelText(lableTextData[0]);
       } else if (successRate >= 40) {
         setLabelText(lableTextData[1]);
+      } else if (successRate === 0){
+        setLabelText(lableTextData[3]);
       } else {
         setLabelText(lableTextData[2]);
       }

@@ -27,7 +27,7 @@ export default function BinDetail({route}: BinDetailProps) {
 
   const [labelText, setLabelText] = useState<string>('');
 
-  const lableTextData = ['Most users found this bin!', 'Some users found this bin!', 'May not always be found here'];
+  const lableTextData = ['Most users found this bin!', 'Some users found this bin!', 'May not always be found here', 'No visitors came here recently'];
 
   useEffect(() => {
     const getBinData = async () => {
@@ -60,6 +60,8 @@ export default function BinDetail({route}: BinDetailProps) {
         setLabelText(lableTextData[0]);
       } else if (successRate >= 40) {
         setLabelText(lableTextData[1]);
+      } else if (successRate === 0){
+        setLabelText(lableTextData[3]);
       } else {
         setLabelText(lableTextData[2]);
       }
@@ -121,7 +123,7 @@ export default function BinDetail({route}: BinDetailProps) {
               <S.TextLocationContents>{binData?.detail}</S.TextLocationContents>
             </S.DetailWrapper>
             <S.DetailWrapper>
-              <S.DetailTitle>Most users found this bin last month!</S.DetailTitle>
+              <S.DetailTitle>{labelText}</S.DetailTitle>
               <S.VisitRecordWrapper>
                 <S.VisitRecordBox>
                   <S.TextVisitNum isSuccessful>{binData?.success_count}</S.TextVisitNum>
