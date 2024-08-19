@@ -133,12 +133,12 @@ type UserInfo = {
 };
 
 type StampInfo = {
-  user_stamp_id: number;
+  user_stamp_id?: number;
   stamp_id: number;
-  registration_dt: string;
-  region_name: string;
-  local_no: number;
-  image: number;
+  registration_dt?: string;
+  region_name?: string;
+  local_no?: number;
+  image: string;
 };
 
 type Image = {

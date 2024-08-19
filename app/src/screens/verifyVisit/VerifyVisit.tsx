@@ -100,7 +100,7 @@ export default function VerifyVisit({route}: VerifyVisitProps) {
             visibilityTime: 2000,
           });
         } else {
-          console.log('방문인증을 이미 하셨습니다.');
+          console.log('방문인증을 이미 하셨습니다.' + statusCode);
           Toast.show({
             type: 'error',
             text1: 'You have already completed today.',
