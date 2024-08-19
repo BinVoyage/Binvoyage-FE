@@ -5,7 +5,7 @@ import {GOOGLE_WEB_CLIENT_ID} from '@env';
 import GoogleSvg from 'assets/images/GoogleSvg';
 import AppleSvg from 'assets/images/AppleSvg';
 import {Palette} from 'constants/palette';
-import {Alert, TouchableOpacity} from 'react-native';
+import {Alert, TouchableOpacity,Linking} from 'react-native';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 import Terms from 'components/terms/Terms';
 import api from 'api/api';
@@ -89,14 +89,14 @@ export default function Login() {
           </S.SignInButtonWrapper>
           <S.TextFooterWrapper>
             <S.TextFooter>By continuing, you agree to our </S.TextFooter>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() => Linking.openURL(`https://binvoyage.notion.site/Terms-of-service-49be66fa52b94ac9a5d937c0a2d341ba?pvs=4`)}>
               <S.TextFooterLink>Terms</S.TextFooterLink>
             </TouchableOpacity>
           </S.TextFooterWrapper>
 
           <S.TextFooterWrapper>
             <S.TextFooter>See how we use your data in our </S.TextFooter>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() => Linking.openURL(`https://binvoyage.notion.site/Privacy-policy-43cb8c8cfe3941fabc84097c693f8c6f?pvs=4`)}>
               <S.TextFooterLink>Privacy Policy</S.TextFooterLink>
             </TouchableOpacity>
           </S.TextFooterWrapper>

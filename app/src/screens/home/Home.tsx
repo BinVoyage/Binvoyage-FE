@@ -51,7 +51,7 @@ export default function Home() {
               <S.BridgeIcon source={require('assets/images/icon-home-trash2x.png')} resizeMode="contain" />
             </S.BridgeIconWrapper>
             <S.BridgeTextWrapper source={require('assets/images/icon-text-wrapper.png')} resizeMode="stretch">
-              <S.BridgeText>{`Struggling to find bins? 😓\nThere’s one just 350m away!`}</S.BridgeText>
+              <S.BridgeText>{`Struggling to find bins? 😓\nTouch here to explore!`}</S.BridgeText>
             </S.BridgeTextWrapper>
           </S.Bridge>
         </S.TopWrapper>
