@@ -152,7 +152,7 @@ export default function BinDetail({route}: BinDetailProps) {
                         </S.VisitDescription>
                       ) : (
                         <S.VisitDescription>
-                          Someone <Text style={{color: Palette.Secondary2}}>couldn't found</Text> this bin
+                          Someone <Text style={{color: Palette.Secondary2}}>couldn't find</Text> this bin
                         </S.VisitDescription>
                       )}
                     </S.RowWrapper>
