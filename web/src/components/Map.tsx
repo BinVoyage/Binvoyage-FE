@@ -26,6 +26,8 @@ const Map = ({ latitude, longitude, triggerSearch, triggerRefresh }: CurrentLoca
   const [center, setCenter] = useState<kakao.maps.LatLng | null>(null);
   const [isMapLoaded, setIsMapLoaded] = useState<boolean>(false);
   const [_, setData] = useState<BinInfo[]>([]);
+  let selectedMarker: kakao.maps.Marker | null = null;
+  let selectedMarkerSrc: string | null = null;
 
   const initMap = () => {
     const container = document.getElementById('map');
@@ -103,7 +105,7 @@ const Map = ({ latitude, longitude, triggerSearch, triggerRefresh }: CurrentLoca
     const initMarkers = (binList: BinInfo[]) => {
       // 마커 초기화
       markersRef.current = [];
-    
+
       if (mapRef.current) {
         binList.forEach(bin => {
           console.log(bin.bin_id);
@@ -118,6 +120,17 @@ const Map = ({ latitude, longitude, triggerSearch, triggerRefresh }: CurrentLoca
     
           // 마커에 클릭 이벤트 추가
           window.kakao.maps.event.addListener(marker, 'click', () => {
+            if (selectedMarker && selectedMarkerSrc) {
+              selectedMarker.setImage(new window.kakao.maps.MarkerImage(selectedMarkerSrc, new window.kakao.maps.Size(30, 30)));
+            }
+            
+            // 현재 클릭된 마커의 이미지를 "targetMarker.svg"로 변경
+            marker.setImage(new window.kakao.maps.MarkerImage("image/targetMarker.svg", new window.kakao.maps.Size(30, 30)));
+
+            // 선택된 마커와 이미지 경로 저장
+            selectedMarker = marker;
+            selectedMarkerSrc = markerImageSrc;
+
             const message = {
               type: 'markerClick',
               payload: {

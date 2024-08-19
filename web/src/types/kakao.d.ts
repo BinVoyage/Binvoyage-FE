@@ -14,9 +14,19 @@ declare namespace kakao.maps {
     }
   
     class Marker {
-      constructor(options: object);
+      constructor(options: {
+        position: LatLng;
+        map?: Map | null;
+        image?: MarkerImage;
+        title?: string;
+        clickable?: boolean;
+        zIndex?: number;
+        opacity?: number;
+    });
       setPosition(position: LatLng): void;
       setMap(map: Map | null): void;
+      getImage(): MarkerImage | undefined;
+      setImage(image: MarkerImage): void;
     }
   
     class Circle {
@@ -25,8 +35,13 @@ declare namespace kakao.maps {
     }
   
     class MarkerImage {
-      constructor(src: string, size: object, options?: object);
-    }
+      constructor(src: string, size: Size, options?: {
+          offset?: Point;
+          alt?: string;
+          shape?: string;
+          coords?: string;
+      });
+  }
   
     class Size {
       constructor(width: number, height: number);
