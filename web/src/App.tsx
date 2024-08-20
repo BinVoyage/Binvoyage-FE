@@ -17,6 +17,12 @@ type VerifyLocation = {
 };
 
 function App() {
+  const defaultLocation: CurrentLocation = {
+    // 광화문역
+    latitude: 37.571648599,
+    longitude: 126.976372775,
+  };
+
   const [isLocationSet, setIsLocationSet] = useState<boolean>(false);
   // const [currentLocation, setCurrentLocation] = useState<CurrentLocation | null>({latitude:37.563685889,longitude:126.975584404});
   const [currentLocation, setCurrentLocation] = useState<CurrentLocation | null>(null);
@@ -103,18 +109,19 @@ function App() {
     };
   }, [currentLocation]);
 
+  const locationToUse = currentLocation || defaultLocation;
+
   return (
     <Router>
       <Routes>
         <Route
           path="/"
-          element={
-            currentLocation && isLocationSet && (
+          element={(
               <Map
-                latitude={currentLocation!.latitude}
-                longitude={currentLocation!.longitude}
-                triggerSearch={triggerSearch}
-                triggerRefresh={triggerRefresh}
+              latitude={locationToUse.latitude}
+              longitude={locationToUse.longitude}
+              triggerSearch={triggerSearch}
+              triggerRefresh={triggerRefresh}
               />
             )
           }
