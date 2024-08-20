@@ -23,7 +23,7 @@ function App() {
     longitude: 126.976372775,
   };
 
-  // const [isLocationSet, setIsLocationSet] = useState<boolean>(false);
+  const [isLocationSet, setIsLocationSet] = useState<boolean>(false);
   // const [currentLocation, setCurrentLocation] = useState<CurrentLocation | null>({latitude:37.563685889,longitude:126.975584404});
   const [currentLocation, setCurrentLocation] = useState<CurrentLocation | null>(null);
   const { setFilterMode } = mapStore();
@@ -54,6 +54,7 @@ function App() {
                 },
               })
             );
+            setIsLocationSet(true);
           } else {
             setCurrentLocation({
               latitude: latitude,
@@ -61,7 +62,7 @@ function App() {
               // latitude: 37.563685889,
               // longitude: 126.975584404,
             });
-            // setIsLocationSet(true);
+            setIsLocationSet(true);
   
             const geocoder = new window.kakao.maps.services.Geocoder();
             const coord = new window.kakao.maps.LatLng(latitude, longitude);
@@ -127,14 +128,14 @@ function App() {
       <Routes>
         <Route
           path="/"
-          element={(
+          element={ isLocationSet ?
               <Map
               latitude={locationToUse.latitude}
               longitude={locationToUse.longitude}
               triggerSearch={triggerSearch}
               triggerRefresh={triggerRefresh}
-              />
-            )
+              /> : null
+            
           }
         />
         <Route
