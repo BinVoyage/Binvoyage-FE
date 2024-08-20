@@ -33,6 +33,7 @@ export default function FindBin() {
   const currentPosition = mapStore(state => state.currentPosition);
   const {startWatchingPosition, stopWatchingPosition} = mapStore();
   const [selectedMarker, setSelectedMarker] = useState<number | null>(null);
+  const alertShown = useRef(false);
 
   // const isFocused = useIsFocused();
 
@@ -52,10 +53,10 @@ export default function FindBin() {
     let result;
     if (Platform.OS === 'android') {
       result = await request(PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION);
-      console.log('Android Permission result:', result); // 권한 요청 결과 로그 추가
     } else if (Platform.OS === 'ios') {
       result = await request(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE);
     }
+
     if (result === RESULTS.GRANTED) {
       startWatchingPosition(position => {
         const message = {
@@ -63,26 +64,37 @@ export default function FindBin() {
           payload: {
             latitude: position.latitude,
             longitude: position.longitude,
-            // latitude: 37.563685889,
-            // longitude: 126.975584404,
           },
         };
-        console.log('Sending message:', JSON.stringify(message)); // 메시지 전송 확인
-
+        console.log('Sending message to WebView:', JSON.stringify(message));
         if (isWebViewLoaded && webViewRef.current) {
           setTimeout(() => {
-            // 지연을 주고 메시지 전송
             webViewRef.current?.postMessage(JSON.stringify(message));
           }, 500); // 0.5초 지연
         }
       });
     } else {
-      Alert.alert('위치 권한이 필요합니다!', '위치 권한을 켜주세요!', [
-        {
-          text: 'OK',
-          onPress: () => requestPermissionAndSendLocation(),
+      if (!alertShown.current) {
+        // alertShown이라는 ref 변수를 사용해 두 번 호출 방지
+        Alert.alert(
+          'Location Permission Needed',
+          'We need your location permission to provide information about nearby bins. Please enable location permissions in Settings.',
+        );
+        alertShown.current = true;
+      }
+      const message = {
+        type: 'location',
+        payload: {
+          latitude: undefined,
+          longitude: undefined,
         },
-      ]);
+      };
+      console.log('Sending message to WebView:', JSON.stringify(message));
+      if (isWebViewLoaded && webViewRef.current) {
+        setTimeout(() => {
+          webViewRef.current?.postMessage(JSON.stringify(message));
+        }, 500); // 0.5초 지연
+      }
     }
   };
 
@@ -110,7 +122,7 @@ export default function FindBin() {
       }
     };
 
-    if (currentPosition) {
+    if (currentPosition?.latitude && currentPosition.longitude) {
       console.log('get data!!!');
       getData();
     }
@@ -216,6 +228,8 @@ export default function FindBin() {
         originWhitelist={['http://*', 'https://*', 'intent://*']}
         source={{uri: URL}}
         javaScriptEnabled={true}
+        domStorageEnabled={true} // DOM 저장소 사용
+        cacheMode={'LOAD_CACHE_ELSE_NETWORK'} // 캐시 우선 로딩
         onMessage={handleMessage}
         onLoad={() => {
           console.log('WebView loaded');
@@ -225,7 +239,7 @@ export default function FindBin() {
       <S.ItemWrapper>
         <S.LocationWrapper>
           <LocationSvg width="24" height="24" fill={Palette.Primary} />
-          <S.LocationText>{currentAddress || 'loading...'}</S.LocationText>
+          <S.LocationText>{currentAddress || 'Please enable location permissions in Settings.'}</S.LocationText>
         </S.LocationWrapper>
         <S.RowWrapper>
           {/* <S.FilterWrapperNoIcon onPress={() => handleFilter(0)} isSelected={filterMode === 0} isTrash={false}>
