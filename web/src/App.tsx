@@ -45,35 +45,46 @@ function App() {
         if (message.type === 'location') {
           const { latitude, longitude } = message.payload;
 
-          setCurrentLocation({
-            latitude: latitude,
-            longitude: longitude,
-            // latitude: 37.563685889,
-            // longitude: 126.975584404,
-          });
-          // setIsLocationSet(true);
-
-          const geocoder = new window.kakao.maps.services.Geocoder();
-          const coord = new window.kakao.maps.LatLng(latitude, longitude);
-
-          geocoder.coord2RegionCode(
-            coord.getLng(),
-            coord.getLat(),
-            (result: any, status: any) => {
-              if (status === window.kakao.maps.services.Status.OK) {
-                const address = result[0]?.address_name || '';
-                const slicedAddress = address.split(' ').slice(0, 2).join(' ');
-                window.ReactNativeWebView.postMessage(
-                  JSON.stringify({
-                    type: 'address',
-                    payload: {
-                      address: slicedAddress,
-                    },
-                  })
-                );
+          if (latitude === undefined || longitude === undefined) {
+            window.ReactNativeWebView.postMessage(
+              JSON.stringify({
+                type: 'address',
+                payload: {
+                  address: 'Please enable location permissions in your device settings.',
+                },
+              })
+            );
+          } else {
+            setCurrentLocation({
+              latitude: latitude,
+              longitude: longitude,
+              // latitude: 37.563685889,
+              // longitude: 126.975584404,
+            });
+            // setIsLocationSet(true);
+  
+            const geocoder = new window.kakao.maps.services.Geocoder();
+            const coord = new window.kakao.maps.LatLng(latitude, longitude);
+  
+            geocoder.coord2RegionCode(
+              coord.getLng(),
+              coord.getLat(),
+              (result: any, status: any) => {
+                if (status === window.kakao.maps.services.Status.OK) {
+                  const address = result[0]?.address_name || '';
+                  const slicedAddress = address.split(' ').slice(0, 2).join(' ');
+                  window.ReactNativeWebView.postMessage(
+                    JSON.stringify({
+                      type: 'address',
+                      payload: {
+                        address: slicedAddress,
+                      },
+                    })
+                  );
+                }
               }
-            }
-          );
+            );
+          }
         } else if (message.type === 'filter') {
           setFilterMode(message.payload.filterMode);
         } else if (message.type === 'search') {
