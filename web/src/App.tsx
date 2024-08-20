@@ -46,6 +46,7 @@ function App() {
           const { latitude, longitude } = message.payload;
 
           if (latitude === undefined || longitude === undefined) {
+            setIsLocationSet(true);
             window.ReactNativeWebView.postMessage(
               JSON.stringify({
                 type: 'address',
@@ -54,16 +55,15 @@ function App() {
                 },
               })
             );
-            setIsLocationSet(true);
           } else {
+            setIsLocationSet(true);
             setCurrentLocation({
               latitude: latitude,
               longitude: longitude,
               // latitude: 37.563685889,
               // longitude: 126.975584404,
             });
-            setIsLocationSet(true);
-  
+            
             const geocoder = new window.kakao.maps.services.Geocoder();
             const coord = new window.kakao.maps.LatLng(latitude, longitude);
   
@@ -121,7 +121,10 @@ function App() {
     };
   }, [currentLocation]);
 
-  const locationToUse = currentLocation || defaultLocation;
+  let locationToUse = defaultLocation;
+  if (currentLocation?.latitude !== undefined && currentLocation?.longitude !== undefined) {
+    locationToUse = currentLocation;
+  }
 
   return (
     <Router>
