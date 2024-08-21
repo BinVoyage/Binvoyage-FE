@@ -1,19 +1,35 @@
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 import * as S from 'components/binItem/BinItem.style';
+import {useEffect, useState} from 'react';
 
 export default function BinItem({item}: {item: BinItemProps}) {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  const [labelText, setLabelText] = useState<string>('');
+  const lableTextData = [
+    'Most users found this bin!',
+    'Some users found this bin!',
+    'May not always be found here',
+    'No visitors came here recently',
+  ];
 
-  let visitMessage = '';
-  if (item.visit_success_rate !== null && item.visit_success_rate !== undefined && item.visit_count) {
-    if (item.visit_success_rate >= 70) {
-      visitMessage = 'Most users found this bin!';
-    } else if (item.visit_success_rate >= 40) {
-      visitMessage = 'Some users found this bin!';
-    } else {
-      visitMessage = 'May not always be found here';
+  useEffect(() => {
+    console.log(item);
+    if (!item.visit_rate) {
+      if (!item.visit_count) {
+        setLabelText(lableTextData[3]);
+        return;
+      }
+
+      if (item.visit_rate >= 70) {
+        setLabelText(lableTextData[0]);
+      } else if (item.visit_rate >= 40) {
+        setLabelText(lableTextData[1]);
+      } else {
+        setLabelText(lableTextData[2]);
+      }
     }
-  }
+  }, [item]);
+
   return (
     <S.Container
       onPress={() => {
@@ -28,11 +44,9 @@ export default function BinItem({item}: {item: BinItemProps}) {
       </S.TextAddress>
       <S.TextType>{item.type_name}</S.TextType>
       <S.TextDistance>{`${Math.round(item.distance)}m away`}</S.TextDistance>
-      {visitMessage ? (
-        <S.VisitWrapper>
-          <S.TextVisit>{visitMessage}</S.TextVisit>
-        </S.VisitWrapper>
-      ) : null}
+      <S.VisitWrapper>
+        <S.TextVisit>{labelText}</S.TextVisit>
+      </S.VisitWrapper>
     </S.Container>
   );
 }

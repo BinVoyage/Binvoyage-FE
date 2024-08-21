@@ -64,7 +64,7 @@ export default function BinDetail({route}: BinDetailProps) {
         setLabelText(lableTextData[3]);
         return;
       }
-      const successRate = binData.success_count / binData.success_count + binData.fail_count * 100;
+      const successRate = (binData.success_count / (binData.success_count + binData.fail_count)) * 100;
       if (successRate >= 70) {
         setLabelText(lableTextData[0]);
       } else if (successRate >= 40) {

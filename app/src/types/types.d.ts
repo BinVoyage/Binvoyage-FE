@@ -112,7 +112,7 @@ interface BinItemProps {
   location_type_name: string;
   coordinate: [number, number];
   distance: number;
-  visit_success_rate: number;
+  visit_rate: number;
   address: string;
   detail: string;
   visit_count: number;
