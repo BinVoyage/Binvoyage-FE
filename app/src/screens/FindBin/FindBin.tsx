@@ -31,7 +31,7 @@ export default function FindBin() {
   const carouselRef = useRef(null);
   const [data, setData] = useState<BinItemProps[]>([]);
   const currentPosition = mapStore(state => state.currentPosition);
-  const {startWatchingPosition, stopWatchingPosition} = mapStore();
+  const {startWatchingPosition, stopWatchingPosition, setCurrentPosition} = mapStore();
   const [selectedMarker, setSelectedMarker] = useState<number | null>(null);
   const alertShown = useRef(false);
 
@@ -96,6 +96,10 @@ export default function FindBin() {
           webViewRef.current?.postMessage(JSON.stringify(message));
         }, 500); // 0.5초 지연
       }
+      setCurrentPosition({
+        latitude: 37.571648599,
+        longitude: 126.976372775,
+      });
     }
   };
 

@@ -4,7 +4,7 @@ import {useEffect, useState} from 'react';
 
 export default function BinItem({item}: {item: BinItemProps}) {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
-  const [labelText, setLabelText] = useState<string>('');
+  const [labelText, setLabelText] = useState<string>('No visitors came here recently');
   const lableTextData = [
     'Most users found this bin!',
     'Some users found this bin!',
@@ -13,10 +13,9 @@ export default function BinItem({item}: {item: BinItemProps}) {
   ];
 
   useEffect(() => {
+    console.log(item.visit_rate);
     if (item.visit_rate) {
-      if (item.visit_count === 0) {
-        setLabelText(lableTextData[3]);
-      } else if (item.visit_rate >= 70) {
+      if (item.visit_rate >= 70) {
         setLabelText(lableTextData[0]);
       } else if (item.visit_rate >= 40) {
         setLabelText(lableTextData[1]);
@@ -24,7 +23,7 @@ export default function BinItem({item}: {item: BinItemProps}) {
         setLabelText(lableTextData[2]);
       }
     }
-  }, [item]);
+  }, []);
 
   return (
     <S.Container
