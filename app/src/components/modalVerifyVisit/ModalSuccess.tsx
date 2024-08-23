@@ -4,7 +4,7 @@ import {Palette} from 'constants/palette';
 import {useState} from 'react';
 import {Alert, Image, Keyboard, TouchableWithoutFeedback} from 'react-native';
 import Toast from 'react-native-toast-message';
-import {mapStore} from 'store/Store';
+import {mapStore, userStore} from 'store/Store';
 
 interface Props {
   bin_id: number;
@@ -18,6 +18,7 @@ export default function ModalSuccess({bin_id, address, coordinate, handleStampMo
   const [reviewMode, setReviewMode] = useState<boolean>(false);
   const placeholder = `Got any tips for finding this bin?\nFeel like leaving a comment?`;
   const [content, setContent] = useState<string>('');
+  const userInfo = userStore(state => state.userInfo);
 
   const handleSubmit = async () => {
     if (content.length >= 5) {
@@ -65,7 +66,7 @@ export default function ModalSuccess({bin_id, address, coordinate, handleStampMo
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} style={{flex: 1}}>
       <S.Background>
         <S.Container>
-          <S.Title>{reviewMode ? 'Share your BinVoyage!' : 'Well done, OO!'}</S.Title>
+          <S.Title>{reviewMode ? 'Share your BinVoyage!' : `Well done, ${userInfo?.user_name}!`}</S.Title>
           <S.TextAddress>{address}</S.TextAddress>
           {reviewMode ? (
             <S.ReviewInput

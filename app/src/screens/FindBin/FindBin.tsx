@@ -1,4 +1,4 @@
-import {View, Alert, Platform, StyleSheet, Dimensions, TouchableOpacity, ImageBackground} from 'react-native';
+import {View, Alert, Platform, StyleSheet, Dimensions, TouchableOpacity, ImageBackground, ActivityIndicator} from 'react-native';
 import {WebView, WebViewMessageEvent} from 'react-native-webview';
 import {useEffect, useRef, useState} from 'react';
 import {PERMISSIONS, RESULTS, request} from 'react-native-permissions';
@@ -31,8 +31,9 @@ export default function FindBin() {
   const carouselRef = useRef(null);
   const [data, setData] = useState<BinItemProps[]>([]);
   const currentPosition = mapStore(state => state.currentPosition);
-  const {startWatchingPosition, stopWatchingPosition} = mapStore();
+  const {startWatchingPosition, stopWatchingPosition, setCurrentPosition} = mapStore();
   const [selectedMarker, setSelectedMarker] = useState<number | null>(null);
+  const alertShown = useRef(false);
 
   // const isFocused = useIsFocused();
 
@@ -52,10 +53,10 @@ export default function FindBin() {
     let result;
     if (Platform.OS === 'android') {
       result = await request(PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION);
-      console.log('Android Permission result:', result); // 권한 요청 결과 로그 추가
     } else if (Platform.OS === 'ios') {
       result = await request(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE);
     }
+
     if (result === RESULTS.GRANTED) {
       startWatchingPosition(position => {
         const message = {
@@ -63,55 +64,74 @@ export default function FindBin() {
           payload: {
             latitude: position.latitude,
             longitude: position.longitude,
-            // latitude: 37.563685889,
-            // longitude: 126.975584404,
           },
         };
-        console.log('Sending message:', JSON.stringify(message)); // 메시지 전송 확인
-
+        console.log('Sending message to WebView:', JSON.stringify(message));
         if (isWebViewLoaded && webViewRef.current) {
-          setTimeout(() => {
-            // 지연을 주고 메시지 전송
-            webViewRef.current?.postMessage(JSON.stringify(message));
-          }, 500); // 0.5초 지연
+          webViewRef.current?.postMessage(JSON.stringify(message));
+          // setTimeout(() => {
+          //   webViewRef.current?.postMessage(JSON.stringify(message));
+          // }, 500); // 0.5초 지연
         }
       });
     } else {
-      Alert.alert('위치 권한이 필요합니다!', '위치 권한을 켜주세요!', [
-        {
-          text: 'OK',
-          onPress: () => requestPermissionAndSendLocation(),
+      if (!alertShown.current) {
+        // alertShown이라는 ref 변수를 사용해 두 번 호출 방지
+        Alert.alert(
+          'Location Permission Needed',
+          'We need your location permission to provide information about nearby bins. Please enable location permissions in Settings.',
+        );
+        alertShown.current = true;
+      }
+      const message = {
+        type: 'location',
+        payload: {
+          latitude: undefined,
+          longitude: undefined,
         },
-      ]);
+      };
+      console.log('Sending message to WebView:', JSON.stringify(message));
+      if (isWebViewLoaded && webViewRef.current) {
+        setTimeout(() => {
+          webViewRef.current?.postMessage(JSON.stringify(message));
+        }, 500); // 0.5초 지연
+      }
+      setCurrentPosition({
+        latitude: 37.571648599,
+        longitude: 126.976372775,
+      });
     }
   };
 
   useEffect(() => {
-    requestPermissionAndSendLocation();
+    if (isWebViewLoaded) {
+      requestPermissionAndSendLocation();
+    }
 
     return () => {
       stopWatchingPosition(); // 컴포넌트가 언마운트될 때만 위치 추적을 중지
     };
   }, [isWebViewLoaded]);
 
-  useEffect(() => {
-    console.log('currentPositon:' + currentPosition?.latitude, currentPosition?.longitude);
-    const getData = async () => {
-      try {
-        const response = await api.get(`/bin/search?lat=${currentPosition?.latitude}&lng=${currentPosition?.longitude}&radius=2000&filter=0`);
+  const getData = async () => {
+    try {
+      const response = await api.get(`/bin/search?lat=${currentPosition?.latitude}&lng=${currentPosition?.longitude}&radius=2000&filter=0`);
 
-        if (response.status === 200) {
-          setData(response.data.data.bin_list);
-        } else {
-          console.log('실패 ㅜㅜ');
-        }
-      } catch (error: any) {
-        console.log(error.response.data);
+      if (response.status === 200) {
+        setData(response.data.data.bin_list);
+      } else {
+        console.log('실패 ㅜㅜ');
       }
-    };
+    } catch (error: any) {
+      console.log(error.response.data);
+    }
+  };
 
-    if (currentPosition) {
+  useEffect(() => {
+    if (currentPosition?.latitude && currentPosition.longitude) {
+      console.log('currentPositon:' + currentPosition?.latitude, currentPosition?.longitude);
       console.log('get data!!!');
+
       getData();
     }
   }, [currentPosition]);
@@ -204,23 +224,23 @@ export default function FindBin() {
   const itemWidth = (width / 375) * 232;
   const itemSpacing = 16; // 슬라이드 간 간격 설정
 
-  // useEffect(() => {
-  //   console.log(data.length);
-  // }, [data]);
-
   return (
     <View style={styles.container}>
+      {/* {!isWebViewLoaded && (
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size={'large'} color={Palette.P100} />
+        </View>
+      )} */}
       <WebView
         ref={webViewRef}
         style={styles.webview}
-        originWhitelist={['http://*', 'https://*', 'intent://*']}
         source={{uri: URL}}
         javaScriptEnabled={true}
+        domStorageEnabled={true} // DOM 저장소 사용
+        cacheMode={'LOAD_CACHE_ELSE_NETWORK'} // 캐시 우선 로딩
         onMessage={handleMessage}
-        onLoad={() => {
-          console.log('WebView loaded');
-          setIsWebViewLoaded(true); // WebView 로드 상태를 true로 설정
-        }}
+        onLoadStart={() => setIsWebViewLoaded(false)} // 로딩 시작
+        onLoadEnd={() => setIsWebViewLoaded(true)} // 로딩 완료
       />
       <S.ItemWrapper>
         <S.LocationWrapper>
@@ -302,5 +322,15 @@ const styles = StyleSheet.create({
   },
   visible: {
     display: 'flex',
+  },
+  loadingContainer: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(255, 255, 255, 0.5)', // 로딩 중 배경을 반투명하게 설정
   },
 });
