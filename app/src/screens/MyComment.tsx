@@ -20,7 +20,6 @@ export default function MyComment() {
       const response = await api.get('user/feedback');
       const feedbackList = response.data.data.feedback_list;
       setComment(feedbackList.reverse()); // 최신 순 정렬
-      console.log(response.data.data);
     } catch (error) {
       console.error(error);
     }
