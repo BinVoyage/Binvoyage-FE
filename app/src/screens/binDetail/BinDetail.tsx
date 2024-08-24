@@ -8,9 +8,10 @@ import ModalOpenMap from 'components/modalOpenMap/ModalOpenMap';
 import ReviewItem from 'components/reviewItem/ReviewItem';
 import {Palette} from 'constants/palette';
 import {useEffect, useState} from 'react';
-import {ScrollView, Text, TouchableOpacity, View} from 'react-native';
+import {Alert, ScrollView, Text, TouchableOpacity, View} from 'react-native';
+import Toast from 'react-native-toast-message';
 import * as S from 'screens/binDetail/BinDetail.style';
-import {mapStore} from 'store/Store';
+import {mapStore, userStore} from 'store/Store';
 import {formatDate} from 'utils/formatDate';
 
 type BinDetailProps = {
@@ -24,6 +25,7 @@ export default function BinDetail({route}: BinDetailProps) {
   const [feedbackList, setFeedbackList] = useState<Feedback[]>([]);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const currentLocation = mapStore(state => state.currentPosition);
+  const userInfo = userStore(state => state.userInfo);
 
   const [labelText, setLabelText] = useState<string>('');
 
@@ -74,6 +76,50 @@ export default function BinDetail({route}: BinDetailProps) {
       }
     }
   }, [binData]);
+
+  const deleteFeedback = async (feedbackId: number) => {
+    Alert.alert(
+      'Delete Feedback',
+      'Are you sure you want to delete this feedback?',
+      [
+        {
+          text: 'Cancel',
+          onPress: () => {},
+          style: 'cancel',
+        },
+        {
+          text: 'OK',
+          onPress: async () => {
+            try {
+              const response = await api.delete(`bin/feedback/${feedbackId}`);
+              if (response.status === 200) {
+                console.log('Feedback deleted successfully');
+                const filteredList = feedbackList.filter(item => item.feedback_id !== feedbackId);
+                setFeedbackList(filteredList);
+              } else {
+                Toast.show({
+                  type: 'error',
+                  text1: 'Failed to delete feedback. Please try again later.',
+                  position: 'bottom',
+                  bottomOffset: 100,
+                  visibilityTime: 2000,
+                });
+              }
+            } catch (error) {
+              Toast.show({
+                type: 'error',
+                text1: 'Failed to delete feedback. Please try again later.',
+                position: 'bottom',
+                bottomOffset: 100,
+                visibilityTime: 2000,
+              });
+            }
+          },
+        },
+      ],
+      {cancelable: false},
+    );
+  };
 
   return (
     <>
@@ -170,11 +216,13 @@ export default function BinDetail({route}: BinDetailProps) {
                 {feedbackList.map((item, index) => (
                   <ReviewItem
                     key={item.feedback_id}
+                    isMyFeedback={userInfo?.user_id === item.user_id}
                     feedbackId={item.feedback_id}
                     date={formatDate(item.registration_dt)}
                     author={item.user_name}
                     content={item.content}
                     isLast={index === feedbackList.length - 1 ? true : false}
+                    onDelete={deleteFeedback}
                   />
                 ))}
               </View>

@@ -45,7 +45,6 @@ export default function ReportFeedback({route}: ReportFeedbackProps) {
     } catch (error: any) {
       if (error.response) {
         const statusCode = error.response.status;
-        console.log(error.response.data);
         if (statusCode === 403) {
           console.log('로그인이 필요합니다.' + statusCode);
           Toast.show({

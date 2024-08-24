@@ -1,4 +1,4 @@
-import {Text, View, FlatList} from 'react-native';
+import {Text, View, FlatList, Alert} from 'react-native';
 import styled from 'styled-components/native';
 import {Palette} from 'constants/palette';
 import ArrowPrevSvg from 'assets/images/ArrowPrevSvg';
@@ -9,6 +9,7 @@ import {useEffect, useRef, useState} from 'react';
 import api from 'api/api';
 import S_Bin from 'assets/images/S_Bin';
 import S_Recycling from 'assets/images/S_Recycling';
+import Toast from 'react-native-toast-message';
 
 export default function MyComment() {
   const commentNavigator = useNavigation<NavigationProp<RootMyParamList>>();
@@ -17,7 +18,8 @@ export default function MyComment() {
   const getData = async () => {
     try {
       const response = await api.get('user/feedback');
-      setComment(response.data.data.feedback_list);
+      const feedbackList = response.data.data.feedback_list;
+      setComment(feedbackList.reverse()); // 최신 순 정렬
       console.log(response.data.data);
     } catch (error) {
       console.error(error);
@@ -25,16 +27,46 @@ export default function MyComment() {
   };
 
   const deleteComment = async (feedback_id: number) => {
-    try {
-      const response = await api.delete(`bin/feedback/${feedback_id}`);
-      if (response.status === 200) {
-        setComment(prevComments => prevComments.filter(comment => comment.feedback_id !== feedback_id));
-      } else {
-        console.log('Failed to delete the comment');
-      }
-    } catch (error) {
-      console.error(error);
-    }
+    Alert.alert(
+      'Delete Feedback',
+      'Are you sure you want to delete this feedback?',
+      [
+        {
+          text: 'Cancel',
+          onPress: () => {},
+          style: 'cancel',
+        },
+        {
+          text: 'OK',
+          onPress: async () => {
+            try {
+              const response = await api.delete(`bin/feedback/${feedback_id}`);
+              if (response.status === 200) {
+                setComment(prevComments => prevComments.filter(comment => comment.feedback_id !== feedback_id));
+              } else {
+                Toast.show({
+                  type: 'error',
+                  text1: 'Failed to delete feedback. Please try again later.',
+                  position: 'bottom',
+                  bottomOffset: 100,
+                  visibilityTime: 2000,
+                });
+              }
+            } catch (error) {
+              console.log(error);
+              Toast.show({
+                type: 'error',
+                text1: 'Failed to delete feedback. Please try again later.',
+                position: 'bottom',
+                bottomOffset: 100,
+                visibilityTime: 2000,
+              });
+            }
+          },
+        },
+      ],
+      {cancelable: false},
+    );
   };
 
   useEffect(() => {
@@ -56,8 +88,7 @@ export default function MyComment() {
     <ItemWrapper>
       <RowWrapper style={{justifyContent: 'space-between'}}>
         <RowWrapper>
-          {bin_type_name === 'Trash' && <S_Bin />}
-          {bin_type_name === 'Recycling' && <S_Recycling />}
+          {bin_type_name === 'Trash' ? <S_Bin /> : <S_Recycling />}
           <BinText>{bin_type_name}</BinText>
           <ItemName>
             <Text>|</Text>

@@ -28,15 +28,6 @@ interface FeedbackResponse {
   };
 }
 
-interface Nickname {
-  user_name: string;
-  nationality: string;
-  stamp_cnt: number;
-  newly_found_cnt: number;
-  report_cnt: number;
-  feedback_cnt: number;
-}
-
 interface NewTrashDetail {
   code: number;
   success: boolean;
@@ -55,19 +46,6 @@ interface Mycomment {
   content?: string;
   bin_id?: number;
   bin_address?: string;
-}
-
-interface MyCommentResponse {
-  code: number;
-  success: boolean;
-  msg: string;
-  data: {
-    total_count: number;
-    page: number;
-    count: number;
-    next: string | null;
-    feedback_list: Mycomment[];
-  };
 }
 
 interface DeleteComment {
@@ -124,6 +102,7 @@ type CurrentPosition = {
 };
 
 type UserInfo = {
+  user_id: number;
   user_name: string;
   nationality: string;
   stamp_cnt: string;
