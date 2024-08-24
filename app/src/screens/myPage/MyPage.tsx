@@ -1,4 +1,4 @@
-import {ScrollView, Linking} from 'react-native';
+import {ScrollView, Linking, Alert} from 'react-native';
 import * as S from 'screens/myPage/MyPage.style';
 import ArrowNextSvg from 'assets/images/ArrowNextSvg';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
@@ -7,6 +7,7 @@ import {useEffect, useState} from 'react';
 import {userStore} from 'store/Store';
 import DeleteAccount from 'screens/DeleteAccount';
 import {useBackHandler} from 'hooks/useBackHandler';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function MyPage() {
   useBackHandler();
@@ -39,13 +40,36 @@ export default function MyPage() {
   };
 
   const Logout = async () => {
-    try {
-      await api.delete('/login/logout');
-      setUserInfo(null);
-      navigation.navigate('Login');
-    } catch (error) {
-      console.log(error);
-    }
+    Alert.alert(
+      'Logout',
+      'Are you sure you want to log out?',
+      [
+        {
+          text: 'Cancel',
+          onPress: () => {},
+          style: 'cancel',
+        },
+        {
+          text: 'OK',
+          onPress: async () => {
+            try {
+              await api.delete('/login/logout');
+              setUserInfo(null);
+              await AsyncStorage.removeItem('authToken');
+
+              // 네비게이션 스택 초기화 및 로그인 화면으로 이동
+              navigation.reset({
+                index: 0,
+                routes: [{name: 'Login'}],
+              });
+            } catch (error) {
+              console.log(error);
+            }
+          },
+        },
+      ],
+      {cancelable: false},
+    );
   };
   return (
     <>

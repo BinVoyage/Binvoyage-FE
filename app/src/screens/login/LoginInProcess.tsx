@@ -5,12 +5,13 @@ import {GOOGLE_WEB_CLIENT_ID} from '@env';
 import GoogleSvg from 'assets/images/GoogleSvg';
 import AppleSvg from 'assets/images/AppleSvg';
 import {Palette} from 'constants/palette';
-import {Alert, TouchableOpacity} from 'react-native';
+import {Alert, TouchableOpacity, View} from 'react-native';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 import api from 'api/api';
 import appleAuth from '@invertase/react-native-apple-authentication';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ArrowPrevSvg from 'assets/images/ArrowPrevSvg';
+import CancelSvg from 'assets/images/CancelSvg';
 
 export default function LoginInProcess() {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -32,14 +33,20 @@ export default function LoginInProcess() {
         const response = await api.post(`/login/oauth2?type=google&token=${userInfo.idToken}`);
 
         if (response.data.success) {
+          const hasAccount = response.data.user_name.length !== 0;
           await AsyncStorage.setItem('authToken', userInfo.idToken);
-          navigation.navigate('UserInput');
+
+          if (hasAccount) {
+            navigation.navigate('BottomNavigator');
+          } else {
+            navigation.navigate('UserInput');
+          }
         } else {
           Alert.alert('로그인 실패');
         }
       }
     } catch (error: any) {
-      console.log(error.response.data);
+      console.log(error);
     }
   };
 
@@ -54,10 +61,15 @@ export default function LoginInProcess() {
       const {identityToken, authorizationCode} = appleAuthRequestResponse;
       if (identityToken) {
         const response = await api.post(`/login/oauth2?type=apple&token=${identityToken}&authorizationCode=${authorizationCode}`);
+        const hasAccount = response.data.user_name.length !== 0;
 
         if (response.data.success) {
           await AsyncStorage.setItem('authToken', identityToken);
-          navigation.navigate('UserInput');
+          if (hasAccount) {
+            navigation.navigate('BottomNavigator');
+          } else {
+            navigation.navigate('UserInput');
+          }
         } else {
           Alert.alert('로그인 실패');
         }
@@ -71,11 +83,13 @@ export default function LoginInProcess() {
     <>
       <S.Container>
         <S.ArrowPrevWrapper onPress={() => myNavigation.goBack()}>
-          <ArrowPrevSvg width="24" height="24" fill={Palette.Gray4} />
+          <CancelSvg width="24" height="24" />
         </S.ArrowPrevWrapper>
         <S.Wrapper>
-          <S.LogoWrapper source={require('assets/images/logo.png')} />
-          <S.Title>{'Login simply\nand continue!'}</S.Title>
+          <View>
+            <S.LogoWrapper source={require('assets/images/logo.png')} />
+            <S.Title>{'Login simply\nand continue!'}</S.Title>
+          </View>
           <S.SignInButtonWrapper>
             <S.AppleSignInButton onPress={handleAppleLogin}>
               <AppleSvg width="24" height="24" fill={Palette.White} />
