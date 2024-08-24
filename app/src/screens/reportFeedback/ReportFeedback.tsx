@@ -33,7 +33,7 @@ export default function ReportFeedback({route}: ReportFeedbackProps) {
   const handleSubmit = async () => {
     if (selected === null) return;
     try {
-      await api.post(`/bin/feedback/report?id=${feedbackId}?type=${selected + 1}`);
+      await api.post(`/bin/feedback/report?id=${feedbackId}&type=${selected + 1}`);
       Toast.show({
         type: 'success',
         text1: 'Thank you for letting us know. We will review it shortly.',
@@ -45,7 +45,7 @@ export default function ReportFeedback({route}: ReportFeedbackProps) {
     } catch (error: any) {
       if (error.response) {
         const statusCode = error.response.status;
-        console.log(error.response);
+        console.log(error.response.data);
         if (statusCode === 403) {
           console.log('로그인이 필요합니다.' + statusCode);
           Toast.show({
