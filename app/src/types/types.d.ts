@@ -38,14 +38,15 @@ interface NewTrashDetail {
   };
 }
 
-interface Mycomment {
-  bin_type_name: string;
+interface MyFeedback {
   feedback_id: number;
-  registration_dt?: string;
+  registration_dt: string;
   change_dt?: string;
-  content?: string;
-  bin_id?: number;
-  bin_address?: string;
+  content: string;
+  bin_id: number;
+  bin_address: string;
+  bin_type_no: number;
+  bin_type_name: string;
 }
 
 interface DeleteComment {

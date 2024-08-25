@@ -4,6 +4,7 @@ import ArrowDownSvg from 'assets/images/ArrowDownSvg';
 import ArrowNextSvg from 'assets/images/ArrowNextSvg';
 import BinSvg from 'assets/images/BinSvg';
 import FootPrintSvg from 'assets/images/FootPrintSvg';
+import S_Recycling from 'assets/images/S_Recycling';
 import ModalOpenMap from 'components/modalOpenMap/ModalOpenMap';
 import ReviewItem from 'components/reviewItem/ReviewItem';
 import {Palette} from 'constants/palette';
@@ -136,7 +137,11 @@ export default function BinDetail({route}: BinDetailProps) {
             <S.RowWrapper style={{justifyContent: 'space-between'}}>
               <S.RowWrapper>
                 <S.RowWrapper>
-                  <BinSvg width="18" height="18" fill={Palette.Gray4} />
+                  {binData?.type_no === 1 ? (
+                    <BinSvg width="18" height="18" fill={Palette.Gray4} />
+                  ) : (
+                    <S_Recycling width="18" height="18" fill={Palette.Gray4} />
+                  )}
                   <S.TextInfo1>{binData?.type_name}</S.TextInfo1>
                 </S.RowWrapper>
                 <S.Division />

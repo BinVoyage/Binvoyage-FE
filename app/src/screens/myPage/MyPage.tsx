@@ -110,7 +110,6 @@ export default function MyPage() {
             <S.TextFeedbackButton>See my feedback</S.TextFeedbackButton>
             <ArrowNextSvg width="24px" height="24px" fill="#66B7FF" />
           </S.FeedbackButton>
-          {/* cmc 웹 노션 테스트로 연결해봤는데 실제기기에서 잘나옴 - 구글로 바꿔놓음 */}
           <S.SettingWrapper>
             <S.SettingButton
               style={{paddingTop: 0}}
