@@ -1,4 +1,4 @@
-import {ScrollView, Linking, Alert} from 'react-native';
+import {ScrollView, Linking, Alert, View} from 'react-native';
 import * as S from 'screens/myPage/MyPage.style';
 import ArrowNextSvg from 'assets/images/ArrowNextSvg';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
@@ -75,36 +75,38 @@ export default function MyPage() {
     <>
       <S.MyWrapper>
         <ScrollView bounces={false}>
-          <S.MyImage source={require('assets/images/Ticket.png')}>
-            {userInfo ? (
-              <S.RowWrapper style={{marginLeft: 13}}>
-                <S.NickName>{userInfo.user_name}</S.NickName>
-                {/* <S.WriteImage source={require('assets/images/WriteProfile.png')} style={{alignItems: 'center'}} /> */}
-              </S.RowWrapper>
-            ) : (
-              <S.NickName style={{marginLeft: 13}}>로그인이 필요합니다.</S.NickName>
-            )}
-            {/* {userInfo && <S.Address>Started BinVoyage 2. Jul 2024</S.Address>} */}
-            {userInfo && (
-              <S.SettingTopWrapper>
+          <S.MyImage source={require('assets/images/ticket4x.png')}>
+            <View>
+              {userInfo ? (
+                <S.RowWrapper style={{marginLeft: 16}}>
+                  <S.NickName>{userInfo.user_name}</S.NickName>
+                  {/* <S.WriteImage source={require('assets/images/WriteProfile.png')} style={{alignItems: 'center'}} /> */}
+                </S.RowWrapper>
+              ) : (
+                <S.NickName style={{marginLeft: 13}}>로그인이 필요합니다.</S.NickName>
+              )}
+            </View>
+
+            <S.SettingTopWrapper>
+              {userInfo ? (
                 <S.UserGrid>
-                  <S.Usercolumn>
+                  <S.UserColumn>
                     <S.ColumnContent>{userInfo.newly_found_cnt}</S.ColumnContent>
                     <S.Sub>Newly found</S.Sub>
-                  </S.Usercolumn>
-                  <S.Sero />
-                  <S.Usercolumn>
+                  </S.UserColumn>
+
+                  <S.UserColumn>
                     <S.ColumnContent>{userInfo.report_cnt}</S.ColumnContent>
                     <S.Sub>Reported</S.Sub>
-                  </S.Usercolumn>
-                  <S.Sero />
-                  <S.Usercolumn>
+                  </S.UserColumn>
+
+                  <S.UserColumn style={{borderRightWidth: 0}}>
                     <S.ColumnContent>{userInfo.stamp_cnt}</S.ColumnContent>
                     <S.Sub>Verified</S.Sub>
-                  </S.Usercolumn>
+                  </S.UserColumn>
                 </S.UserGrid>
-              </S.SettingTopWrapper>
-            )}
+              ) : null}
+            </S.SettingTopWrapper>
           </S.MyImage>
           <S.FeedbackButton onPress={handleFeedback}>
             <S.TextFeedbackButton>See my feedback</S.TextFeedbackButton>

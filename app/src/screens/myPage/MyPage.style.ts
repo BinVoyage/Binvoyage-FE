@@ -7,17 +7,21 @@ import styled from 'styled-components/native';
 const screenWidth = Dimensions.get('window').width;
 const width = screenWidth - 32;
 
+const innerWidth = Math.round((width * 280) / 351) - 4;
+const innerHeight = Math.round((innerWidth * 53) / 274);
+
 export const MyWrapper = styled.View`
   width: 100%;
-  height: 1200px;
+  flex: 1;
   background: ${Palette.Gray1};
-  padding: 16px 20px;
+  padding: 20px 16px;
 `;
 
 export const MyImage = styled.ImageBackground`
-  width: ${width};
-  height: ${(width * 147) / 342}px;
+  width: ${width}px;
+  height: ${Math.round((width * 157) / 351)}px;
   padding: 16px 0px;
+  justify-content: space-between;
 `;
 
 export const TextWrapper = styled.View`
@@ -25,10 +29,6 @@ export const TextWrapper = styled.View`
   flex-direction: row;
   flex-wrap: wrap;
   align-items: center;
-`;
-
-export const Texts = styled.View`
-  padding-right: 175px;
 `;
 
 export const FeedbackButton = styled.TouchableOpacity`
@@ -55,18 +55,17 @@ export const RowWrapper = styled.View`
 `;
 
 export const SettingTopWrapper = styled.View`
-  width: ${(width * 274) / 342};
-  padding: 0px 13px 8px;
-  margin-top: auto;
-`;
-export const WriteImage = styled.Image`
-  align-content: left;
-  padding-right: 8px;
+  position: relative;
+  left: 4px;
+  width: ${innerWidth};
+  height: ${innerHeight};
+  background: ${Palette.P400};
+  padding: 8px 12px;
 `;
 
 export const NickName = styled.Text`
-  font-size: ${Typo.B3.fontSize};
-  font-weight: ${Typo.B3.fontWeight};
+  font-size: ${Typo.SubTitle.fontSize};
+  font-weight: ${Typo.SubTitle.fontWeight};
   color: ${Palette.Gray1};
   margin-right: 4px;
 `;
@@ -79,19 +78,18 @@ export const Address = styled.Text`
 `;
 
 export const UserGrid = styled.View`
+  width: 100%;
   flex-direction: row;
-  width: 275px;
+  gap: 16px;
 `;
 
-export const Usercolumn = styled.View`
-  display: flex;
+export const UserColumn = styled.View`
   flex-direction: column;
-  padding-top: 10px;
-  margin-left: 8px;
-  margin-right: 8px;
-  width: 71px;
-  height: 35px;
+  border-right-width: 1px;
+  border-right-color: ${Palette.P200};
+  padding-right: 16px;
 `;
+
 export const Sub = styled.Text`
   font-size: ${Typo.Label.fontSize};
   font-weight: ${Typo.Label.fontWeight};
