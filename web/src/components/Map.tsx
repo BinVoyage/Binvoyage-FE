@@ -111,6 +111,9 @@ const Map = ({ latitude, longitude, triggerSearch, triggerRefresh }: CurrentLoca
       markerInfo.marker.setMap(null); // 지도에서 기존 마커 제거
     });
   
+    // 마커 목록 초기화
+    setMarkers([]);
+  
     const updatedMarkers: MarkerInfo[] = [];
   
     if (mapRef.current) {
@@ -164,7 +167,6 @@ const Map = ({ latitude, longitude, triggerSearch, triggerRefresh }: CurrentLoca
     }
   };
   
-    
 
   const calculateDistance = (binLocation: any) => {
     const currentPosition = new window.kakao.maps.LatLng(latitude, longitude);
