@@ -100,67 +100,62 @@ const Map = ({ latitude, longitude, triggerSearch, triggerRefresh }: CurrentLoca
   };
   
 
-    const initMarkers = (binList: BinInfo[]) => {
-      const updatedMarkers: MarkerInfo[] = [];
-
-      if (mapRef.current) {
-        binList.forEach(bin => {
-          const binLocation = new window.kakao.maps.LatLng(bin.coordinate[1], bin.coordinate[0]);
-          const markerImageSrc = bin.type_no === 1 ? "image/trashmark.svg" : "image/recyclemark.svg";
-
-          // 이미 존재하는 마커인지 확인
-          const existingMarkerInfo = markers.find(markerObj => 
-            markerObj.marker.getPosition().getLat() === binLocation.getLat() &&
-            markerObj.marker.getPosition().getLng() === binLocation.getLng()
-          );
-    
-          if (existingMarkerInfo) {
-            // 이미 존재하는 마커가 있으면 해당 마커를 updatedMarkers에 추가
-            existingMarkerInfo.marker.setMap(mapRef.current);
-            updatedMarkers.push(existingMarkerInfo);
-          } else {
-            // 새로 추가된 마커 생성
-            const marker = new window.kakao.maps.Marker({
-              position: binLocation,
-              image: new window.kakao.maps.MarkerImage(markerImageSrc, new window.kakao.maps.Size(30, 30)),
-              map: mapRef.current!,
-            });
-    
-          // 마커에 클릭 이벤트 추가
-          window.kakao.maps.event.addListener(marker, 'click', () => {
-            if (selectedMarker && selectedMarkerSrc) {
-              selectedMarker.setImage(new window.kakao.maps.MarkerImage(selectedMarkerSrc, new window.kakao.maps.Size(30, 30)));
-            }
-            
-            // 현재 클릭된 마커의 이미지를 "targetMarker.svg"로 변경
-            marker.setImage(new window.kakao.maps.MarkerImage("image/targetMarker.svg", new window.kakao.maps.Size(30, 30)));
-
-            // 선택된 마커와 이미지 경로 저장
-            selectedMarker = marker;
-            selectedMarkerSrc = markerImageSrc;
-
-            const message = {
-              type: 'markerClick',
-              payload: {
-                bin_id: bin.bin_id
-              }
-            };
-            window.ReactNativeWebView?.postMessage(JSON.stringify(message));
-          });
-    
-          updatedMarkers.push({
-            marker: marker,
-            type_no: bin.type_no,
-            map: mapRef.current!,
-            distance: calculateDistance(binLocation),
-          });
-        }
+  const initMarkers = (binList: BinInfo[]) => {
+    // 기존 마커 제거
+    markers.forEach(markerInfo => {
+      markerInfo.marker.setMap(null); // 지도에서 기존 마커 제거
+    });
+  
+    const updatedMarkers: MarkerInfo[] = [];
+  
+    if (mapRef.current) {
+      binList.forEach(bin => {
+        const binLocation = new window.kakao.maps.LatLng(bin.coordinate[1], bin.coordinate[0]);
+        const markerImageSrc = bin.type_no === 1 ? "image/trashmark.svg" : "image/recyclemark.svg";
+  
+        // 새로 추가된 마커 생성
+        const marker = new window.kakao.maps.Marker({
+          position: binLocation,
+          image: new window.kakao.maps.MarkerImage(markerImageSrc, new window.kakao.maps.Size(30, 30)),
+          map: mapRef.current!,
         });
-        setMarkers(updatedMarkers);
-      } else {
-        console.error("Map object is not initialized.");
-      }
-    };
+  
+        // 마커에 클릭 이벤트 추가
+        window.kakao.maps.event.addListener(marker, 'click', () => {
+          if (selectedMarker && selectedMarkerSrc) {
+            selectedMarker.setImage(new window.kakao.maps.MarkerImage(selectedMarkerSrc, new window.kakao.maps.Size(30, 30)));
+          }
+  
+          // 현재 클릭된 마커의 이미지를 "targetMarker.svg"로 변경
+          marker.setImage(new window.kakao.maps.MarkerImage("image/targetMarker.svg", new window.kakao.maps.Size(30, 30)));
+  
+          // 선택된 마커와 이미지 경로 저장
+          selectedMarker = marker;
+          selectedMarkerSrc = markerImageSrc;
+  
+          const message = {
+            type: 'markerClick',
+            payload: {
+              bin_id: bin.bin_id
+            }
+          };
+          window.ReactNativeWebView?.postMessage(JSON.stringify(message));
+        });
+  
+        updatedMarkers.push({
+          marker: marker,
+          type_no: bin.type_no,
+          map: mapRef.current!,
+          distance: calculateDistance(binLocation),
+        });
+      });
+  
+      setMarkers(updatedMarkers); // 새로운 마커들로 상태를 업데이트
+    } else {
+      console.error("Map object is not initialized.");
+    }
+  };
+  
     
 
   const calculateDistance = (binLocation: any) => {
