@@ -1,9 +1,9 @@
 import {ScrollView, Linking, Alert, View} from 'react-native';
 import * as S from 'screens/myPage/MyPage.style';
 import ArrowNextSvg from 'assets/images/ArrowNextSvg';
-import {NavigationProp, useNavigation} from '@react-navigation/native';
+import {NavigationProp, useFocusEffect, useNavigation} from '@react-navigation/native';
 import api from 'api/api';
-import {useEffect, useState} from 'react';
+import {useCallback, useEffect, useState} from 'react';
 import {userStore} from 'store/Store';
 import DeleteAccount from 'screens/DeleteAccount';
 import {useBackHandler} from 'hooks/useBackHandler';
@@ -25,11 +25,13 @@ export default function MyPage() {
     }
   };
 
-  useEffect(() => {
-    if (userInfo) {
-      getMemberData();
-    }
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      if (userInfo) {
+        getMemberData();
+      }
+    }, [])
+  );
 
   const handleFeedback = () => {
     if (userInfo) {
