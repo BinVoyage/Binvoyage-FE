@@ -26,7 +26,7 @@ const Map = ({ latitude, longitude, triggerSearch, triggerRefresh }: CurrentLoca
   const [currentMarker, setCurrentMarker] = useState<kakao.maps.Marker | null>(null);
   const [center, setCenter] = useState<kakao.maps.LatLng | null>(null);
   const [isMapLoaded, setIsMapLoaded] = useState<boolean>(false);
-  const [_, setData] = useState<BinInfo[]>([]);
+  // const [_, setData] = useState<BinInfo[]>([]);
   let selectedMarker: kakao.maps.Marker | null = null;
   let selectedMarkerSrc: string | null = null;
 
@@ -91,7 +91,7 @@ const Map = ({ latitude, longitude, triggerSearch, triggerRefresh }: CurrentLoca
         const newBinList = response.data.data.bin_list;
   
         // 새로운 데이터로 마커 초기화
-        setData(newBinList);
+        // setData(newBinList);
         initMarkers(newBinList);
       } else {
         console.log(response.data.message);
@@ -107,7 +107,8 @@ const Map = ({ latitude, longitude, triggerSearch, triggerRefresh }: CurrentLoca
   
   const initMarkers = (binList: BinInfo[]) => {
     // 기존 마커 제거
-    markers.forEach(markerInfo => {
+    markers.forEach((markerInfo, index) => {
+      console.log(index);
       markerInfo.marker.setMap(null); // 지도에서 기존 마커 제거
     });
   
@@ -161,7 +162,7 @@ const Map = ({ latitude, longitude, triggerSearch, triggerRefresh }: CurrentLoca
       });
   
       setMarkers(updatedMarkers); // 새로운 마커들로 상태를 업데이트
-      filterMarkers(filterMode);  // 필터링 적용
+      filterMarkers(filterMode, updatedMarkers);  // 필터링 적용
     } else {
       console.error("Map object is not initialized.");
     }
@@ -176,8 +177,8 @@ const Map = ({ latitude, longitude, triggerSearch, triggerRefresh }: CurrentLoca
     return poly.getLength();
   };
 
-  const filterMarkers = (filterMode: number) => {
-    markers.forEach(markerObj => {
+  const filterMarkers = (filterMode: number, markerList: MarkerInfo[]) => {
+    markerList.forEach(markerObj => {
       if (filterMode === -1 || filterMode === 0) {
           markerObj.marker.setMap(markerObj.map);
       } else if (filterMode === 1 && markerObj.type_no === 1) {
@@ -228,7 +229,7 @@ const Map = ({ latitude, longitude, triggerSearch, triggerRefresh }: CurrentLoca
   }, [triggerRefresh, isMapLoaded]);
 
   useEffect(() => {
-    filterMarkers(filterMode); // filterMode 변경 시 마커 필터링
+    filterMarkers(filterMode, markers); // filterMode 변경 시 마커 필터링
   }, [filterMode, markers]);
 
   useEffect(() => {
