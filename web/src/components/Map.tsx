@@ -81,7 +81,7 @@ const Map = ({ latitude, longitude, triggerSearch, triggerRefresh }: CurrentLoca
    // API를 통해 실제 데이터를 가져오는 함수
    const fetchBinData = async (lat: number, lng: number) => {
     try {
-      const response = await api.get(`/bin/search?lat=${lat}&lng=${lng}&radius=1000&filter=0`);
+      const response = await api.get(`/bin/search?lat=${lat}&lng=${lng}&radius=2000&filter=0`);
   
       console.log(response.data);  // 전체 응답 데이터 구조 확인
       console.log(response.data.data);  // data 속성 확인
@@ -107,8 +107,7 @@ const Map = ({ latitude, longitude, triggerSearch, triggerRefresh }: CurrentLoca
   
   const initMarkers = (binList: BinInfo[]) => {
     // 기존 마커 제거
-    markers.forEach((markerInfo, index) => {
-      console.log(index);
+    markers.forEach((markerInfo) => {
       markerInfo.marker.setMap(null); // 지도에서 기존 마커 제거
     });
   

@@ -6,7 +6,6 @@ import * as S from 'screens/FindBin/FindBin.style';
 import LocationSvg from 'assets/images/LocationSvg';
 import {Palette} from 'constants/palette';
 import RecyclingFilterSvg from 'assets/images/RecyclingFilterSvg';
-import TrashFilterSvg from 'assets/images/TrashFilterSvg';
 import {Image} from 'react-native';
 import MyBottomSheet from 'components/MyBottomSheet';
 import Carousel from 'react-native-snap-carousel';
@@ -14,7 +13,6 @@ import BinItem from 'components/binItem/BinItem';
 import EmptyItem from 'components/binItem/EmptyItem';
 import Animated, {useAnimatedStyle, withTiming} from 'react-native-reanimated';
 import {NativeViewGestureHandler} from 'react-native-gesture-handler';
-import {useIsFocused} from '@react-navigation/native';
 import api from 'api/api';
 import {mapStore} from 'store/Store';
 import BinBottomSheet from 'components/binBottomSheet/BinBottomSheet';
@@ -31,7 +29,8 @@ export default function FindBin() {
   const carouselRef = useRef(null);
   const [data, setData] = useState<BinItemProps[]>([]);
   const currentPosition = mapStore(state => state.currentPosition);
-  const {startWatchingPosition, stopWatchingPosition, setCurrentPosition} = mapStore();
+  const centerPosition = mapStore(state => state.centerPosition);
+  const {startWatchingPosition, stopWatchingPosition, setCurrentPosition, setCenterPosition} = mapStore();
   const [selectedMarker, setSelectedMarker] = useState<number | null>(null);
   const alertShown = useRef(false);
 
@@ -113,9 +112,9 @@ export default function FindBin() {
     };
   }, [isWebViewLoaded]);
 
-  const getData = async () => {
+  const getData = async (position: CurrentPosition) => {
     try {
-      const response = await api.get(`/bin/search?lat=${currentPosition?.latitude}&lng=${currentPosition?.longitude}&radius=1000&filter=${filterMode}`);
+      const response = await api.get(`/bin/search?lat=${position?.latitude}&lng=${position?.longitude}&radius=2000&filter=${filterMode}`);
 
       if (response.status === 200) {
         setData(response.data.data.bin_list);
@@ -132,9 +131,13 @@ export default function FindBin() {
       console.log('currentPositon:' + currentPosition?.latitude, currentPosition?.longitude);
       console.log('get data!!!');
 
-      getData();
+      getData(currentPosition);
     }
   }, [currentPosition, filterMode]);
+
+  useEffect(() => {
+    console.log('center:' + centerPosition?.latitude, centerPosition?.longitude);
+  }, [centerPosition]);
 
   const refreshLocationWatching = () => {
     // 기존의 위치 감시 중지
@@ -164,6 +167,10 @@ export default function FindBin() {
       if (data.type === 'address') {
         setCurrentAddress(data.payload.address);
       } else if (data.type === 'centerMoved') {
+        setCenterPosition({
+          latitude: data.payload.latitude,
+          longitude: data.payload.longitude,
+        });
         setIsSearchShow(true);
       } else if (data.type === 'markerClick') {
         console.log('click: ', data.payload.bin_id);
@@ -176,8 +183,9 @@ export default function FindBin() {
     }
   };
 
-  const sendSearchMessage = () => {
-    if (webViewRef.current) {
+  const handleSearchArea = () => {
+    if (webViewRef.current && centerPosition) {
+      // getData(centerPosition);
       const message = {
         type: 'search',
       };
@@ -267,7 +275,7 @@ export default function FindBin() {
         </TouchableOpacity>
       </Animated.View>
       <Animated.View style={[styles.search, animatedStyle, isSearchShow ? styles.visible : null]}>
-        <S.BtnSearchThisArea onPress={sendSearchMessage}>
+        <S.BtnSearchThisArea onPress={handleSearchArea}>
           <S.TextSearchThisArea>Search this area</S.TextSearchThisArea>
         </S.BtnSearchThisArea>
       </Animated.View>

@@ -6,6 +6,8 @@ interface mapStore {
   setCurrentPosition: (position: CurrentPosition) => void;
   watcherId: number | null;
   setWatcherId: (id: number | null) => void;
+  centerPosition: CurrentPosition | null;
+  setCenterPosition: (position: CurrentPosition) => void;
   startWatchingPosition: (onPositionUpdate?: (position: CurrentPosition) => void) => void;
   stopWatchingPosition: () => void;
 }
@@ -23,6 +25,8 @@ interface Picturestore {
 export const mapStore = create<mapStore>((set, get) => ({
   currentPosition: null,
   watcherId: null,
+  centerPosition: null,
+  setCenterPosition: position => set({centerPosition: position}),
   setWatcherId: id => set({watcherId: id}),
   setCurrentPosition: position => set({currentPosition: position}),
   startWatchingPosition: onPositionUpdate => {
