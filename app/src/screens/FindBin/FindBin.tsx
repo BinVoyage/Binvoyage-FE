@@ -23,7 +23,7 @@ import {useBackHandler} from 'hooks/useBackHandler';
 export default function FindBin() {
   useBackHandler();
   const webViewRef = useRef<WebView>(null);
-  const [filterMode, setFilterMode] = useState<number>(-1);
+  const [filterMode, setFilterMode] = useState<number>(0);
   const [currentAddress, setCurrentAddress] = useState<string>('');
   const [isWebViewLoaded, setIsWebViewLoaded] = useState<boolean>(false); // WebView 로드 상태
   const [bottomSheetOffset, setBottomSheetOffset] = useState<number>(0); // BottomSheet의 높이 또는 offset 상태
@@ -46,7 +46,7 @@ export default function FindBin() {
     };
   }, [refreshWrapperBottom]);
 
-  const URL = 'https://binvoyage.netlify.app/';
+  const URL = 'https://test--binvoyage.netlify.app/';
   // const URL = 'http://localhost:5173/';
 
   const requestPermissionAndSendLocation = async () => {
@@ -115,7 +115,7 @@ export default function FindBin() {
 
   const getData = async () => {
     try {
-      const response = await api.get(`/bin/search?lat=${currentPosition?.latitude}&lng=${currentPosition?.longitude}&radius=2000&filter=0`);
+      const response = await api.get(`/bin/search?lat=${currentPosition?.latitude}&lng=${currentPosition?.longitude}&radius=1000&filter=${filterMode}`);
 
       if (response.status === 200) {
         setData(response.data.data.bin_list);
@@ -134,7 +134,7 @@ export default function FindBin() {
 
       getData();
     }
-  }, [currentPosition]);
+  }, [currentPosition, filterMode]);
 
   const refreshLocationWatching = () => {
     // 기존의 위치 감시 중지
@@ -201,7 +201,7 @@ export default function FindBin() {
       };
 
       // 메시지가 잘 전송되었는지 확인하기 위한 로그
-      // console.log('Sending message to WebView:', JSON.stringify(message));
+      console.log('Sending message to WebView:', JSON.stringify(message));
 
       webViewRef.current.postMessage(JSON.stringify(message));
     } else {
@@ -212,8 +212,8 @@ export default function FindBin() {
 
   const handleFilter = (mode: number) => {
     if (filterMode === mode) {
-      setFilterMode(-1);
-      sendModeMessage(-1);
+      setFilterMode(0);
+      sendModeMessage(0);
       return;
     }
     setFilterMode(mode);

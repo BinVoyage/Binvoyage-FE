@@ -13,7 +13,6 @@ export default function BinItem({item}: {item: BinItemProps}) {
   ];
 
   useEffect(() => {
-    console.log(item.visit_rate);
     if (item.visit_rate) {
       if (item.visit_rate >= 70) {
         setLabelText(lableTextData[0]);
