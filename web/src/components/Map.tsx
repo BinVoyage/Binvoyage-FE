@@ -78,15 +78,10 @@ const Map = ({ latitude, longitude, triggerSearch, triggerRefresh }: CurrentLoca
       if (response.data.code === 12000) {
         console.log(response.data.data.bin_list);  // bin_list 출력
         const newBinList = response.data.data.bin_list;
-        setData(prevData => {
-          // 기존 데이터와 새로 가져온 데이터 병합 및 중복 제거
-          const updatedData = [...prevData, ...newBinList].filter((bin, index, self) => 
-              index === self.findIndex((t) => t.bin_id === bin.bin_id)
-          );
-          // 병합된 데이터를 상태에 저장
-          initMarkers(updatedData);
-          return updatedData;
-      });
+  
+        // 새로운 데이터로 마커 초기화
+        setData(newBinList);
+        initMarkers(newBinList);
       } else {
         console.log(response.data.message);
       }
@@ -98,6 +93,7 @@ const Map = ({ latitude, longitude, triggerSearch, triggerRefresh }: CurrentLoca
       }
     }
   };
+  
   
 
   const initMarkers = (binList: BinInfo[]) => {
