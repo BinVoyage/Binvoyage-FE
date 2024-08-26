@@ -53,22 +53,19 @@ const Map = ({ latitude, longitude, triggerSearch, triggerRefresh }: CurrentLoca
     setCurrentMarker(myMarker); 
     
     fetchBinData(latitude, longitude);
-    // fetchBinData(37.563685889, 126.975584404); // 지도 초기화 시 데이터 가져오기
 
     // 중심 좌표 변경 이벤트 리스너 추가
     window.kakao.maps.event.addListener(map, 'center_changed', debounce(handleCenterChanged, 500));
 
-    // 사용자가 확대/축소할 때 최대 레벨을 제한하는 이벤트 리스너 추가
-    // window.kakao.maps.event.addListener(map, 'zoom_changed', function() {
-    //   const currentLevel = map.getLevel();
-    //   if (currentLevel > 7) { // 최대 레벨을 7로 제한
-    //     map.setLevel(7); // 다시 레벨 7로 되돌림
-    //   }
-    //   map.setCenter(currentPosition); // 현재 위치를 중심으로 설정
-    // });
-
     // 맵 클릭 이벤트 리스너 추가
     window.kakao.maps.event.addListener(map, 'click', function() {
+      // 현재 선택된 마커가 있는 경우, 이미지를 원래 이미지로 되돌림
+      if (selectedMarker && selectedMarkerSrc) {
+        selectedMarker.setImage(new window.kakao.maps.MarkerImage(selectedMarkerSrc, new window.kakao.maps.Size(30, 30)));
+        selectedMarker = null;  // 선택된 마커 초기화
+        selectedMarkerSrc = null;
+      }
+      
       const message = {
         type: 'mapClick',
       };
