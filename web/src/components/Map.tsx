@@ -20,7 +20,8 @@ type MarkerInfo = {
 
 const Map = ({ latitude, longitude, triggerSearch, triggerRefresh }: CurrentLocation) => {
   const mapRef = useRef<kakao.maps.Map | null>(null);
-  const markersRef = useRef<MarkerInfo[]>([]);
+  // const markersRef = useRef<MarkerInfo[]>([]);
+  const [markers, setMarkers] = useState<MarkerInfo[]>([]);
   const filterMode = mapStore(state => state.filterMode);
   const [currentMarker, setCurrentMarker] = useState<kakao.maps.Marker | null>(null);
   const [center, setCenter] = useState<kakao.maps.LatLng | null>(null);
@@ -116,12 +117,11 @@ const Map = ({ latitude, longitude, triggerSearch, triggerRefresh }: CurrentLoca
 
       if (mapRef.current) {
         binList.forEach(bin => {
-          console.log(bin.bin_id);
           const binLocation = new window.kakao.maps.LatLng(bin.coordinate[1], bin.coordinate[0]);
           const markerImageSrc = bin.type_no === 1 ? "image/trashmark.svg" : "image/recyclemark.svg";
 
           // 이미 존재하는 마커인지 확인
-          const existingMarkerInfo = markersRef.current.find(markerObj => 
+          const existingMarkerInfo = markers.find(markerObj => 
             markerObj.marker.getPosition().getLat() === binLocation.getLat() &&
             markerObj.marker.getPosition().getLng() === binLocation.getLng()
           );
@@ -168,7 +168,7 @@ const Map = ({ latitude, longitude, triggerSearch, triggerRefresh }: CurrentLoca
           });
         }
         });
-        markersRef.current = updatedMarkers;
+        setMarkers(updatedMarkers);
         // 마커 필터링
         filterMarkers(filterMode);
       } else {
@@ -186,7 +186,7 @@ const Map = ({ latitude, longitude, triggerSearch, triggerRefresh }: CurrentLoca
   };
 
   const filterMarkers = (filterMode: number) => {
-    markersRef.current.forEach(markerObj => {
+    markers.forEach(markerObj => {
       if (filterMode === -1 || filterMode === 0) {
           markerObj.marker.setMap(markerObj.map);
       } else if (filterMode === 1 && markerObj.type_no === 1) {
@@ -238,7 +238,7 @@ const Map = ({ latitude, longitude, triggerSearch, triggerRefresh }: CurrentLoca
 
   useEffect(() => {
     filterMarkers(filterMode); // filterMode 변경 시 마커 필터링
-  }, [filterMode]);
+  }, [filterMode, markers]);
 
   useEffect(() => {
     if (triggerSearch && center) {

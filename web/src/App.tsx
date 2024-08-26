@@ -23,7 +23,7 @@ function App() {
     longitude: 126.976372775,
   };
 
-  const [isLocationSet, setIsLocationSet] = useState<boolean>(false);
+  const [isLocationSet, setIsLocationSet] = useState<boolean>(true);
   // const [currentLocation, setCurrentLocation] = useState<CurrentLocation | null>({latitude:37.563685889,longitude:126.975584404});
   const [currentLocation, setCurrentLocation] = useState<CurrentLocation | null>(null);
   const { setFilterMode } = mapStore();
