@@ -20,7 +20,6 @@ type MarkerInfo = {
 
 const Map = ({ latitude, longitude, triggerSearch, triggerRefresh }: CurrentLocation) => {
   const mapRef = useRef<kakao.maps.Map | null>(null);
-  // const markersRef = useRef<MarkerInfo[]>([]);
   const [markers, setMarkers] = useState<MarkerInfo[]>([]);
   const filterMode = mapStore(state => state.filterMode);
   const [currentMarker, setCurrentMarker] = useState<kakao.maps.Marker | null>(null);
@@ -52,20 +51,10 @@ const Map = ({ latitude, longitude, triggerSearch, triggerRefresh }: CurrentLoca
     myMarker.setMap(map);
     setCurrentMarker(myMarker); 
     
-    fetchBinData(latitude, longitude);
-    // fetchBinData(37.563685889, 126.975584404); // 지도 초기화 시 데이터 가져오기
+    fetchBinData(latitude, longitude, filterMode); // 초기 호출 시 filterMode 추가
 
     // 중심 좌표 변경 이벤트 리스너 추가
     window.kakao.maps.event.addListener(map, 'center_changed', debounce(handleCenterChanged, 500));
-
-    // 사용자가 확대/축소할 때 최대 레벨을 제한하는 이벤트 리스너 추가
-    // window.kakao.maps.event.addListener(map, 'zoom_changed', function() {
-    //   const currentLevel = map.getLevel();
-    //   if (currentLevel > 7) { // 최대 레벨을 7로 제한
-    //     map.setLevel(7); // 다시 레벨 7로 되돌림
-    //   }
-    //   map.setCenter(currentPosition); // 현재 위치를 중심으로 설정
-    // });
 
     // 맵 클릭 이벤트 리스너 추가
     window.kakao.maps.event.addListener(map, 'click', function() {
@@ -79,9 +68,9 @@ const Map = ({ latitude, longitude, triggerSearch, triggerRefresh }: CurrentLoca
   };
 
    // API를 통해 실제 데이터를 가져오는 함수
-   const fetchBinData = async (lat: number, lng: number) => {
+   const fetchBinData = async (lat: number, lng: number, filterMode: number) => {
     try {
-      const response = await api.get(`/bin/search?lat=${lat}&lng=${lng}&radius=1000&filter=0`);
+      const response = await api.get(`/bin/search?lat=${lat}&lng=${lng}&radius=1000&filter=${filterMode}`);
   
       console.log(response.data);  // 전체 응답 데이터 구조 확인
       console.log(response.data.data);  // data 속성 확인
@@ -168,8 +157,6 @@ const Map = ({ latitude, longitude, triggerSearch, triggerRefresh }: CurrentLoca
         }
         });
         setMarkers(updatedMarkers);
-        // 마커 필터링
-        filterMarkers(filterMode);
       } else {
         console.error("Map object is not initialized.");
       }
@@ -182,20 +169,6 @@ const Map = ({ latitude, longitude, triggerSearch, triggerRefresh }: CurrentLoca
       path: [currentPosition, binLocation],
     });
     return poly.getLength();
-  };
-
-  const filterMarkers = (filterMode: number) => {
-    markers.forEach(markerObj => {
-      if (filterMode === -1 || filterMode === 0) {
-          markerObj.marker.setMap(markerObj.map);
-      } else if (filterMode === 1 && markerObj.type_no === 1) {
-          markerObj.marker.setMap(markerObj.map);
-      } else if (filterMode === 2 && markerObj.type_no === 2) {
-          markerObj.marker.setMap(markerObj.map);
-      } else {
-        markerObj.marker.setMap(null);
-      }
-    });
   };
 
   const handleCenterChanged = () => {
@@ -235,15 +208,18 @@ const Map = ({ latitude, longitude, triggerSearch, triggerRefresh }: CurrentLoca
     }
   }, [triggerRefresh, isMapLoaded]);
 
+  // filterMode 변경 시마다 API 호출
   useEffect(() => {
-    filterMarkers(filterMode); // filterMode 변경 시 마커 필터링
-  }, [filterMode, markers]);
+    if (center) {
+      fetchBinData(center.getLat(), center.getLng(), filterMode);
+    }
+  }, [filterMode]);
 
   useEffect(() => {
     if (triggerSearch && center) {
       const lat= center.getLat();
       const lng = center.getLng();
-      fetchBinData(lat, lng);
+      fetchBinData(lat, lng, filterMode);
     }
   }, [triggerSearch])
 
