@@ -98,7 +98,6 @@ const Map = ({ latitude, longitude, triggerSearch, triggerRefresh }: CurrentLoca
           initMarkers(updatedData);
           return updatedData;
       });
-        initMarkers(response.data.data.bin_list);
       } else {
         console.log(response.data.message);
       }
