@@ -117,12 +117,14 @@ const Map = ({ latitude, longitude, triggerSearch, triggerRefresh }: CurrentLoca
       binList.forEach(bin => {
         const binLocation = new window.kakao.maps.LatLng(bin.coordinate[1], bin.coordinate[0]);
         const markerImageSrc = bin.type_no === 1 ? "image/trashmark.svg" : "image/recyclemark.svg";
+        const zIndex = bin.type_no === 2 ? 10 : 5;
   
         // 새로 추가된 마커 생성
         const marker = new window.kakao.maps.Marker({
           position: binLocation,
           image: new window.kakao.maps.MarkerImage(markerImageSrc, new window.kakao.maps.Size(30, 30)),
           map: mapRef.current!,
+          zIndex: zIndex
         });
   
         // 마커에 클릭 이벤트 추가
