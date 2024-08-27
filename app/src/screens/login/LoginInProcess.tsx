@@ -10,12 +10,13 @@ import {NavigationProp, useNavigation} from '@react-navigation/native';
 import api from 'api/api';
 import appleAuth from '@invertase/react-native-apple-authentication';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import ArrowPrevSvg from 'assets/images/ArrowPrevSvg';
 import CancelSvg from 'assets/images/CancelSvg';
+import {userStore} from 'store/Store';
 
 export default function LoginInProcess() {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const myNavigation = useNavigation<NavigationProp<RootMyParamList>>();
+  const {setIsLoggedIn} = userStore();
 
   useEffect(() => {
     GoogleSignin.configure({
@@ -33,7 +34,8 @@ export default function LoginInProcess() {
         const response = await api.post(`/login/oauth2?type=google&token=${userInfo.idToken}`);
 
         if (response.data.success) {
-          const hasAccount = response.data.user_name.length !== 0;
+          setIsLoggedIn(true);
+          const hasAccount = response.data.data.user_name.length !== 0;
           await AsyncStorage.setItem('authToken', userInfo.idToken);
 
           if (hasAccount) {
@@ -61,9 +63,10 @@ export default function LoginInProcess() {
       const {identityToken, authorizationCode} = appleAuthRequestResponse;
       if (identityToken) {
         const response = await api.post(`/login/oauth2?type=apple&token=${identityToken}&authorizationCode=${authorizationCode}`);
-        const hasAccount = response.data.user_name.length !== 0;
 
         if (response.data.success) {
+          setIsLoggedIn(true);
+          const hasAccount = response.data.data.user_name.length !== 0;
           await AsyncStorage.setItem('authToken', identityToken);
           if (hasAccount) {
             navigation.navigate('BottomNavigator');

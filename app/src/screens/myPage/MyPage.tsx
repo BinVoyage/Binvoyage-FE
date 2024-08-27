@@ -13,7 +13,7 @@ export default function MyPage() {
   useBackHandler();
   const commentNavigator = useNavigation<NavigationProp<RootMyParamList>>();
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
-  const {userInfo, setUserInfo} = userStore();
+  const {userInfo, setUserInfo, setIsLoggedIn} = userStore();
   const [deleteModal, setDeleteModal] = useState<boolean>(false);
 
   const getMemberData = async () => {
@@ -65,6 +65,7 @@ export default function MyPage() {
             try {
               await api.delete('/login/logout');
               setUserInfo(null);
+              setIsLoggedIn(false);
               await AsyncStorage.removeItem('authToken');
 
               // 네비게이션 스택 초기화 및 로그인 화면으로 이동

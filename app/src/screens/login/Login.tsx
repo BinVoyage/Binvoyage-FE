@@ -75,9 +75,9 @@ export default function Login() {
       const {identityToken, authorizationCode} = appleAuthRequestResponse;
       if (identityToken) {
         const response = await api.post(`/login/oauth2?type=apple&token=${identityToken}&authorizationCode=${authorizationCode}`);
-        const hasAccount = response.data.user_name.length !== 0;
 
         if (response.data.success) {
+          const hasAccount = response.data.data.user_name.length !== 0;
           await AsyncStorage.setItem('authToken', identityToken);
           if (hasAccount) {
             navigation.navigate('BottomNavigator');

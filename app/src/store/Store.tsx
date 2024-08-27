@@ -14,7 +14,9 @@ interface mapStore {
 
 interface userStore {
   userInfo: UserInfo | null;
+  isLoggedIn: boolean;
   setUserInfo: (info: UserInfo | null) => void;
+  setIsLoggedIn: (value: boolean) => void;
 }
 
 interface Picturestore {
@@ -60,6 +62,8 @@ export const mapStore = create<mapStore>((set, get) => ({
 export const userStore = create<userStore>(set => ({
   userInfo: null,
   setUserInfo: info => set({userInfo: info}),
+  isLoggedIn: false,
+  setIsLoggedIn: value => set({isLoggedIn: value}),
 }));
 
 export const pictureStore = create<Picturestore>(set => ({
