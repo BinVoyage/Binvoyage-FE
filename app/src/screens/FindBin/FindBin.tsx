@@ -114,10 +114,16 @@ export default function FindBin() {
 
   const getData = async (position: CurrentPosition) => {
     try {
-      const response = await api.get(`/bin/search?lat=${position?.latitude}&lng=${position?.longitude}&radius=2000&filter=${filterMode}`);
-
+      const response = await api.get(`/bin/search?lat=${position?.latitude}&lng=${position?.longitude}&radius=2000&filter=${filterMode > 0 ? filterMode : 0}`);
+  
       if (response.status === 200) {
-        setData(response.data.data.bin_list);
+        if (filterMode === 0) {
+          // filterMode가 0일 때 visit_count가 0보다 큰 아이템들만 필터링
+          setData(response.data.data.bin_list.filter((item: any) => item.visit_count > 0));
+        } else {
+          // filterMode가 0이 아닌 경우 전체 리스트를 설정
+          setData(response.data.data.bin_list);
+        }
       } else {
         console.log('실패 ㅜㅜ');
       }
