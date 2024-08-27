@@ -115,6 +115,13 @@ export const SettingWrapper = styled.View`
   padding: 13px 0px 32px;
 `;
 
+export const ArrowNextWrapper = styled.View`
+  width: 24px;
+  height: 24px;
+  justify-content: center;
+  align-items: center;
+`
+
 export const SettingButton = styled.TouchableOpacity`
   flex-direction: row;
   align-items: center;

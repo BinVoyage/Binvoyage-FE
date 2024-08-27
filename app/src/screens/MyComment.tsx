@@ -1,11 +1,11 @@
-import {Text, View, FlatList, Alert} from 'react-native';
+import {FlatList, Alert} from 'react-native';
 import styled from 'styled-components/native';
 import {Palette} from 'constants/palette';
 import ArrowPrevSvg from 'assets/images/ArrowPrevSvg';
 import BinSvg from 'assets/images/BinSvg';
 import {Typo} from 'constants/typo';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
-import {useEffect, useRef, useState} from 'react';
+import {useEffect, useState} from 'react';
 import api from 'api/api';
 import S_Recycling from 'assets/images/S_Recycling';
 import Toast from 'react-native-toast-message';
@@ -97,9 +97,9 @@ export default function MyComment() {
 
   return (
     <CommentWrapper>
-      <BackDropBox onPress={() => commentNavigator.navigate('MyPage')}>
-        <ArrowPrevSvg width="24" height="24" fill={Palette.Gray4} />
-      </BackDropBox>
+      <ArrowPrevWrapper onPress={() => commentNavigator.navigate('MyPage')}>
+        <ArrowPrevSvg width="9" height="16" fill={Palette.Gray4} />
+      </ArrowPrevWrapper>
       <FlatList
         data={comment}
         showsVerticalScrollIndicator={false}
@@ -128,7 +128,7 @@ const CommentWrapper = styled.View`
   padding: 13px 16px;
 `;
 
-const BackDropBox = styled.TouchableOpacity`
+const ArrowPrevWrapper = styled.TouchableOpacity`
   width: 24px;
   height: 24px;
   margin-bottom: 16px;

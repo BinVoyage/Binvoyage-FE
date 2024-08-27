@@ -3,7 +3,7 @@ import * as S from 'screens/myPage/MyPage.style';
 import ArrowNextSvg from 'assets/images/ArrowNextSvg';
 import {NavigationProp, useFocusEffect, useNavigation} from '@react-navigation/native';
 import api from 'api/api';
-import {useCallback, useEffect, useState} from 'react';
+import {useCallback, useState} from 'react';
 import {userStore} from 'store/Store';
 import DeleteAccount from 'screens/DeleteAccount';
 import {useBackHandler} from 'hooks/useBackHandler';
@@ -30,7 +30,7 @@ export default function MyPage() {
       if (userInfo) {
         getMemberData();
       }
-    }, [])
+    }, []),
   );
 
   const handleFeedback = () => {
@@ -112,38 +112,50 @@ export default function MyPage() {
           </S.MyImage>
           <S.FeedbackButton onPress={handleFeedback}>
             <S.TextFeedbackButton>See my feedback</S.TextFeedbackButton>
-            <ArrowNextSvg width="24px" height="24px" fill="#66B7FF" />
+            <S.ArrowNextWrapper>
+              <ArrowNextSvg width="9" height="16" fill="#66B7FF" />
+            </S.ArrowNextWrapper>
           </S.FeedbackButton>
           <S.SettingWrapper>
             <S.SettingButton
               style={{paddingTop: 0}}
               onPress={() => Linking.openURL(`https://binvoyage.notion.site/About-us-473ef656d31148ba87cf4d43ca2e2579?pvs=4`)}>
               <S.TextB1>About</S.TextB1>
-              <ArrowNextSvg width="24px" height="24px" fill="#BEC1C7" />
+              <S.ArrowNextWrapper>
+                <ArrowNextSvg width="9" height="16" fill="#BEC1C7" />
+              </S.ArrowNextWrapper>
             </S.SettingButton>
             <S.SettingButton onPress={() => Linking.openURL(`https://binvoyage.notion.site/Terms-of-service-49be66fa52b94ac9a5d937c0a2d341ba?pvs=4`)}>
               <S.TextB1>
                 <S.OtherText>Terms of service</S.OtherText>
               </S.TextB1>
-              <ArrowNextSvg width="24px" height="24px" fill="#BEC1C7" />
+              <S.ArrowNextWrapper>
+                <ArrowNextSvg width="9" height="16" fill="#BEC1C7" />
+              </S.ArrowNextWrapper>
             </S.SettingButton>
             <S.SettingButton onPress={() => Linking.openURL(`https://binvoyage.notion.site/Privacy-policy-43cb8c8cfe3941fabc84097c693f8c6f?pvs=4`)}>
               <S.TextB1>
                 <S.OtherText>Privacy policy</S.OtherText>
               </S.TextB1>
-              <ArrowNextSvg width="24px" height="24px" fill="#BEC1C7" />
+              <S.ArrowNextWrapper>
+                <ArrowNextSvg width="9" height="16" fill="#BEC1C7" />
+              </S.ArrowNextWrapper>
             </S.SettingButton>
             <S.SettingButton onPress={() => Linking.openURL(`https://forms.gle/qEAcgLHFw9x3GJ889`)}>
               <S.TextB1>
                 <S.OtherText>Contact us</S.OtherText>
               </S.TextB1>
-              <ArrowNextSvg width="24px" height="24px" fill="#BEC1C7" />
+              <S.ArrowNextWrapper>
+                <ArrowNextSvg width="9" height="16" fill="#BEC1C7" />
+              </S.ArrowNextWrapper>
             </S.SettingButton>
             <S.SettingButton onPress={userInfo ? Logout : () => commentNavigator.navigate('LoginInProcess')}>
               <S.TextB1>
                 <S.OtherText>{userInfo ? 'Log out' : 'Log in'}</S.OtherText>
               </S.TextB1>
-              <ArrowNextSvg width="24px" height="24px" fill="#BEC1C7" />
+              <S.ArrowNextWrapper>
+                <ArrowNextSvg width="9" height="16" fill="#BEC1C7" />
+              </S.ArrowNextWrapper>
             </S.SettingButton>
             {userInfo ? (
               <S.SettingButton onPress={() => setDeleteModal(true)}>

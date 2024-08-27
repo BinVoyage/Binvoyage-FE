@@ -71,7 +71,7 @@ export default function ReportWrongInfo({route}: ReportWrongInfoProps) {
     <>
       <S.Container>
         <S.ArrowPrevWrapper onPress={() => navigation.goBack()}>
-          <ArrowPrevSvg width="24" height="24" fill={Palette.Gray4} />
+          <ArrowPrevSvg width="9" height="16" fill={Palette.Gray4} />
         </S.ArrowPrevWrapper>
         <ScrollView bounces={false} showsVerticalScrollIndicator={false} style={{marginBottom: 28}}>
           <S.RowWrapper style={{gap: 2}}>
@@ -80,7 +80,7 @@ export default function ReportWrongInfo({route}: ReportWrongInfoProps) {
           </S.RowWrapper>
           <S.Title>What details are incorrect?</S.Title>
           <S.AddressWrapper>
-            <S.TextInfoB3>{address}</S.TextInfoB3>
+            <S.TextInfoB3 numberOfLines={1} ellipsizeMode="tail">{address}</S.TextInfoB3>
           </S.AddressWrapper>
           {image && <S.ImageArea />}
           <S.DetailWrapper style={{marginBottom: 16}}>

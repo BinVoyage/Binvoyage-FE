@@ -1,7 +1,9 @@
 import {NavigationProp, RouteProp, useNavigation} from '@react-navigation/native';
 import api from 'api/api';
+import ArrowDownSvgSm from 'assets/images/ArrowDownSm';
 import ArrowDownSvg from 'assets/images/ArrowDownSvg';
 import ArrowNextSvg from 'assets/images/ArrowNextSvg';
+import ArrowNextSvgXs from 'assets/images/ArrowNextSvgXs';
 import BinSvg from 'assets/images/BinSvg';
 import FootPrintSvg from 'assets/images/FootPrintSvg';
 import S_Recycling from 'assets/images/S_Recycling';
@@ -162,9 +164,9 @@ export default function BinDetail({route}: BinDetailProps) {
                     isVerifyVisit: false,
                   })
                 }>
-                <S.RowWrapper>
+                <S.RowWrapper style={{gap: 3}}>
                   <S.TextWrongInfo>Wrong Info?</S.TextWrongInfo>
-                  <ArrowNextSvg width="14" height="14" fill={Palette.Primary} />
+                  <ArrowNextSvgXs width="7" height="12" fill={Palette.P400} />
                 </S.RowWrapper>
               </TouchableOpacity>
             </S.RowWrapper>
@@ -238,7 +240,7 @@ export default function BinDetail({route}: BinDetailProps) {
                   })
                 }>
                 <S.TextSeeAll>See All</S.TextSeeAll>
-                <ArrowDownSvg width="24" height="24" fill={Palette.Gray4} />
+                <ArrowDownSvgSm width="19" height="18" fill={Palette.Gray4} />
               </S.SeeAllWrapper>
             </S.DetailWrapper>
           </S.GrayContainer>

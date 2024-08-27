@@ -5,7 +5,7 @@ import CheckBoxFilledSvg from 'assets/images/CheckBoxFilledSvg';
 import CheckBoxSvg from 'assets/images/CheckBoxSvg';
 import {Palette} from 'constants/palette';
 import {useEffect, useState} from 'react';
-import {Alert, TouchableOpacity} from 'react-native';
+import {TouchableOpacity} from 'react-native';
 import Toast from 'react-native-toast-message';
 import * as S from 'screens/reportFeedback/ReportFeedback.style';
 
@@ -55,7 +55,6 @@ export default function ReportFeedback({route}: ReportFeedbackProps) {
             visibilityTime: 2000,
           });
         } else {
-          // console.log('방문인증을 이미 하셨습니다.' + statusCode);
           Toast.show({
             type: 'error',
             text1: 'An error occurred. Please try again later.',
@@ -83,7 +82,7 @@ export default function ReportFeedback({route}: ReportFeedbackProps) {
   return (
     <S.Container>
       <S.ArrowPrevWrapper onPress={() => navigation.goBack()}>
-        <ArrowPrevSvg width="24" height="24" fill={Palette.Gray4} />
+        <ArrowPrevSvg width="9" height="16" fill={Palette.Gray4} />
       </S.ArrowPrevWrapper>
       <S.Title>{`Why are you reporting\nthis feedback comment?`}</S.Title>
       <S.DetailWrapper style={{marginBottom: 14}}>
