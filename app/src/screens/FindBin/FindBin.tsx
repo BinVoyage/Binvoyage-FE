@@ -17,6 +17,7 @@ import api from 'api/api';
 import {mapStore} from 'store/Store';
 import BinBottomSheet from 'components/binBottomSheet/BinBottomSheet';
 import {useBackHandler} from 'hooks/useBackHandler';
+import { translateAddress } from 'utils/translateAddress';
 
 export default function FindBin() {
   useBackHandler();
@@ -171,7 +172,7 @@ export default function FindBin() {
     try {
       const data = JSON.parse(e.nativeEvent.data);
       if (data.type === 'address') {
-        setCurrentAddress(data.payload.address);
+        setCurrentAddress(translateAddress(data.payload.address));
       } else if (data.type === 'centerMoved') {
         setCenterPosition({
           latitude: data.payload.latitude,
