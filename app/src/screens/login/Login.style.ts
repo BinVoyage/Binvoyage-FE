@@ -106,6 +106,7 @@ export const ArrowPrevWrapper = styled.TouchableOpacity`
   right: 16px;
   width: 24px;
   height: 24px;
+  z-index: 1;
 `;
 
 export const LogoWrapper = styled.ImageBackground`
