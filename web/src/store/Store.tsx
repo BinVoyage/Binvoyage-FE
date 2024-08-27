@@ -5,6 +5,6 @@ interface store {
   setFilterMode : (mode : number) => void;
 }
 export const mapStore = create<store>((set)=>({
-  filterMode: 0,
+  filterMode: -1,
   setFilterMode: (mode: number) => set(() => ({ filterMode: mode })),
 }))

@@ -110,6 +110,7 @@ type UserInfo = {
   newly_found_cnt: number;
   report_cnt: number;
   feedback_cnt: number;
+  registration_dt: string;
 };
 
 type StampInfo = {

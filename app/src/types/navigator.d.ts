@@ -28,10 +28,6 @@ type RootStackParamList = {
 type RootHomeParamList = {
   Home: undefined;
   PassPort: undefined;
-  NewTrash: undefined;
-  NewTrashDetail: undefined;
-  tabBarStyle?: undefined;
-  OnBoarding: undefined;
 };
 
 type RootBinDetailParamList = {

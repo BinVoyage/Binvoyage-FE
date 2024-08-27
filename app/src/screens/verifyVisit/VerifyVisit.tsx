@@ -196,7 +196,7 @@ export default function VerifyVisit({route}: VerifyVisitProps) {
     <>
       <S.Container>
         <S.ArrowPrevWrapper onPress={() => navigation.goBack()}>
-          <ArrowPrevSvg width="24" height="24" fill={Palette.Gray4} />
+          <ArrowPrevSvg width="9" height="16" fill={Palette.Gray4} />
         </S.ArrowPrevWrapper>
         <ScrollView bounces={false} showsVerticalScrollIndicator={false} style={{marginBottom: 28}}>
           <S.RowWrapper style={{gap: 2}}>
@@ -205,7 +205,7 @@ export default function VerifyVisit({route}: VerifyVisitProps) {
           </S.RowWrapper>
           <S.Title>{titleMessage}</S.Title>
           <S.AddressWrapper>
-            <S.TextInfoB3>{address}</S.TextInfoB3>
+            <S.TextInfoB3 numberOfLines={1} ellipsizeMode="tail">{address}</S.TextInfoB3>
           </S.AddressWrapper>
           {image ?? <S.ImageArea />}
           <S.DetailWrapper style={{marginBottom: 16}}>
@@ -221,7 +221,6 @@ export default function VerifyVisit({route}: VerifyVisitProps) {
             <WebView
               ref={webViewRef}
               style={{width: '100%', height: '100%', borderRadius: 10}}
-              originWhitelist={['http://*', 'https://*', 'intent://*']}
               source={{uri: URL}}
               javaScriptEnabled={true}
               onMessage={handleMessage}

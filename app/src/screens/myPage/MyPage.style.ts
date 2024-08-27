@@ -74,7 +74,7 @@ export const Address = styled.Text`
   font-size: ${Typo.B3.fontSize};
   font-weight: ${Typo.B3.fontWeight};
   color: ${Palette.Gray1};
-  margin: 4px 13px;
+  margin: 4px 16px;
 `;
 
 export const UserGrid = styled.View`
@@ -113,6 +113,13 @@ export const SettingWrapper = styled.View`
   border-radius: 12px;
   background: ${Palette.White};
   padding: 13px 0px 32px;
+`;
+
+export const ArrowNextWrapper = styled.View`
+  width: 24px;
+  height: 24px;
+  justify-content: center;
+  align-items: center;
 `;
 
 export const SettingButton = styled.TouchableOpacity`

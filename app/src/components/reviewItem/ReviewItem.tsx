@@ -3,7 +3,7 @@ import SirenSvg from 'assets/images/SirenSvg';
 import {Palette} from 'constants/palette';
 import {TouchableOpacity} from 'react-native';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
-import BinSvg from 'assets/images/BinSvg';
+import DeleteSvg from 'assets/images/DeleteSvg';
 
 interface Props {
   isMyFeedback: boolean;
@@ -24,7 +24,7 @@ export default function ReviewItem({isMyFeedback, date, author, content, feedbac
         <S.TextDate>{date}</S.TextDate>
         {isMyFeedback ? (
           <TouchableOpacity onPress={() => onDelete(feedbackId)}>
-            <BinSvg width="18" height="18" fill={Palette.Gray4} />
+            <DeleteSvg width="15" height="17" fill={Palette.Gray4} />
           </TouchableOpacity>
         ) : (
           <TouchableOpacity onPress={() => navigation.navigate('ReportFeedback', {date, author, content, feedbackId})}>
