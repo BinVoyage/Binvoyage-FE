@@ -25,6 +25,14 @@ export default function MyPage() {
     }
   };
 
+  function formatRegistrationDate(registrationDt: string): string {
+    const dateObj = new Date(registrationDt);
+    const options: Intl.DateTimeFormatOptions = {day: 'numeric', month: 'short', year: 'numeric'};
+    const formattedDate = dateObj.toLocaleDateString('en-GB', options);
+
+    return `Started BinVoyage ${formattedDate}`;
+  }
+
   useFocusEffect(
     useCallback(() => {
       if (userInfo) {
@@ -80,10 +88,13 @@ export default function MyPage() {
           <S.MyImage source={require('assets/images/ticket4x.png')}>
             <View>
               {userInfo ? (
-                <S.RowWrapper style={{marginLeft: 16}}>
-                  <S.NickName>{userInfo.user_name}</S.NickName>
-                  {/* <S.WriteImage source={require('assets/images/WriteProfile.png')} style={{alignItems: 'center'}} /> */}
-                </S.RowWrapper>
+                <>
+                  <S.RowWrapper style={{marginLeft: 16}}>
+                    <S.NickName>{userInfo.user_name}</S.NickName>
+                    {/* <S.WriteImage source={require('assets/images/WriteProfile.png')} style={{alignItems: 'center'}} /> */}
+                  </S.RowWrapper>
+                  <S.Address>{formatRegistrationDate(userInfo.registration_dt)}</S.Address>
+                </>
               ) : (
                 <S.NickName style={{marginLeft: 13}}>로그인이 필요합니다.</S.NickName>
               )}
