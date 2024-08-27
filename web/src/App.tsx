@@ -24,7 +24,6 @@ function App() {
   };
 
   const [isLocationSet, setIsLocationSet] = useState<boolean>(true);
-  // const [currentLocation, setCurrentLocation] = useState<CurrentLocation | null>({latitude:37.563685889,longitude:126.975584404});
   const [currentLocation, setCurrentLocation] = useState<CurrentLocation | null>(null);
   const { setFilterMode } = mapStore();
   const [triggerSearch, setTriggerSearch] = useState<number>(0);
@@ -32,10 +31,6 @@ function App() {
 
   // VerifyVisit
   const [verifyLocation, setVerifyLocation] = useState<VerifyLocation | null>(null);
-  // const [verifyLocation, setVerifyLocation] = useState<VerifyLocation | null>({
-  //   latitude: 37.563685889,
-  //   longitude: 126.975584404,
-  // });
 
   useEffect(() => {
     const handleMessage = (event: any) => {
@@ -47,6 +42,7 @@ function App() {
 
           if (latitude === undefined || longitude === undefined) {
             setIsLocationSet(true);
+            setCurrentLocation(defaultLocation);
             window.ReactNativeWebView.postMessage(
               JSON.stringify({
                 type: 'address',
@@ -56,13 +52,11 @@ function App() {
               })
             );
           } else {
-            setIsLocationSet(true);
             setCurrentLocation({
               latitude: latitude,
               longitude: longitude,
-              // latitude: 37.563685889,
-              // longitude: 126.975584404,
             });
+            setIsLocationSet(true);
             
             const geocoder = new window.kakao.maps.services.Geocoder();
             const coord = new window.kakao.maps.LatLng(latitude, longitude);
@@ -131,7 +125,7 @@ function App() {
       <Routes>
         <Route
           path="/"
-          element={ isLocationSet ?
+          element={ isLocationSet && currentLocation?
               <Map
               latitude={locationToUse.latitude}
               longitude={locationToUse.longitude}
