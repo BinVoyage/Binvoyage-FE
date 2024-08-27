@@ -17,7 +17,7 @@ import api from 'api/api';
 import {mapStore} from 'store/Store';
 import BinBottomSheet from 'components/binBottomSheet/BinBottomSheet';
 import {useBackHandler} from 'hooks/useBackHandler';
-import { translateAddress } from 'utils/translateAddress';
+import {translateAddress} from 'utils/translateAddress';
 
 export default function FindBin() {
   useBackHandler();
@@ -46,7 +46,7 @@ export default function FindBin() {
     };
   }, [refreshWrapperBottom]);
 
-  const URL = 'https://test--binvoyage.netlify.app/';
+  const URL = 'https://binvoyage.netlify.app/';
   // const URL = 'http://localhost:5173/';
 
   const requestPermissionAndSendLocation = async () => {
@@ -115,8 +115,10 @@ export default function FindBin() {
 
   const getData = async (position: CurrentPosition) => {
     try {
-      const response = await api.get(`/bin/search?lat=${position?.latitude}&lng=${position?.longitude}&radius=2000&filter=${filterMode > 0 ? filterMode : 0}`);
-  
+      const response = await api.get(
+        `/bin/search?lat=${position?.latitude}&lng=${position?.longitude}&radius=2000&filter=${filterMode > 0 ? filterMode : 0}`,
+      );
+
       if (response.status === 200) {
         if (filterMode === 0) {
           // filterMode가 0일 때 visit_count가 0보다 큰 아이템들만 필터링
