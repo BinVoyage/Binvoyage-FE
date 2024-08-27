@@ -21,7 +21,7 @@ import {useBackHandler} from 'hooks/useBackHandler';
 export default function FindBin() {
   useBackHandler();
   const webViewRef = useRef<WebView>(null);
-  const [filterMode, setFilterMode] = useState<number>(0);
+  const [filterMode, setFilterMode] = useState<number>(-1);
   const [currentAddress, setCurrentAddress] = useState<string>('');
   const [isWebViewLoaded, setIsWebViewLoaded] = useState<boolean>(false); // WebView 로드 상태
   const [bottomSheetOffset, setBottomSheetOffset] = useState<number>(0); // BottomSheet의 높이 또는 offset 상태
@@ -220,8 +220,8 @@ export default function FindBin() {
 
   const handleFilter = (mode: number) => {
     if (filterMode === mode) {
-      setFilterMode(0);
-      sendModeMessage(0);
+      setFilterMode(-1);
+      sendModeMessage(-1);
       return;
     }
     setFilterMode(mode);
@@ -256,9 +256,9 @@ export default function FindBin() {
           <S.LocationText>{currentAddress || 'loading...'}</S.LocationText>
         </S.LocationWrapper>
         <S.RowWrapper>
-          {/* <S.FilterWrapperNoIcon onPress={() => handleFilter(0)} isSelected={filterMode === 0} isTrash={false}>
+          <S.FilterWrapperNoIcon onPress={() => handleFilter(0)} isSelected={filterMode === 0} isTrash={false}>
             <S.FilterText isSelected={filterMode === 0}>Recently visited</S.FilterText>
-          </S.FilterWrapperNoIcon> */}
+          </S.FilterWrapperNoIcon>
           <S.FilterWrapper onPress={() => handleFilter(2)} isSelected={filterMode === 2} isTrash={false}>
             <RecyclingFilterSvg width="26" height="26" fill={Palette.Primary} />
             <S.FilterText isSelected={filterMode === 2}>Recycling</S.FilterText>

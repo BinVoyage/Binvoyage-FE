@@ -1,7 +1,7 @@
 import { MutableRefObject, useEffect, useRef, useState } from "react";
 import { mapStore } from "../store/Store";
 import debounce from "lodash.debounce";
-import { BinInfo } from "../types/types";
+import { BinInfo, MarkerInfo } from "../types/types";
 import api from "../api/api";
 
 type CurrentLocation = {
@@ -9,13 +9,6 @@ type CurrentLocation = {
   longitude: number;
   triggerSearch: number;
   triggerRefresh: number;
-};
-
-type MarkerInfo = {
-  marker: kakao.maps.Marker;
-  type_no: number;
-  map: kakao.maps.Map;
-  distance: number;
 };
 
 const Map = ({ latitude, longitude, triggerSearch, triggerRefresh }: CurrentLocation) => {
@@ -154,6 +147,7 @@ const Map = ({ latitude, longitude, triggerSearch, triggerRefresh }: CurrentLoca
           type_no: bin.type_no,
           map: mapRef.current!,
           distance: calculateDistance(binLocation),
+          visit_count: bin.visit_count
         });
       });
   
@@ -175,8 +169,10 @@ const Map = ({ latitude, longitude, triggerSearch, triggerRefresh }: CurrentLoca
 
   const filterMarkers = (filterMode: number, markerList: MarkerInfo[]) => {
     markerList.forEach(markerObj => {
-      if (filterMode === -1 || filterMode === 0) {
+      if (filterMode === -1) {
           markerObj.marker.setMap(markerObj.map);
+      } else if (filterMode === 0 && markerObj.visit_count > 0) {
+        markerObj.marker.setMap(markerObj.map);
       } else if (filterMode === 1 && markerObj.type_no === 1) {
           markerObj.marker.setMap(markerObj.map);
       } else if (filterMode === 2 && markerObj.type_no === 2) {
