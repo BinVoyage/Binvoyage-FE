@@ -30,6 +30,8 @@ export const LocationText = styled(DefaultText)`
   font-size: ${Typo.B3.fontSize};
   font-weight: ${Typo.B3.fontWeight};
   color: #3b3f4a;
+  flex-shrink: 1;
+  flex-wrap: wrap;
 `;
 
 export const RowWrapper = styled.View`

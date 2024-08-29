@@ -16,7 +16,7 @@ type ReportFeedbackProps = {
 export default function ReportFeedback({route}: ReportFeedbackProps) {
   const {date, author, content, feedbackId} = route.params;
   const navigation = useNavigation<NavigationProp<RootBinDetailParamList>>();
-  const [selected, setSelected] = useState<boolean[]>([false, false, false, false]);
+  const [selected, setSelected] = useState<number | null>(null);
   const [isValid, setIsValid] = useState<boolean>(false);
 
   const reportTypes = [
@@ -27,16 +27,13 @@ export default function ReportFeedback({route}: ReportFeedbackProps) {
   ];
 
   const handleSelect = (index: number) => {
-    const newSelected = [...selected];
-    newSelected[index] = !newSelected[index];
-    setSelected(newSelected);
+    setSelected(prevSelected => (prevSelected === index ? null : index));
   };
 
   const handleSubmit = async () => {
+    if (selected === null) return;
     try {
-      await api.post('/bin/feedback/report', {
-        id: feedbackId,
-      });
+      await api.post(`/bin/feedback/report?id=${feedbackId}&type=${selected + 1}`);
       Toast.show({
         type: 'success',
         text1: 'Thank you for letting us know. We will review it shortly.',
@@ -45,19 +42,47 @@ export default function ReportFeedback({route}: ReportFeedbackProps) {
         visibilityTime: 2000,
       });
       navigation.goBack();
-    } catch (error) {
-      console.log(error);
+    } catch (error: any) {
+      if (error.response) {
+        const statusCode = error.response.status;
+        if (statusCode === 403) {
+          console.log('로그인이 필요합니다.' + statusCode);
+          Toast.show({
+            type: 'error',
+            text1: 'Login required. Please log in from the My Page to continue.',
+            position: 'bottom',
+            bottomOffset: 100,
+            visibilityTime: 2000,
+          });
+        } else {
+          Toast.show({
+            type: 'error',
+            text1: 'An error occurred. Please try again later.',
+            position: 'bottom',
+            bottomOffset: 100,
+            visibilityTime: 2000,
+          });
+        }
+      } else {
+        Toast.show({
+          type: 'error',
+          text1: 'You have already completed today.',
+          position: 'bottom',
+          bottomOffset: 100,
+          visibilityTime: 2000,
+        });
+      }
     }
   };
 
   useEffect(() => {
-    setIsValid(selected.some(item => item));
+    setIsValid(selected !== null);
   }, [selected]);
 
   return (
     <S.Container>
       <S.ArrowPrevWrapper onPress={() => navigation.goBack()}>
-        <ArrowPrevSvg width="24" height="24" fill={Palette.Gray4} />
+        <ArrowPrevSvg width="9" height="16" fill={Palette.Gray4} />
       </S.ArrowPrevWrapper>
       <S.Title>{`Why are you reporting\nthis feedback comment?`}</S.Title>
       <S.DetailWrapper style={{marginBottom: 14}}>
@@ -73,7 +98,7 @@ export default function ReportFeedback({route}: ReportFeedbackProps) {
         {reportTypes.map((type, index) => (
           <S.SelectWrapper key={index} isLast={index === reportTypes.length - 1}>
             <TouchableOpacity onPress={() => handleSelect(index)}>
-              {selected[index] ? <CheckBoxFilledSvg width="24" height="24" fill={Palette.Primary} /> : <CheckBoxSvg width="24" height="24" />}
+              {selected === index ? <CheckBoxFilledSvg width="24" height="24" fill={Palette.Primary} /> : <CheckBoxSvg width="24" height="24" />}
             </TouchableOpacity>
             <S.TextReportType>{type}</S.TextReportType>
           </S.SelectWrapper>

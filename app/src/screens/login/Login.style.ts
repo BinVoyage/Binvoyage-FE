@@ -103,13 +103,14 @@ export const TextFooterLink = styled(DefaultText)`
 export const ArrowPrevWrapper = styled.TouchableOpacity`
   position: absolute;
   top: 30px;
-  left: 16px;
+  right: 16px;
   width: 24px;
   height: 24px;
+  z-index: 1;
 `;
 
 export const LogoWrapper = styled.ImageBackground`
   width: 64px;
   height: 64px;
-  margin-bottom: 18px;
+  margin: 30px 0px 18px;
 `;

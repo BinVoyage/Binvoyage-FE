@@ -1,72 +1,93 @@
-import {Text, View, FlatList} from 'react-native';
+import {FlatList, Alert} from 'react-native';
 import styled from 'styled-components/native';
 import {Palette} from 'constants/palette';
 import ArrowPrevSvg from 'assets/images/ArrowPrevSvg';
 import BinSvg from 'assets/images/BinSvg';
 import {Typo} from 'constants/typo';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
-import {useEffect, useRef, useState} from 'react';
+import {useEffect, useState} from 'react';
 import api from 'api/api';
-import S_Bin from 'assets/images/S_Bin';
 import S_Recycling from 'assets/images/S_Recycling';
+import Toast from 'react-native-toast-message';
+import DeleteSvg from 'assets/images/DeleteSvg';
 
 export default function MyComment() {
   const commentNavigator = useNavigation<NavigationProp<RootMyParamList>>();
-  const [comment, setComment] = useState<Mycomment[]>([]);
+  const [comment, setComment] = useState<MyFeedback[]>([]);
 
   const getData = async () => {
     try {
       const response = await api.get('user/feedback');
-      setComment(response.data.data.feedback_list);
-      console.log(response.data.data);
+      const feedbackList = response.data.data.feedback_list;
+      setComment(feedbackList.reverse()); // 최신 순 정렬
     } catch (error) {
       console.error(error);
     }
   };
 
   const deleteComment = async (feedback_id: number) => {
-    try {
-      const response = await api.delete(`bin/feedback/${feedback_id}`);
-      if (response.status === 200) {
-        setComment(prevComments => prevComments.filter(comment => comment.feedback_id !== feedback_id));
-      } else {
-        console.log('Failed to delete the comment');
-      }
-    } catch (error) {
-      console.error(error);
-    }
+    Alert.alert(
+      'Delete Feedback',
+      'Are you sure you want to delete this feedback?',
+      [
+        {
+          text: 'Cancel',
+          onPress: () => {},
+          style: 'cancel',
+        },
+        {
+          text: 'OK',
+          onPress: async () => {
+            try {
+              const response = await api.delete(`bin/feedback/${feedback_id}`);
+              if (response.status === 200) {
+                setComment(prevComments => prevComments.filter(comment => comment.feedback_id !== feedback_id));
+              } else {
+                Toast.show({
+                  type: 'error',
+                  text1: 'Failed to delete feedback. Please try again later.',
+                  position: 'bottom',
+                  bottomOffset: 100,
+                  visibilityTime: 2000,
+                });
+              }
+            } catch (error) {
+              console.log(error);
+              Toast.show({
+                type: 'error',
+                text1: 'Failed to delete feedback. Please try again later.',
+                position: 'bottom',
+                bottomOffset: 100,
+                visibilityTime: 2000,
+              });
+            }
+          },
+        },
+      ],
+      {cancelable: false},
+    );
   };
 
   useEffect(() => {
     getData();
   }, []);
 
-  type ItemProps = {
-    bin_type_name: string | any;
-    feedback_id: number;
-    registration_dt?: string;
-    change_dt?: string;
-    content?: string;
-    bin_id?: number;
-    bin_address?: string;
-    [key: string]: any;
-  };
-
-  const CommentItem = ({feedback_id, registration_dt, content, bin_address, bin_type_name}: ItemProps) => (
+  const FeedbackItem = ({feedback_id, registration_dt, content, bin_address, bin_type_name, bin_type_no}: MyFeedback) => (
     <ItemWrapper>
       <RowWrapper style={{justifyContent: 'space-between'}}>
         <RowWrapper>
-          {bin_type_name === 'Trash' && <S_Bin />}
-          {bin_type_name === 'Recycling' && <S_Recycling />}
+          {bin_type_no === 1 ? (
+            <BinSvg width="18" height="18" fill={Palette.Secondary2} />
+          ) : (
+            <S_Recycling width="18" height="18" fill={Palette.Primary} />
+          )}
           <BinText>{bin_type_name}</BinText>
-          <ItemName>
-            <Text>|</Text>
-          </ItemName>
-          <Text>{registration_dt?.substring(0, 10)}</Text>
+          <Division />
+          <BinText>{registration_dt?.substring(0, 10)}</BinText>
         </RowWrapper>
-        <Deleted onPress={() => deleteComment(feedback_id)}>
-          <BinSvg width="15px" height="17px" fill="#9DA0A8" />
-        </Deleted>
+        <DeletedSvgWrapper onPress={() => deleteComment(feedback_id)}>
+          <DeleteSvg width="15" height="17" fill={Palette.Gray4} />
+        </DeletedSvgWrapper>
       </RowWrapper>
       <AddressText>{bin_address}</AddressText>
       <ContentText>{content}</ContentText>
@@ -76,16 +97,18 @@ export default function MyComment() {
 
   return (
     <CommentWrapper>
-      <BackDropBox onPress={() => commentNavigator.navigate('MyPage')}>
-        <ArrowPrevSvg width="24px" height="24px" fill="#5A5E6A" />
-      </BackDropBox>
+      <ArrowPrevWrapper onPress={() => commentNavigator.navigate('MyPage')}>
+        <ArrowPrevSvg width="9" height="16" fill={Palette.Gray4} />
+      </ArrowPrevWrapper>
       <FlatList
         data={comment}
         showsVerticalScrollIndicator={false}
         keyExtractor={item => item.feedback_id.toString()}
         onEndReachedThreshold={0.8}
         renderItem={({item}) => (
-          <CommentItem
+          <FeedbackItem
+            bin_id={item.bin_id}
+            bin_type_no={item.bin_type_no}
             bin_type_name={item.bin_type_name}
             feedback_id={item.feedback_id}
             registration_dt={item.registration_dt}
@@ -105,7 +128,7 @@ const CommentWrapper = styled.View`
   padding: 13px 16px;
 `;
 
-const BackDropBox = styled.TouchableOpacity`
+const ArrowPrevWrapper = styled.TouchableOpacity`
   width: 24px;
   height: 24px;
   margin-bottom: 16px;
@@ -118,22 +141,26 @@ const ItemWrapper = styled.View`
 `;
 
 const RowWrapper = styled.View`
-  display: flex;
   flex-direction: row;
   align-items: center;
-`;
-
-const ItemName = styled.View`
-  margin: 0px 8px;
 `;
 
 const BinText = styled.Text`
   align-content: space-between;
   font-size: ${Typo.B3.fontSize};
   font-weight: ${Typo.B3.fontWeight};
+  color: ${Palette.Gray5};
   margin-left: 4px;
 `;
-const Deleted = styled.TouchableOpacity`
+
+const Division = styled.View`
+  width: 1px;
+  height: 16px;
+  background: ${Palette.Gray4};
+  margin: 0px 8px;
+`;
+
+const DeletedSvgWrapper = styled.TouchableOpacity`
   width: 15px;
   height: 17px;
 `;
@@ -148,6 +175,7 @@ const AddressText = styled.Text`
 const ContentText = styled.Text`
   font-size: ${Typo.B3.fontSize};
   font-weight: ${Typo.B3.fontWeight};
+  color: ${Palette.Gray6};
   margin-bottom: 8px;
 `;
 

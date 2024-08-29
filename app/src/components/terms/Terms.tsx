@@ -4,6 +4,7 @@ import * as S from 'components/terms/Terms.style';
 import CheckBoxSvg from 'assets/images/CheckBoxSvg';
 import {Palette} from 'constants/palette';
 import CheckBoxFilledSvg from 'assets/images/CheckBoxFilledSvg';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function Terms() {
   const [agree, setAgree] = useState<boolean>(false);
@@ -11,7 +12,8 @@ export default function Terms() {
   const [isValid, setIsValid] = useState<boolean>(false);
   const [receivePromotion, setReceivePromotion] = useState<boolean>(false);
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
+    await AsyncStorage.setItem('termsAgreement', 'true');
     setAgree(true);
   };
 

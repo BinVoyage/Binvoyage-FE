@@ -1,4 +1,4 @@
-import {View, Alert, Platform, StyleSheet, Dimensions, TouchableOpacity, ImageBackground} from 'react-native';
+import {View, Alert, Platform, StyleSheet, Dimensions, TouchableOpacity, ImageBackground, ActivityIndicator} from 'react-native';
 import {WebView, WebViewMessageEvent} from 'react-native-webview';
 import {useEffect, useRef, useState} from 'react';
 import {PERMISSIONS, RESULTS, request} from 'react-native-permissions';
@@ -6,7 +6,6 @@ import * as S from 'screens/FindBin/FindBin.style';
 import LocationSvg from 'assets/images/LocationSvg';
 import {Palette} from 'constants/palette';
 import RecyclingFilterSvg from 'assets/images/RecyclingFilterSvg';
-import TrashFilterSvg from 'assets/images/TrashFilterSvg';
 import {Image} from 'react-native';
 import MyBottomSheet from 'components/MyBottomSheet';
 import Carousel from 'react-native-snap-carousel';
@@ -14,11 +13,11 @@ import BinItem from 'components/binItem/BinItem';
 import EmptyItem from 'components/binItem/EmptyItem';
 import Animated, {useAnimatedStyle, withTiming} from 'react-native-reanimated';
 import {NativeViewGestureHandler} from 'react-native-gesture-handler';
-import {useIsFocused} from '@react-navigation/native';
 import api from 'api/api';
 import {mapStore} from 'store/Store';
 import BinBottomSheet from 'components/binBottomSheet/BinBottomSheet';
 import {useBackHandler} from 'hooks/useBackHandler';
+import {translateAddress} from 'utils/translateAddress';
 
 export default function FindBin() {
   useBackHandler();
@@ -31,8 +30,10 @@ export default function FindBin() {
   const carouselRef = useRef(null);
   const [data, setData] = useState<BinItemProps[]>([]);
   const currentPosition = mapStore(state => state.currentPosition);
-  const {startWatchingPosition, stopWatchingPosition} = mapStore();
+  const centerPosition = mapStore(state => state.centerPosition);
+  const {startWatchingPosition, stopWatchingPosition, setCurrentPosition, setCenterPosition} = mapStore();
   const [selectedMarker, setSelectedMarker] = useState<number | null>(null);
+  const alertShown = useRef(false);
 
   // const isFocused = useIsFocused();
 
@@ -52,10 +53,10 @@ export default function FindBin() {
     let result;
     if (Platform.OS === 'android') {
       result = await request(PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION);
-      console.log('Android Permission result:', result); // 권한 요청 결과 로그 추가
     } else if (Platform.OS === 'ios') {
       result = await request(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE);
     }
+
     if (result === RESULTS.GRANTED) {
       startWatchingPosition(position => {
         const message = {
@@ -63,58 +64,89 @@ export default function FindBin() {
           payload: {
             latitude: position.latitude,
             longitude: position.longitude,
-            // latitude: 37.563685889,
-            // longitude: 126.975584404,
           },
         };
-        console.log('Sending message:', JSON.stringify(message)); // 메시지 전송 확인
-
+        console.log('Sending message to WebView:', JSON.stringify(message));
         if (isWebViewLoaded && webViewRef.current) {
-          setTimeout(() => {
-            // 지연을 주고 메시지 전송
-            webViewRef.current?.postMessage(JSON.stringify(message));
-          }, 500); // 0.5초 지연
+          webViewRef.current?.postMessage(JSON.stringify(message));
+          // setTimeout(() => {
+          //   webViewRef.current?.postMessage(JSON.stringify(message));
+          // }, 500); // 0.5초 지연
         }
       });
     } else {
-      Alert.alert('위치 권한이 필요합니다!', '위치 권한을 켜주세요!', [
-        {
-          text: 'OK',
-          onPress: () => requestPermissionAndSendLocation(),
+      if (!alertShown.current) {
+        // alertShown이라는 ref 변수를 사용해 두 번 호출 방지
+        Alert.alert(
+          'Location Permission Needed',
+          'We need your location permission to provide information about nearby bins. Please enable location permissions in Settings.',
+        );
+        alertShown.current = true;
+      }
+      const message = {
+        type: 'location',
+        payload: {
+          latitude: undefined,
+          longitude: undefined,
         },
-      ]);
+      };
+      console.log('Sending message to WebView:', JSON.stringify(message));
+      if (isWebViewLoaded && webViewRef.current) {
+        setTimeout(() => {
+          webViewRef.current?.postMessage(JSON.stringify(message));
+        }, 500); // 0.5초 지연
+      }
+      setCurrentPosition({
+        latitude: 37.571648599,
+        longitude: 126.976372775,
+      });
     }
   };
 
   useEffect(() => {
-    requestPermissionAndSendLocation();
+    if (isWebViewLoaded) {
+      requestPermissionAndSendLocation();
+    }
 
     return () => {
       stopWatchingPosition(); // 컴포넌트가 언마운트될 때만 위치 추적을 중지
     };
   }, [isWebViewLoaded]);
 
-  useEffect(() => {
-    console.log('currentPositon:' + currentPosition?.latitude, currentPosition?.longitude);
-    const getData = async () => {
-      try {
-        const response = await api.get(`/bin/search?lat=${currentPosition?.latitude}&lng=${currentPosition?.longitude}&radius=2000&filter=0`);
+  const getData = async (position: CurrentPosition) => {
+    try {
+      const response = await api.get(
+        `/bin/search?lat=${position?.latitude}&lng=${position?.longitude}&radius=2000&filter=${filterMode > 0 ? filterMode : 0}`,
+      );
 
-        if (response.status === 200) {
-          setData(response.data.data.bin_list);
+      if (response.status === 200) {
+        if (filterMode === 0) {
+          // filterMode가 0일 때 visit_count가 0보다 큰 아이템들만 필터링
+          setData(response.data.data.bin_list.filter((item: any) => item.visit_count > 0));
         } else {
-          console.log('실패 ㅜㅜ');
+          // filterMode가 0이 아닌 경우 전체 리스트를 설정
+          setData(response.data.data.bin_list);
         }
-      } catch (error: any) {
-        console.log(error.response.data);
+      } else {
+        console.log('실패 ㅜㅜ');
       }
-    };
-
-    if (currentPosition) {
-      console.log('get data!!!');
-      getData();
+    } catch (error: any) {
+      console.log(error.response.data);
     }
-  }, [currentPosition]);
+  };
+
+  useEffect(() => {
+    if (currentPosition?.latitude && currentPosition.longitude) {
+      console.log('currentPositon:' + currentPosition?.latitude, currentPosition?.longitude);
+      console.log('get data!!!');
+
+      getData(currentPosition);
+    }
+  }, [currentPosition, filterMode]);
+
+  useEffect(() => {
+    console.log('center:' + centerPosition?.latitude, centerPosition?.longitude);
+  }, [centerPosition]);
 
   const refreshLocationWatching = () => {
     // 기존의 위치 감시 중지
@@ -142,8 +174,12 @@ export default function FindBin() {
     try {
       const data = JSON.parse(e.nativeEvent.data);
       if (data.type === 'address') {
-        setCurrentAddress(data.payload.address);
+        setCurrentAddress(translateAddress(data.payload.address));
       } else if (data.type === 'centerMoved') {
+        setCenterPosition({
+          latitude: data.payload.latitude,
+          longitude: data.payload.longitude,
+        });
         setIsSearchShow(true);
       } else if (data.type === 'markerClick') {
         console.log('click: ', data.payload.bin_id);
@@ -156,8 +192,9 @@ export default function FindBin() {
     }
   };
 
-  const sendSearchMessage = () => {
-    if (webViewRef.current) {
+  const handleSearchArea = () => {
+    if (webViewRef.current && centerPosition) {
+      // getData(centerPosition);
       const message = {
         type: 'search',
       };
@@ -181,7 +218,7 @@ export default function FindBin() {
       };
 
       // 메시지가 잘 전송되었는지 확인하기 위한 로그
-      // console.log('Sending message to WebView:', JSON.stringify(message));
+      console.log('Sending message to WebView:', JSON.stringify(message));
 
       webViewRef.current.postMessage(JSON.stringify(message));
     } else {
@@ -204,23 +241,23 @@ export default function FindBin() {
   const itemWidth = (width / 375) * 232;
   const itemSpacing = 16; // 슬라이드 간 간격 설정
 
-  // useEffect(() => {
-  //   console.log(data.length);
-  // }, [data]);
-
   return (
     <View style={styles.container}>
+      {/* {!isWebViewLoaded && (
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size={'large'} color={Palette.P100} />
+        </View>
+      )} */}
       <WebView
         ref={webViewRef}
         style={styles.webview}
-        originWhitelist={['http://*', 'https://*', 'intent://*']}
         source={{uri: URL}}
         javaScriptEnabled={true}
+        domStorageEnabled={true} // DOM 저장소 사용
+        cacheMode={'LOAD_CACHE_ELSE_NETWORK'} // 캐시 우선 로딩
         onMessage={handleMessage}
-        onLoad={() => {
-          console.log('WebView loaded');
-          setIsWebViewLoaded(true); // WebView 로드 상태를 true로 설정
-        }}
+        onLoadStart={() => setIsWebViewLoaded(false)} // 로딩 시작
+        onLoadEnd={() => setIsWebViewLoaded(true)} // 로딩 완료
       />
       <S.ItemWrapper>
         <S.LocationWrapper>
@@ -228,9 +265,9 @@ export default function FindBin() {
           <S.LocationText>{currentAddress || 'loading...'}</S.LocationText>
         </S.LocationWrapper>
         <S.RowWrapper>
-          {/* <S.FilterWrapperNoIcon onPress={() => handleFilter(0)} isSelected={filterMode === 0} isTrash={false}>
+          <S.FilterWrapperNoIcon onPress={() => handleFilter(0)} isSelected={filterMode === 0} isTrash={false}>
             <S.FilterText isSelected={filterMode === 0}>Recently visited</S.FilterText>
-          </S.FilterWrapperNoIcon> */}
+          </S.FilterWrapperNoIcon>
           <S.FilterWrapper onPress={() => handleFilter(2)} isSelected={filterMode === 2} isTrash={false}>
             <RecyclingFilterSvg width="26" height="26" fill={Palette.Primary} />
             <S.FilterText isSelected={filterMode === 2}>Recycling</S.FilterText>
@@ -247,7 +284,7 @@ export default function FindBin() {
         </TouchableOpacity>
       </Animated.View>
       <Animated.View style={[styles.search, animatedStyle, isSearchShow ? styles.visible : null]}>
-        <S.BtnSearchThisArea onPress={sendSearchMessage}>
+        <S.BtnSearchThisArea onPress={handleSearchArea}>
           <S.TextSearchThisArea>Search this area</S.TextSearchThisArea>
         </S.BtnSearchThisArea>
       </Animated.View>
@@ -302,5 +339,15 @@ const styles = StyleSheet.create({
   },
   visible: {
     display: 'flex',
+  },
+  loadingContainer: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(255, 255, 255, 0.5)', // 로딩 중 배경을 반투명하게 설정
   },
 });

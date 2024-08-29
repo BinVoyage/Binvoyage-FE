@@ -20,3 +20,11 @@ export type BinInfo = {
   detail: string,
   visit_count: number
 }
+
+export type MarkerInfo = {
+  marker: kakao.maps.Marker;
+  type_no: number;
+  map: kakao.maps.Map;
+  distance: number;
+  visit_count: number;
+};

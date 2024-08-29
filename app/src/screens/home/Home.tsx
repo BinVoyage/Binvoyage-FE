@@ -11,7 +11,7 @@ export default function Home() {
   useBackHandler();
   const navigation1 = useNavigation<NavigationProp<RootTabParamList>>();
   const navigation2 = useNavigation<NavigationProp<RootHomeParamList>>();
-  const {userInfo, setUserInfo} = userStore();
+  const {userInfo, isLoggedIn, setUserInfo} = userStore();
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
@@ -21,6 +21,7 @@ export default function Home() {
 
         if (response.data.success) {
           setUserInfo(response.data.data);
+          console.log(response.data.data);
         }
       } catch (error) {
         console.log(error);
@@ -28,11 +29,11 @@ export default function Home() {
     };
     getData();
     setIsLoading(false);
-  }, []);
+  }, [isLoggedIn]);
 
   useEffect(() => {
     console.log(userInfo);
-  }, [userInfo]);
+  }, [userInfo, isLoggedIn]);
 
   return (
     <S.Container>

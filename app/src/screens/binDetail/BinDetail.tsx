@@ -1,16 +1,20 @@
 import {NavigationProp, RouteProp, useNavigation} from '@react-navigation/native';
 import api from 'api/api';
+import ArrowDownSvgSm from 'assets/images/ArrowDownSm';
 import ArrowDownSvg from 'assets/images/ArrowDownSvg';
 import ArrowNextSvg from 'assets/images/ArrowNextSvg';
+import ArrowNextSvgXs from 'assets/images/ArrowNextSvgXs';
 import BinSvg from 'assets/images/BinSvg';
 import FootPrintSvg from 'assets/images/FootPrintSvg';
+import S_Recycling from 'assets/images/S_Recycling';
 import ModalOpenMap from 'components/modalOpenMap/ModalOpenMap';
 import ReviewItem from 'components/reviewItem/ReviewItem';
 import {Palette} from 'constants/palette';
 import {useEffect, useState} from 'react';
-import {ScrollView, Text, TouchableOpacity, View} from 'react-native';
+import {Alert, ScrollView, Text, TouchableOpacity, View} from 'react-native';
+import Toast from 'react-native-toast-message';
 import * as S from 'screens/binDetail/BinDetail.style';
-import {mapStore} from 'store/Store';
+import {mapStore, userStore} from 'store/Store';
 import {formatDate} from 'utils/formatDate';
 
 type BinDetailProps = {
@@ -24,6 +28,7 @@ export default function BinDetail({route}: BinDetailProps) {
   const [feedbackList, setFeedbackList] = useState<Feedback[]>([]);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const currentLocation = mapStore(state => state.currentPosition);
+  const userInfo = userStore(state => state.userInfo);
 
   const [labelText, setLabelText] = useState<string>('');
 
@@ -64,7 +69,7 @@ export default function BinDetail({route}: BinDetailProps) {
         setLabelText(lableTextData[3]);
         return;
       }
-      const successRate = binData.success_count / binData.success_count + binData.fail_count * 100;
+      const successRate = (binData.success_count / (binData.success_count + binData.fail_count)) * 100;
       if (successRate >= 70) {
         setLabelText(lableTextData[0]);
       } else if (successRate >= 40) {
@@ -74,6 +79,50 @@ export default function BinDetail({route}: BinDetailProps) {
       }
     }
   }, [binData]);
+
+  const deleteFeedback = async (feedbackId: number) => {
+    Alert.alert(
+      'Delete Feedback',
+      'Are you sure you want to delete this feedback?',
+      [
+        {
+          text: 'Cancel',
+          onPress: () => {},
+          style: 'cancel',
+        },
+        {
+          text: 'OK',
+          onPress: async () => {
+            try {
+              const response = await api.delete(`bin/feedback/${feedbackId}`);
+              if (response.status === 200) {
+                console.log('Feedback deleted successfully');
+                const filteredList = feedbackList.filter(item => item.feedback_id !== feedbackId);
+                setFeedbackList(filteredList);
+              } else {
+                Toast.show({
+                  type: 'error',
+                  text1: 'Failed to delete feedback. Please try again later.',
+                  position: 'bottom',
+                  bottomOffset: 100,
+                  visibilityTime: 2000,
+                });
+              }
+            } catch (error) {
+              Toast.show({
+                type: 'error',
+                text1: 'Failed to delete feedback. Please try again later.',
+                position: 'bottom',
+                bottomOffset: 100,
+                visibilityTime: 2000,
+              });
+            }
+          },
+        },
+      ],
+      {cancelable: false},
+    );
+  };
 
   return (
     <>
@@ -90,7 +139,11 @@ export default function BinDetail({route}: BinDetailProps) {
             <S.RowWrapper style={{justifyContent: 'space-between'}}>
               <S.RowWrapper>
                 <S.RowWrapper>
-                  <BinSvg width="18" height="18" fill={Palette.Gray4} />
+                  {binData?.type_no === 1 ? (
+                    <BinSvg width="18" height="18" fill={Palette.Gray4} />
+                  ) : (
+                    <S_Recycling width="18" height="18" fill={Palette.Gray4} />
+                  )}
                   <S.TextInfo1>{binData?.type_name}</S.TextInfo1>
                 </S.RowWrapper>
                 <S.Division />
@@ -111,9 +164,9 @@ export default function BinDetail({route}: BinDetailProps) {
                     isVerifyVisit: false,
                   })
                 }>
-                <S.RowWrapper>
+                <S.RowWrapper style={{gap: 3}}>
                   <S.TextWrongInfo>Wrong Info?</S.TextWrongInfo>
-                  <ArrowNextSvg width="14" height="14" fill={Palette.Primary} />
+                  <ArrowNextSvgXs width="7" height="12" fill={Palette.P400} />
                 </S.RowWrapper>
               </TouchableOpacity>
             </S.RowWrapper>
@@ -143,20 +196,23 @@ export default function BinDetail({route}: BinDetailProps) {
               </S.VisitRecordWrapper>
               {/* 최근 n개의 발견 / 실패 리스트 출력 */}
               {binData?.visit_list
-                ? binData.visit_list.slice(0, 5).map((item, index) => (
-                    <S.RowWrapper style={{marginBottom: 2}} key={index}>
-                      <S.TextDate>{formatDate(item.visit_dt)}</S.TextDate>
-                      {item.is_success ? (
-                        <S.VisitDescription>
-                          Someone <Text style={{color: Palette.Primary}}>found</Text> this bin
-                        </S.VisitDescription>
-                      ) : (
-                        <S.VisitDescription>
-                          Someone <Text style={{color: Palette.Secondary2}}>couldn't find</Text> this bin
-                        </S.VisitDescription>
-                      )}
-                    </S.RowWrapper>
-                  ))
+                ? binData.visit_list
+                    .slice(-5)
+                    .reverse()
+                    .map((item, index) => (
+                      <S.RowWrapper style={{marginBottom: 2}} key={index}>
+                        <S.TextDate>{formatDate(item.visit_dt)}</S.TextDate>
+                        {item.is_success ? (
+                          <S.VisitDescription>
+                            Someone <Text style={{color: Palette.Primary}}>found</Text> this bin
+                          </S.VisitDescription>
+                        ) : (
+                          <S.VisitDescription>
+                            Someone <Text style={{color: Palette.Secondary2}}>couldn't find</Text> this bin
+                          </S.VisitDescription>
+                        )}
+                      </S.RowWrapper>
+                    ))
                 : null}
             </S.DetailWrapper>
             <S.DetailWrapper style={{paddingBottom: 0}}>
@@ -167,11 +223,13 @@ export default function BinDetail({route}: BinDetailProps) {
                 {feedbackList.map((item, index) => (
                   <ReviewItem
                     key={item.feedback_id}
+                    isMyFeedback={userInfo?.user_id === item.user_id}
                     feedbackId={item.feedback_id}
                     date={formatDate(item.registration_dt)}
                     author={item.user_name}
                     content={item.content}
                     isLast={index === feedbackList.length - 1 ? true : false}
+                    onDelete={deleteFeedback}
                   />
                 ))}
               </View>
@@ -182,7 +240,7 @@ export default function BinDetail({route}: BinDetailProps) {
                   })
                 }>
                 <S.TextSeeAll>See All</S.TextSeeAll>
-                <ArrowDownSvg width="24" height="24" fill={Palette.Gray4} />
+                <ArrowDownSvgSm width="19" height="18" fill={Palette.Gray4} />
               </S.SeeAllWrapper>
             </S.DetailWrapper>
           </S.GrayContainer>

@@ -6,13 +6,17 @@ interface mapStore {
   setCurrentPosition: (position: CurrentPosition) => void;
   watcherId: number | null;
   setWatcherId: (id: number | null) => void;
+  centerPosition: CurrentPosition | null;
+  setCenterPosition: (position: CurrentPosition) => void;
   startWatchingPosition: (onPositionUpdate?: (position: CurrentPosition) => void) => void;
   stopWatchingPosition: () => void;
 }
 
 interface userStore {
   userInfo: UserInfo | null;
+  isLoggedIn: boolean;
   setUserInfo: (info: UserInfo | null) => void;
+  setIsLoggedIn: (value: boolean) => void;
 }
 
 interface Picturestore {
@@ -23,6 +27,8 @@ interface Picturestore {
 export const mapStore = create<mapStore>((set, get) => ({
   currentPosition: null,
   watcherId: null,
+  centerPosition: null,
+  setCenterPosition: position => set({centerPosition: position}),
   setWatcherId: id => set({watcherId: id}),
   setCurrentPosition: position => set({currentPosition: position}),
   startWatchingPosition: onPositionUpdate => {
@@ -56,6 +62,8 @@ export const mapStore = create<mapStore>((set, get) => ({
 export const userStore = create<userStore>(set => ({
   userInfo: null,
   setUserInfo: info => set({userInfo: info}),
+  isLoggedIn: false,
+  setIsLoggedIn: value => set({isLoggedIn: value}),
 }));
 
 export const pictureStore = create<Picturestore>(set => ({

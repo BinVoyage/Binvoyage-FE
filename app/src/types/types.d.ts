@@ -28,15 +28,6 @@ interface FeedbackResponse {
   };
 }
 
-interface Nickname {
-  user_name: string;
-  nationality: string;
-  stamp_cnt: number;
-  newly_found_cnt: number;
-  report_cnt: number;
-  feedback_cnt: number;
-}
-
 interface NewTrashDetail {
   code: number;
   success: boolean;
@@ -47,27 +38,15 @@ interface NewTrashDetail {
   };
 }
 
-interface Mycomment {
-  bin_type_name: string;
+interface MyFeedback {
   feedback_id: number;
-  registration_dt?: string;
+  registration_dt: string;
   change_dt?: string;
-  content?: string;
-  bin_id?: number;
-  bin_address?: string;
-}
-
-interface MyCommentResponse {
-  code: number;
-  success: boolean;
-  msg: string;
-  data: {
-    total_count: number;
-    page: number;
-    count: number;
-    next: string | null;
-    feedback_list: Mycomment[];
-  };
+  content: string;
+  bin_id: number;
+  bin_address: string;
+  bin_type_no: number;
+  bin_type_name: string;
 }
 
 interface DeleteComment {
@@ -112,7 +91,7 @@ interface BinItemProps {
   location_type_name: string;
   coordinate: [number, number];
   distance: number;
-  visit_success_rate: number;
+  visit_rate: number;
   address: string;
   detail: string;
   visit_count: number;
@@ -124,12 +103,14 @@ type CurrentPosition = {
 };
 
 type UserInfo = {
+  user_id: number;
   user_name: string;
   nationality: string;
   stamp_cnt: string;
   newly_found_cnt: number;
   report_cnt: number;
   feedback_cnt: number;
+  registration_dt: string;
 };
 
 type StampInfo = {

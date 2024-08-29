@@ -10,6 +10,8 @@ import FootPrintSvg from 'assets/images/FootPrintSvg';
 import api from 'api/api';
 import {mapStore} from 'store/Store';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
+import S_Recycling from 'assets/images/S_Recycling';
+import S_Bin from 'assets/images/S_Bin';
 
 interface Props {
   bin_id: number;
@@ -44,7 +46,7 @@ export default function BinBottomSheet({bin_id, onSheetChange}: Props) {
         setLabelText(lableTextData[3]);
         return;
       }
-      const successRate = binData.success_count / binData.success_count + binData.fail_count * 100;
+      const successRate = (binData.success_count / (binData.success_count + binData.fail_count)) * 100;
       if (successRate >= 70) {
         setLabelText(lableTextData[0]);
       } else if (successRate >= 40) {
@@ -112,7 +114,11 @@ export default function BinBottomSheet({bin_id, onSheetChange}: Props) {
         <S.RowWrapper style={{justifyContent: 'space-between'}}>
           <S.RowWrapper>
             <S.RowWrapper>
-              <BinSvg width="18" height="18" fill={Palette.Gray4} />
+              {binData?.type_no === 1 ? (
+                <BinSvg width="18" height="18" fill={Palette.Gray4} />
+              ) : (
+                <S_Recycling width="13" height="12" fill={Palette.Gray4} />
+              )}
               {isLoading ? <S.TextInfo1>isLoading...</S.TextInfo1> : <S.TextInfo1>{binData?.type_name}</S.TextInfo1>}
             </S.RowWrapper>
             <S.Division />

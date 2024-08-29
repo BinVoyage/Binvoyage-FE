@@ -1,11 +1,11 @@
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import * as S from 'screens/login/Login.style';
-import {useEffect} from 'react';
+import {useEffect, useState} from 'react';
 import {GOOGLE_WEB_CLIENT_ID} from '@env';
 import GoogleSvg from 'assets/images/GoogleSvg';
 import AppleSvg from 'assets/images/AppleSvg';
 import {Palette} from 'constants/palette';
-import {Alert, TouchableOpacity,Linking} from 'react-native';
+import {Alert, TouchableOpacity, Linking, View} from 'react-native';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 import Terms from 'components/terms/Terms';
 import api from 'api/api';
@@ -16,8 +16,22 @@ import {useBackHandler} from 'hooks/useBackHandler';
 export default function Login() {
   useBackHandler();
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  const [showTerms, setShowTerms] = useState(false);
+
+  const checkTermsAgreement = async () => {
+    try {
+      const termsAgreement = await AsyncStorage.getItem('termsAgreement');
+      if (termsAgreement !== 'true') {
+        setShowTerms(true);
+      }
+    } catch (error) {
+      console.log('Error checking terms agreement:', error);
+    }
+  };
 
   useEffect(() => {
+    checkTermsAgreement();
+
     GoogleSignin.configure({
       webClientId: GOOGLE_WEB_CLIENT_ID,
       offlineAccess: false,
@@ -33,8 +47,14 @@ export default function Login() {
         const response = await api.post(`/login/oauth2?type=google&token=${userInfo.idToken}`);
 
         if (response.data.success) {
+          const hasAccount = response.data.data.user_name.length !== 0;
           await AsyncStorage.setItem('authToken', userInfo.idToken);
-          navigation.navigate('UserInput');
+
+          if (hasAccount) {
+            navigation.navigate('BottomNavigator');
+          } else {
+            navigation.navigate('UserInput');
+          }
         } else {
           Alert.alert('로그인 실패');
         }
@@ -57,8 +77,13 @@ export default function Login() {
         const response = await api.post(`/login/oauth2?type=apple&token=${identityToken}&authorizationCode=${authorizationCode}`);
 
         if (response.data.success) {
+          const hasAccount = response.data.data.user_name.length !== 0;
           await AsyncStorage.setItem('authToken', identityToken);
-          navigation.navigate('UserInput');
+          if (hasAccount) {
+            navigation.navigate('BottomNavigator');
+          } else {
+            navigation.navigate('UserInput');
+          }
         } else {
           Alert.alert('로그인 실패');
         }
@@ -72,8 +97,10 @@ export default function Login() {
     <>
       <S.Container>
         <S.Wrapper>
-          <S.LogoWrapper source={require('assets/images/logo.png')} />
-          <S.Title>{'No more wandering.\nStart your BinVoyage!'}</S.Title>
+          <View>
+            <S.LogoWrapper source={require('assets/images/logo.png')} />
+            <S.Title>{'No more wandering.\nStart your BinVoyage!'}</S.Title>
+          </View>
           <S.SignInButtonWrapper>
             <S.AppleSignInButton onPress={handleAppleLogin}>
               <AppleSvg width="24" height="24" fill={Palette.White} />
@@ -87,22 +114,26 @@ export default function Login() {
               <S.PassSignInText>Continue without logging in</S.PassSignInText>
             </S.PassSignInButton>
           </S.SignInButtonWrapper>
-          <S.TextFooterWrapper>
-            <S.TextFooter>By continuing, you agree to our </S.TextFooter>
-            <TouchableOpacity onPress={() => Linking.openURL(`https://binvoyage.notion.site/Terms-of-service-49be66fa52b94ac9a5d937c0a2d341ba?pvs=4`)}>
-              <S.TextFooterLink>Terms</S.TextFooterLink>
-            </TouchableOpacity>
-          </S.TextFooterWrapper>
+          <View>
+            <S.TextFooterWrapper>
+              <S.TextFooter>By continuing, you agree to our </S.TextFooter>
+              <TouchableOpacity
+                onPress={() => Linking.openURL(`https://binvoyage.notion.site/Terms-of-service-49be66fa52b94ac9a5d937c0a2d341ba?pvs=4`)}>
+                <S.TextFooterLink>Terms</S.TextFooterLink>
+              </TouchableOpacity>
+            </S.TextFooterWrapper>
 
-          <S.TextFooterWrapper>
-            <S.TextFooter>See how we use your data in our </S.TextFooter>
-            <TouchableOpacity onPress={() => Linking.openURL(`https://binvoyage.notion.site/Privacy-policy-43cb8c8cfe3941fabc84097c693f8c6f?pvs=4`)}>
-              <S.TextFooterLink>Privacy Policy</S.TextFooterLink>
-            </TouchableOpacity>
-          </S.TextFooterWrapper>
+            <S.TextFooterWrapper>
+              <S.TextFooter>See how we use your data in our </S.TextFooter>
+              <TouchableOpacity
+                onPress={() => Linking.openURL(`https://binvoyage.notion.site/Privacy-policy-43cb8c8cfe3941fabc84097c693f8c6f?pvs=4`)}>
+                <S.TextFooterLink>Privacy Policy</S.TextFooterLink>
+              </TouchableOpacity>
+            </S.TextFooterWrapper>
+          </View>
         </S.Wrapper>
       </S.Container>
-      <Terms />
+      {showTerms && <Terms />}
     </>
   );
 }

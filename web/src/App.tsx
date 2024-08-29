@@ -17,8 +17,13 @@ type VerifyLocation = {
 };
 
 function App() {
-  const [isLocationSet, setIsLocationSet] = useState<boolean>(false);
-  // const [currentLocation, setCurrentLocation] = useState<CurrentLocation | null>({latitude:37.563685889,longitude:126.975584404});
+  const defaultLocation: CurrentLocation = {
+    // 광화문역
+    latitude: 37.571648599,
+    longitude: 126.976372775,
+  };
+
+  const [isLocationSet, setIsLocationSet] = useState<boolean>(true);
   const [currentLocation, setCurrentLocation] = useState<CurrentLocation | null>(null);
   const { setFilterMode } = mapStore();
   const [triggerSearch, setTriggerSearch] = useState<number>(0);
@@ -26,10 +31,6 @@ function App() {
 
   // VerifyVisit
   const [verifyLocation, setVerifyLocation] = useState<VerifyLocation | null>(null);
-  // const [verifyLocation, setVerifyLocation] = useState<VerifyLocation | null>({
-  //   latitude: 37.563685889,
-  //   longitude: 126.975584404,
-  // });
 
   useEffect(() => {
     const handleMessage = (event: any) => {
@@ -39,35 +40,46 @@ function App() {
         if (message.type === 'location') {
           const { latitude, longitude } = message.payload;
 
-          setCurrentLocation({
-            latitude: latitude,
-            longitude: longitude,
-            // latitude: 37.563685889,
-            // longitude: 126.975584404,
-          });
-          setIsLocationSet(true);
-
-          const geocoder = new window.kakao.maps.services.Geocoder();
-          const coord = new window.kakao.maps.LatLng(latitude, longitude);
-
-          geocoder.coord2RegionCode(
-            coord.getLng(),
-            coord.getLat(),
-            (result: any, status: any) => {
-              if (status === window.kakao.maps.services.Status.OK) {
-                const address = result[0]?.address_name || '';
-                const slicedAddress = address.split(' ').slice(0, 2).join(' ');
-                window.ReactNativeWebView.postMessage(
-                  JSON.stringify({
-                    type: 'address',
-                    payload: {
-                      address: slicedAddress,
-                    },
-                  })
-                );
+          if (latitude === undefined || longitude === undefined) {
+            setIsLocationSet(true);
+            setCurrentLocation(defaultLocation);
+            window.ReactNativeWebView.postMessage(
+              JSON.stringify({
+                type: 'address',
+                payload: {
+                  address: 'Please enable location permissions in your device settings.',
+                },
+              })
+            );
+          } else {
+            setCurrentLocation({
+              latitude: latitude,
+              longitude: longitude,
+            });
+            setIsLocationSet(true);
+            
+            const geocoder = new window.kakao.maps.services.Geocoder();
+            const coord = new window.kakao.maps.LatLng(latitude, longitude);
+  
+            geocoder.coord2RegionCode(
+              coord.getLng(),
+              coord.getLat(),
+              (result: any, status: any) => {
+                if (status === window.kakao.maps.services.Status.OK) {
+                  const address = result[0]?.address_name || '';
+                  const slicedAddress = address.split(' ').slice(0, 2).join(' ');
+                  window.ReactNativeWebView.postMessage(
+                    JSON.stringify({
+                      type: 'address',
+                      payload: {
+                        address: slicedAddress,
+                      },
+                    })
+                  );
+                }
               }
-            }
-          );
+            );
+          }
         } else if (message.type === 'filter') {
           setFilterMode(message.payload.filterMode);
         } else if (message.type === 'search') {
@@ -103,20 +115,24 @@ function App() {
     };
   }, [currentLocation]);
 
+  let locationToUse = defaultLocation;
+  if (currentLocation?.latitude !== undefined && currentLocation?.longitude !== undefined) {
+    locationToUse = currentLocation;
+  }
+
   return (
     <Router>
       <Routes>
         <Route
           path="/"
-          element={
-            currentLocation && isLocationSet && (
+          element={ isLocationSet && currentLocation?
               <Map
-                latitude={currentLocation!.latitude}
-                longitude={currentLocation!.longitude}
-                triggerSearch={triggerSearch}
-                triggerRefresh={triggerRefresh}
-              />
-            )
+              latitude={locationToUse.latitude}
+              longitude={locationToUse.longitude}
+              triggerSearch={triggerSearch}
+              triggerRefresh={triggerRefresh}
+              /> : null
+            
           }
         />
         <Route
