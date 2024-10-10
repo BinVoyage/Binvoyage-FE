@@ -56,6 +56,6 @@ type RootBinDetailParamList = {
 
 type RootMyParamList = {
   MyPage: undefined;
-  MyComment: undefined;
+  MyFeedback: undefined;
   LoginInProcess: undefined;
 };

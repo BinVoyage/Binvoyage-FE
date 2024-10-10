@@ -1,6 +1,6 @@
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import MyPage from 'screens/myPage/MyPage';
-import MyComment from 'screens/MyComment';
+import MyFeedback from 'screens/myFeedback/MyFeedback';
 import LoginInProcess from 'screens/login/LoginInProcess';
 
 export default function MyNavigator() {
@@ -8,7 +8,7 @@ export default function MyNavigator() {
   return (
     <Stack.Navigator initialRouteName="MyPage" screenOptions={{headerShown: false, gestureEnabled: true}}>
       <Stack.Screen name="MyPage" component={MyPage} />
-      <Stack.Screen name="MyComment" component={MyComment} />
+      <Stack.Screen name="MyFeedback" component={MyFeedback} />
       <Stack.Screen name="LoginInProcess" component={LoginInProcess} />
     </Stack.Navigator>
   );

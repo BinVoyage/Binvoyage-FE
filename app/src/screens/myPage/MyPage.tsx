@@ -5,7 +5,7 @@ import {NavigationProp, useFocusEffect, useNavigation} from '@react-navigation/n
 import api from 'api/api';
 import {useCallback, useState} from 'react';
 import {userStore} from 'store/Store';
-import DeleteAccount from 'screens/DeleteAccount';
+import DeleteAccount from 'screens/deleteAccount/DeleteAccount';
 import {useBackHandler} from 'hooks/useBackHandler';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -43,7 +43,7 @@ export default function MyPage() {
 
   const handleFeedback = () => {
     if (userInfo) {
-      commentNavigator.navigate('MyComment');
+      commentNavigator.navigate('MyFeedback');
     } else {
       commentNavigator.navigate('LoginInProcess');
     }

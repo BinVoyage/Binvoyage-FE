@@ -5,10 +5,6 @@ import UserInput from 'screens/UserInput';
 import Login from 'screens/login/Login';
 import Onboarding from 'screens/OnBoarding';
 import BinDetailNavigator from './BinDetailNavigator';
-import {useState, useEffect} from 'react';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import MyComment from 'screens/MyComment';
-import DeleteAccount from 'screens/DeleteAccount';
 
 type StackNavigatorProps = {
   isLoggedIn: boolean;
