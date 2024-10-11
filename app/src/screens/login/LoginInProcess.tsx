@@ -39,7 +39,7 @@ export default function LoginInProcess() {
           await AsyncStorage.setItem('authToken', userInfo.idToken);
 
           if (hasAccount) {
-            navigation.navigate('BottomNavigator');
+            navigation.goBack();
           } else {
             navigation.navigate('UserInput');
           }
@@ -69,7 +69,7 @@ export default function LoginInProcess() {
           const hasAccount = response.data.data.user_name.length !== 0;
           await AsyncStorage.setItem('authToken', identityToken);
           if (hasAccount) {
-            navigation.navigate('BottomNavigator');
+            navigation.goBack();
           } else {
             navigation.navigate('UserInput');
           }
