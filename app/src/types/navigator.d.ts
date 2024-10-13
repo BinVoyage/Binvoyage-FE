@@ -28,6 +28,7 @@ type RootStackParamList = {
 type RootHomeParamList = {
   Home: undefined;
   PassPort: undefined;
+  ReportNewBin: undefined;
 };
 
 type RootBinDetailParamList = {

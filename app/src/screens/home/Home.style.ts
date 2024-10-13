@@ -149,7 +149,7 @@ export const Button = styled.TouchableOpacity`
   align-items: center;
   background: ${Palette.Primary};
   border-radius: 10px;
-  margin-top: auto;
+  margin-top: 24px;
 `;
 
 export const ButtonText = styled(DefaultText)`
