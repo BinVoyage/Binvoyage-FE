@@ -2,7 +2,7 @@ import {View, Alert, Platform, StyleSheet, Dimensions, TouchableOpacity, ImageBa
 import {WebView, WebViewMessageEvent} from 'react-native-webview';
 import {useEffect, useRef, useState} from 'react';
 import {PERMISSIONS, RESULTS, request} from 'react-native-permissions';
-import * as S from 'screens/FindBin/FindBin.style';
+import * as S from 'screens/findBin/FindBin.style';
 import LocationSvg from 'assets/images/LocationSvg';
 import {Palette} from 'constants/palette';
 import RecyclingFilterSvg from 'assets/images/RecyclingFilterSvg';
