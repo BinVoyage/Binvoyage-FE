@@ -11,6 +11,7 @@ export default function Home() {
   useBackHandler();
   const navigation1 = useNavigation<NavigationProp<RootTabParamList>>();
   const navigation2 = useNavigation<NavigationProp<RootHomeParamList>>();
+  const navigation3 = useNavigation<NavigationProp<RootStackParamList>>();
   const {userInfo, isLoggedIn, setUserInfo} = userStore();
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
@@ -71,7 +72,7 @@ export default function Home() {
               <S.IconPassPort source={require('assets/images/icon-passport.png')} resizeMode="contain" />
             </S.PassPort>
           </S.PassPortBg>
-          <S.Button onPress={() => navigation2.navigate('ReportNewBin')}>
+          <S.Button onPress={() => navigation3.navigate('ReportNewBinNavigator')}>
             <S.ButtonText>Find any new bin? Let us know!</S.ButtonText>
           </S.Button>
         </S.Body>

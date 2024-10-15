@@ -23,6 +23,7 @@ type RootStackParamList = {
       isVerifyVisit?: boolean;
     };
   };
+  ReportNewBinNavigator: undefined;
 };
 
 type RootHomeParamList = {
@@ -54,6 +55,10 @@ type RootBinDetailParamList = {
     coordinate: [number, number];
   };
 };
+
+type RootReportNewBinParamList = {
+  ReportNewBin: undefined;
+}
 
 type RootMyParamList = {
   MyPage: undefined;

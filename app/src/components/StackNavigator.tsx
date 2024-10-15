@@ -5,6 +5,7 @@ import UserInput from 'screens/UserInput';
 import Login from 'screens/login/Login';
 import Onboarding from 'screens/OnBoarding';
 import BinDetailNavigator from './BinDetailNavigator';
+import ReportNewBinNavigator from './ReportNewBinNavigator';
 
 type StackNavigatorProps = {
   isLoggedIn: boolean;
@@ -21,6 +22,7 @@ export default function StackNavigator({isLoggedIn}: StackNavigatorProps) {
         <Stack.Screen name="OnBoarding" component={Onboarding} />
         <Stack.Screen name="UserInput" component={UserInput} />
         <Stack.Screen name="BinDetailNavigator" component={BinDetailNavigator} />
+        <Stack.Screen name="ReportNewBinNavigator" component={ReportNewBinNavigator} />
       </Stack.Navigator>
     </NavigationContainer>
   );

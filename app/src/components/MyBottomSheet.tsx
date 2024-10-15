@@ -1,14 +1,15 @@
 import BottomSheet, {BottomSheetView} from '@gorhom/bottom-sheet';
 import {Palette} from 'constants/palette';
 import {useRef, useMemo, useState, useEffect} from 'react';
-import {Dimensions, StyleSheet} from 'react-native';
+import {Dimensions, StyleSheet, ViewStyle} from 'react-native';
 
 interface Props {
   onSheetChange: (offset: number) => void;
   children: React.ReactNode;
+  wrapperStyle?: ViewStyle;
 }
 
-export default function MyBottomSheet({onSheetChange, children}: Props) {
+export default function MyBottomSheet({onSheetChange, children, wrapperStyle}: Props) {
   const height = Dimensions.get('window').height;
   // const [index, setIndex] = useState<number>(1);
   const bottomSheetRef = useRef<BottomSheet>(null);
@@ -29,7 +30,7 @@ export default function MyBottomSheet({onSheetChange, children}: Props) {
       backgroundStyle={styles.container}
       handleIndicatorStyle={styles.handleIndicator}
       onChange={handleSheetChanges}>
-      <BottomSheetView style={styles.wrapper}>{children}</BottomSheetView>
+      <BottomSheetView style={[styles.wrapper, wrapperStyle]}>{children}</BottomSheetView>
     </BottomSheet>
   );
 }

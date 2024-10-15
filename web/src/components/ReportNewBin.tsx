@@ -24,7 +24,6 @@ const ReportNewBin = ({latitude, longitude}: ReportNewBinProps) => {
     
         setIsMapLoaded(true);
 
-        // 마커 클릭 이벤트 추가
         window.kakao.maps.event.addListener(map, 'click', function (mouseEvent: any) {
             const clickPosition = mouseEvent.latLng;
 
@@ -49,10 +48,8 @@ const ReportNewBin = ({latitude, longitude}: ReportNewBinProps) => {
             const message = {
                 type: 'newBinPoint',
                 payload: {
-                    position: {
-                        latitude: targetMarker?.getPosition().getLat(),
-                        longitude: targetMarker?.getPosition().getLng()
-                    }
+                    latitude: targetMarker?.getPosition().getLat(),
+                    longitude: targetMarker?.getPosition().getLng()
                 }
             };
             window.ReactNativeWebView?.postMessage(JSON.stringify(message));
@@ -67,19 +64,55 @@ const ReportNewBin = ({latitude, longitude}: ReportNewBinProps) => {
     };
 
     const addMarkersAndOverlays = (map: kakao.maps.Map) => {
-        const currentImageSrc = "image/Current.svg";
-        const imageSize = new window.kakao.maps.Size(30, 30);
-        const imageOption = { offset: new window.kakao.maps.Point(15, 15) };
-        const currentImage = new window.kakao.maps.MarkerImage(currentImageSrc, imageSize, imageOption);    
         const currentPosition = new window.kakao.maps.LatLng(latitude, longitude);
     
         const myMarker = new window.kakao.maps.Marker({
           position: currentPosition,
-          image: currentImage,
-          zIndex: 2,
+          image: new window.kakao.maps.MarkerImage("image/Current.svg", new window.kakao.maps.Size(30, 30),  { offset: new window.kakao.maps.Point(15, 15) }),
+          zIndex: 3,
+        });
+
+        // 마커 클릭 이벤트 추가 (현재 위치 클릭해도 마커 찍을 수 있도록)
+        window.kakao.maps.event.addListener(myMarker, 'click', function () {
+            const clickPosition = myMarker.getPosition();
+
+            // 기존 targetMarker가 있으면 삭제
+            if (targetMarker) {
+                targetMarker.setMap(null);
+            }
+
+            const imageSrc = "image/reportNewBin/targetMarker.png";
+            const imageSize = new window.kakao.maps.Size(35, 47);
+
+            // 새로운 마커 생성
+            const newMarker = new window.kakao.maps.Marker({
+                position: clickPosition,
+                image: new window.kakao.maps.MarkerImage(imageSrc, imageSize),
+                map: map,
+            });
+
+            // 새로운 마커를 상태로 저장
+            targetMarker = newMarker;
+
+            const message = {
+                type: 'newBinPoint',
+                payload: {
+                    latitude: targetMarker?.getPosition().getLat(),
+                    longitude: targetMarker?.getPosition().getLng()
+                }
+            };
+            window.ReactNativeWebView?.postMessage(JSON.stringify(message));
+        });
+
+        const newMarker = new window.kakao.maps.Marker({
+            position: currentPosition,
+            image: new window.kakao.maps.MarkerImage("image/reportNewBin/targetMarker.png", new window.kakao.maps.Size(35, 47)),
+            zIndex: 4,
         });
     
         myMarker.setMap(map);
+        newMarker.setMap(map);
+        targetMarker = newMarker;
         setCurrentMarker(myMarker);
     };
 

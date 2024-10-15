@@ -1,16 +1,20 @@
+import MyBottomSheet from 'components/MyBottomSheet';
 import React, {useEffect, useRef, useState} from 'react';
-import {Platform, Alert, StyleSheet, View, Image, TouchableOpacity, Dimensions} from 'react-native';
+import {Platform, Alert, StyleSheet, View, Image, TouchableOpacity, Dimensions, Text} from 'react-native';
 import {request, PERMISSIONS, RESULTS} from 'react-native-permissions';
 import Animated, {useAnimatedStyle, withTiming} from 'react-native-reanimated';
-import WebView from 'react-native-webview';
+import WebView, { WebViewMessageEvent } from 'react-native-webview';
 import {mapStore} from 'store/Store';
+import * as S from 'screens/reportNewBin/ReportNewBin.style';
+import AddressSvg from 'assets/images/reportNewBin/AddressSvg';
 
 export default function ReportNewBin() {
   const webViewRef = useRef<WebView>(null);
   const {startWatchingPosition, stopWatchingPosition, setCurrentPosition, setCenterPosition} = mapStore();
   const [isWebViewLoaded, setIsWebViewLoaded] = useState<boolean>(false); // WebView 로드 상태
   const [bottomSheetOffset, setBottomSheetOffset] = useState<number>(0); // BottomSheet의 높이 또는 offset 상태
-  const URL = 'https://binvoyage.netlify.app/reportNewBin';
+  // const URL = 'https://binvoyage.netlify.app/reportNewBin';
+  const URL = 'https://feature-38--binvoyage.netlify.app/reportNewBin';
   const alertShown = useRef(false);
 
   const {width, height} = Dimensions.get('window');
@@ -108,6 +112,17 @@ export default function ReportNewBin() {
     }
   };
 
+  const handleMessage = (e: WebViewMessageEvent) => {
+    try {
+      const data = JSON.parse(e.nativeEvent.data);
+      if (data.type === 'newBinPoint') {
+        console.log("newBinPoint:", data.payload.position);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return (
     <View style={styles.container}>
       <WebView
@@ -117,7 +132,7 @@ export default function ReportNewBin() {
         javaScriptEnabled={true}
         domStorageEnabled={true} // DOM 저장소 사용
         cacheMode={'LOAD_CACHE_ELSE_NETWORK'} // 캐시 우선 로딩
-        // onMessage={handleMessage}
+        onMessage={handleMessage}
         onLoadStart={() => setIsWebViewLoaded(false)} // 로딩 시작
         onLoadEnd={() => setIsWebViewLoaded(true)} // 로딩 완료/>
       />
@@ -126,6 +141,17 @@ export default function ReportNewBin() {
           <Image source={require('assets/images/icon-refresh.png')} style={{width: 60, height: 60}} />
         </TouchableOpacity>
       </Animated.View>
+      <MyBottomSheet onSheetChange={setBottomSheetOffset} wrapperStyle={{paddingHorizontal: 16 }}>
+        <View style={styles.view}>
+          <S.AddressWrapper>
+            <AddressSvg width='24' height='24'/>
+            <S.TextAddress>서울 성북구 삼선교로 16길 16-3</S.TextAddress>
+          </S.AddressWrapper>
+          <S.Button>
+            <S.ButtonText>There’s a bin here!</S.ButtonText>
+          </S.Button>
+        </View>
+      </MyBottomSheet>
     </View>
   );
 }
@@ -137,8 +163,9 @@ const styles = StyleSheet.create({
   webview: {
     flex: 1,
   },
-  View: {
+  view: {
     flex: 1,
+    justifyContent: 'space-between'
   },
   refresh: {
     position: 'absolute',
