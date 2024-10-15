@@ -30,18 +30,32 @@ const ReportNewBin = ({latitude, longitude}: ReportNewBinProps) => {
 
             // 기존 targetMarker가 있으면 삭제
             if (targetMarker) {
-                console.log("removed");
                 targetMarker.setMap(null);
             }
+
+            const imageSrc = "image/reportNewBin/targetMarker.png";
+            const imageSize = new window.kakao.maps.Size(35, 47);
 
             // 새로운 마커 생성
             const newMarker = new window.kakao.maps.Marker({
                 position: clickPosition,
+                image: new window.kakao.maps.MarkerImage(imageSrc, imageSize),
                 map: map,
             });
 
             // 새로운 마커를 상태로 저장
             targetMarker = newMarker;
+
+            const message = {
+                type: 'newBinPoint',
+                payload: {
+                    position: {
+                        latitude: targetMarker?.getPosition().getLat(),
+                        longitude: targetMarker?.getPosition().getLng()
+                    }
+                }
+            };
+            window.ReactNativeWebView?.postMessage(JSON.stringify(message));
         });
 
     
@@ -54,7 +68,6 @@ const ReportNewBin = ({latitude, longitude}: ReportNewBinProps) => {
 
     const addMarkersAndOverlays = (map: kakao.maps.Map) => {
         const currentImageSrc = "image/Current.svg";
-        // const binImageSrc = "image/targetMarker.svg";
         const imageSize = new window.kakao.maps.Size(30, 30);
         const imageOption = { offset: new window.kakao.maps.Point(15, 15) };
         const currentImage = new window.kakao.maps.MarkerImage(currentImageSrc, imageSize, imageOption);    
