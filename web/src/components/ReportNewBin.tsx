@@ -8,8 +8,8 @@ type ReportNewBinProps = {
 
 const ReportNewBin = ({latitude, longitude}: ReportNewBinProps) => {
     const mapRef = useRef<kakao.maps.Map | null>(null);
-    const [isMapLoaded, setIsMapLoaded] = useState<boolean>(false);
-    const [currentMarker, setCurrentMarker] = useState<kakao.maps.Marker | null>(null);
+    const [, setIsMapLoaded] = useState<boolean>(false);
+    const [, setCurrentMarker] = useState<kakao.maps.Marker | null>(null);
     let targetMarker: kakao.maps.Marker | null = null;
 
     const initMap = () => {
