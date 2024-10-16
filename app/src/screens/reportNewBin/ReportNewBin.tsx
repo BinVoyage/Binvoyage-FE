@@ -116,7 +116,7 @@ export default function ReportNewBin() {
     try {
       const data = JSON.parse(e.nativeEvent.data);
       if (data.type === 'newBinPoint') {
-        console.log("newBinPoint:", data.payload.position);
+        console.log("newBinPoint:", data.payload.latitude, data.payload.longitude);
       }
     } catch (err) {
       console.log(err);
