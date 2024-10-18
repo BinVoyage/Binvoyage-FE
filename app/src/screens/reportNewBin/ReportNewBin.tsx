@@ -6,7 +6,9 @@ import Animated, {useAnimatedStyle, withTiming} from 'react-native-reanimated';
 import WebView, { WebViewMessageEvent } from 'react-native-webview';
 import {mapStore} from 'store/Store';
 import * as S from 'screens/reportNewBin/ReportNewBin.style';
-import AddressSvg from 'assets/images/reportNewBin/AddressSvg';
+import { NavigationProp, useNavigation } from '@react-navigation/native';
+import LocationSvg from 'assets/images/LocationSvg';
+import { Palette } from 'constants/palette';
 
 export default function ReportNewBin() {
   const webViewRef = useRef<WebView>(null);
@@ -16,8 +18,10 @@ export default function ReportNewBin() {
   // const URL = 'https://binvoyage.netlify.app/reportNewBin';
   const URL = 'https://feature-38--binvoyage.netlify.app/reportNewBin';
   const alertShown = useRef(false);
+  const navigation = useNavigation<NavigationProp<RootReportNewBinParamList>>();
+  const [markerPosition, setMarkerPosition] = useState<[number, number] | null>(null);
+  const [address, setAddress] = useState<string>('서울 성북구 삼선교로 16길 16-3');
 
-  const {width, height} = Dimensions.get('window');
   const refreshWrapperBottom = bottomSheetOffset > 0 ? bottomSheetOffset + 10 : 40;
 
   const animatedStyle = useAnimatedStyle(() => {
@@ -117,6 +121,7 @@ export default function ReportNewBin() {
       const data = JSON.parse(e.nativeEvent.data);
       if (data.type === 'newBinPoint') {
         console.log("newBinPoint:", data.payload.latitude, data.payload.longitude);
+        setMarkerPosition([data.payload.latitude, data.payload.longitude]);
       }
     } catch (err) {
       console.log(err);
@@ -141,13 +146,19 @@ export default function ReportNewBin() {
           <Image source={require('assets/images/icon-refresh.png')} style={{width: 60, height: 60}} />
         </TouchableOpacity>
       </Animated.View>
-      <MyBottomSheet onSheetChange={setBottomSheetOffset} wrapperStyle={{paddingHorizontal: 16 }}>
+      <MyBottomSheet onSheetChange={setBottomSheetOffset} wrapperStyle={{paddingHorizontal: 16}}>
         <View style={styles.view}>
           <S.AddressWrapper>
-            <AddressSvg width='24' height='24'/>
-            <S.TextAddress>서울 성북구 삼선교로 16길 16-3</S.TextAddress>
+            <LocationSvg width="24" height="24" fill={Palette.Primary} />
+            <S.TextAddress>{address}</S.TextAddress>
           </S.AddressWrapper>
-          <S.Button>
+          <S.Button
+            onPress={() =>
+              navigation.navigate('ReportNewBinDetail', {
+                address,
+                coordinate: markerPosition,
+              })
+            }>
             <S.ButtonText>There’s a bin here!</S.ButtonText>
           </S.Button>
         </View>

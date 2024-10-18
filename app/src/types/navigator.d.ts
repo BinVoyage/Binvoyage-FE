@@ -58,6 +58,10 @@ type RootBinDetailParamList = {
 
 type RootReportNewBinParamList = {
   ReportNewBin: undefined;
+  ReportNewBinDetail: {
+    address: string;
+    coordinate: [number, number] | null; // [lat, lng]
+  };
 }
 
 type RootMyParamList = {
