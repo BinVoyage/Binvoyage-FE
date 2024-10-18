@@ -114,11 +114,24 @@ const ReportNewBin = ({latitude, longitude}: ReportNewBinProps) => {
         newMarker.setMap(map);
         targetMarker = newMarker;
         setCurrentMarker(myMarker);
+
+        // 첫 로드 시 마커 위치 초기화 메세지
+        const message = {
+            type: 'newBinPoint',
+            payload: {
+                latitude: currentPosition.getLat(),
+                longitude: currentPosition.getLng()
+            }
+        };
+        window.ReactNativeWebView?.postMessage(JSON.stringify(message));
     };
 
     useEffect(() => {
         window.kakao.maps.load(() => initMap());
+
     }, []);
+
+
 
     return (
         <div id="reportNewBin" style={{ width: "100vw", height: "100vh", background: Palette.Gray1 }}></div>
