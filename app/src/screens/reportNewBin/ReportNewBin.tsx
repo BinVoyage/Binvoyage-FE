@@ -3,13 +3,14 @@ import React, {useEffect, useRef, useState} from 'react';
 import {Platform, Alert, StyleSheet, View, Image, TouchableOpacity, Dimensions, Text} from 'react-native';
 import {request, PERMISSIONS, RESULTS} from 'react-native-permissions';
 import Animated, {useAnimatedStyle, withTiming} from 'react-native-reanimated';
-import WebView, { WebViewMessageEvent } from 'react-native-webview';
+import WebView, {WebViewMessageEvent} from 'react-native-webview';
 import {mapStore} from 'store/Store';
 import * as S from 'screens/reportNewBin/ReportNewBin.style';
-import { NavigationProp, useNavigation } from '@react-navigation/native';
+import {NavigationProp, useNavigation} from '@react-navigation/native';
 import LocationSvg from 'assets/images/LocationSvg';
-import { Palette } from 'constants/palette';
+import {Palette} from 'constants/palette';
 import StickyNotification from 'components/StickyNotification';
+import api from 'api/api';
 
 export default function ReportNewBin() {
   const webViewRef = useRef<WebView>(null);
@@ -21,7 +22,7 @@ export default function ReportNewBin() {
   const alertShown = useRef(false);
   const navigation = useNavigation<NavigationProp<RootReportNewBinParamList>>();
   const [markerPosition, setMarkerPosition] = useState<[number, number] | null>(null);
-  const [address, setAddress] = useState<string>('서울 성북구 삼선교로 16길 16-3');
+  const [address, setAddress] = useState<string>('');
 
   const refreshWrapperBottom = bottomSheetOffset > 0 ? bottomSheetOffset + 10 : 40;
 
@@ -121,7 +122,8 @@ export default function ReportNewBin() {
     try {
       const data = JSON.parse(e.nativeEvent.data);
       if (data.type === 'newBinPoint') {
-        console.log("newBinPoint:", data.payload.latitude, data.payload.longitude);
+        console.log('newBinPoint:', data.payload.latitude, data.payload.longitude);
+        convertAddress(data.payload.latitude, data.payload.longitude);
         setMarkerPosition([data.payload.latitude, data.payload.longitude]);
       }
     } catch (err) {
@@ -129,9 +131,24 @@ export default function ReportNewBin() {
     }
   };
 
+  const convertAddress = async (lat: number, lng: number) => {
+    try {
+      const response = await api.get(`/bin/address?lat=${lat}&lng=${lng}`);
+      if (response.data.success) {
+        const result = response.data.data.address;
+        const trimmedAddress = result.split(', Seoul, South Korea')[0];
+        setAddress(trimmedAddress);
+      } else {
+        console.log('convert address failed');
+      }
+    } catch (error) {
+      console.log('convert address Error: ', error);
+    }
+  };
+
   return (
     <View style={styles.container}>
-      <StickyNotification content='The blue dots show where the bins already are!'/>
+      <StickyNotification content="The blue dots show where the bins already are!" />
       <WebView
         ref={webViewRef}
         style={styles.webview}
@@ -178,7 +195,7 @@ const styles = StyleSheet.create({
   },
   view: {
     flex: 1,
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
   },
   refresh: {
     position: 'absolute',
