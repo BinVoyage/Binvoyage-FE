@@ -118,8 +118,6 @@ const ReportNewBin = ({latitude, longitude, triggerRefresh}: ReportNewBinProps) 
         targetMarker = newMarker;
         setCurrentMarker(myMarker);
 
-        fetchBinData(latitude, longitude);
-
         // 첫 로드 시 마커 위치 초기화 메세지
         const message = {
             type: 'newBinPoint',
@@ -198,7 +196,6 @@ const ReportNewBin = ({latitude, longitude, triggerRefresh}: ReportNewBinProps) 
 
     useEffect(() => {
         window.kakao.maps.load(() => initMap());
-
     }, []);
 
     // 좌표 변경 시 currentMarker 이동 처리
@@ -216,6 +213,12 @@ const ReportNewBin = ({latitude, longitude, triggerRefresh}: ReportNewBinProps) 
             mapRef.current.setCenter(currentPosition);
         }
     }, [triggerRefresh, isMapLoaded]);
+
+    useEffect(() => {
+        if (isMapLoaded && mapRef.current) {
+          fetchBinData(latitude, longitude); // 맵이 처음 로드되었을 때만 호출
+        }
+      }, [isMapLoaded]); // isMapLoaded가 true로 변경될 때 실행
 
     return (
         <div id="reportNewBin" style={{ width: "100vw", height: "100vh", background: Palette.Gray1 }}></div>
