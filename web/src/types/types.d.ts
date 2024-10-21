@@ -25,6 +25,6 @@ export type MarkerInfo = {
   marker: kakao.maps.Marker;
   type_no: number;
   map: kakao.maps.Map;
-  distance: number;
+  distance?: number;
   visit_count: number;
 };
