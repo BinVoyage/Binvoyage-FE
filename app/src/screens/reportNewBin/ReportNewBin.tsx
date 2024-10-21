@@ -9,6 +9,7 @@ import * as S from 'screens/reportNewBin/ReportNewBin.style';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import LocationSvg from 'assets/images/LocationSvg';
 import { Palette } from 'constants/palette';
+import StickyNotification from 'components/StickyNotification';
 
 export default function ReportNewBin() {
   const webViewRef = useRef<WebView>(null);
@@ -130,6 +131,7 @@ export default function ReportNewBin() {
 
   return (
     <View style={styles.container}>
+      <StickyNotification content='The blue dots show where the bins already are!'/>
       <WebView
         ref={webViewRef}
         style={styles.webview}
