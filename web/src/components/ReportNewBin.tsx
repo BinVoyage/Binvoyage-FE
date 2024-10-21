@@ -57,12 +57,7 @@ const ReportNewBin = ({latitude, longitude, triggerRefresh}: ReportNewBinProps) 
             window.ReactNativeWebView?.postMessage(JSON.stringify(message));
         });
 
-    
-        // 마커 및 기타 오버레이는 맵 로드 후 지연 추가
-        setTimeout(() => {
-          addMarkersAndOverlays(map);
-        }, 500); // 0.5초 지연 후 추가
-    
+        addMarkersAndOverlays(map);
         setIsMapLoaded(true);
     };
 
@@ -175,7 +170,7 @@ const ReportNewBin = ({latitude, longitude, triggerRefresh}: ReportNewBinProps) 
         // 새로 추가된 마커 생성
         const marker = new window.kakao.maps.Marker({
           position: binLocation,
-          image: new window.kakao.maps.MarkerImage(markerImageSrc, new window.kakao.maps.Size(16, 16)),
+          image: new window.kakao.maps.MarkerImage(markerImageSrc, new window.kakao.maps.Size(30, 30)),
           map: mapRef.current!,
         });
   

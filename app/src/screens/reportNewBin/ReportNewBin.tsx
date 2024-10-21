@@ -15,8 +15,8 @@ export default function ReportNewBin() {
   const {startWatchingPosition, stopWatchingPosition, setCurrentPosition, setCenterPosition} = mapStore();
   const [isWebViewLoaded, setIsWebViewLoaded] = useState<boolean>(false); // WebView 로드 상태
   const [bottomSheetOffset, setBottomSheetOffset] = useState<number>(0); // BottomSheet의 높이 또는 offset 상태
-  // const URL = 'https://binvoyage.netlify.app/reportNewBin';
-  const URL = 'https://feature-38--binvoyage.netlify.app/reportNewBin';
+  const URL = 'https://binvoyage.netlify.app/reportNewBin';
+  // const URL = 'https://feature-38--binvoyage.netlify.app/reportNewBin';
   const alertShown = useRef(false);
   const navigation = useNavigation<NavigationProp<RootReportNewBinParamList>>();
   const [markerPosition, setMarkerPosition] = useState<[number, number] | null>(null);
