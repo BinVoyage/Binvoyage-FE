@@ -145,8 +145,9 @@ function App() {
         <Route
           path="/reportNewBin"
           element={
+            isLocationSet && currentLocation?
             <ReportNewBin latitude={locationToUse.latitude}
-            longitude={locationToUse.longitude} triggerRefresh={triggerRefresh} />
+            longitude={locationToUse.longitude} triggerRefresh={triggerRefresh} /> : null
           }
         />
       </Routes>
