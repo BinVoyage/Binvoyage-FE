@@ -131,8 +131,22 @@ export const ButtonText = styled(DefaultText)<{isValid: boolean}>`
   color: ${props => (props.isValid ? Palette.White : Palette.Gray5)};
 `;
 
+export const ImageContainer = styled.View`
+  position: relative;
+  width: 100%;
+`;
+
 export const AttachedImage = styled.Image`
+  position: relative;
   width: 100%;
   height: 200px;
   border-radius: 8px;
+`;
+
+export const BtnRemoveImage = styled.TouchableOpacity`
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 20px;
+  height: 20px;
 `;

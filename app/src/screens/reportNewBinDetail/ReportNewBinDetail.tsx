@@ -5,12 +5,13 @@ import LocationSvg from 'assets/images/LocationSvg';
 import {Palette} from 'constants/palette';
 import useMediaPermissions from 'hooks/useMediaPermissions';
 import {useEffect, useState} from 'react';
-import {Alert, Image, Linking, Platform, ScrollView} from 'react-native';
+import {Alert, Linking, Platform, ScrollView} from 'react-native';
 import ImagePicker from 'react-native-image-crop-picker';
 import Toast from 'react-native-toast-message';
 import ReactNativeBlobUtil from 'react-native-blob-util';
 import * as S from 'screens/reportNewBinDetail/ReportNewBinDetail.style';
 import {RESULTS} from 'react-native-permissions';
+import RemoveImageSvg from 'assets/images/RemoveImageSvg';
 
 type ReportNewBinProps = {
   route: RouteProp<RootReportNewBinParamList, 'ReportNewBinDetail'>;
@@ -209,7 +210,12 @@ export default function ReportNewBinDetail({route}: ReportNewBinProps) {
           textAlignVertical="top"
         />
         {imageUrl ? (
-          <S.AttachedImage source={{uri: imageUrl}} resizeMode="cover" />
+          <S.ImageContainer>
+            <S.AttachedImage source={{uri: imageUrl}} resizeMode="cover" />
+            <S.BtnRemoveImage onPress={() => setImageUrl(null)}>
+              <RemoveImageSvg width="20" height="20" />
+            </S.BtnRemoveImage>
+          </S.ImageContainer>
         ) : (
           <S.AddPicture onPress={handleUploadImage}>
             <S.IconAddPicture source={require('assets/images/AddImage.png')} />
