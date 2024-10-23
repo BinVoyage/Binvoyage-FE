@@ -69,16 +69,15 @@ export const SelectItem = styled.TouchableOpacity<{isSelected: boolean}>`
   padding: 10px 22px;
   border-radius: 22px;
   flex-shrink: 0;
-  background: ${props => props.isSelected ? Palette.Primary : Palette.Gray2};
-  
+  background: ${props => (props.isSelected ? Palette.Primary : Palette.Gray2)};
 `;
 
 export const TextSelectItem = styled(DefaultText)<{isSelected: boolean}>`
   font-size: ${Typo.B3.fontSize};
   font-weight: ${Typo.B3.fontWeight};
-  color: ${props => props.isSelected ? Palette.White : Palette.Gray4};
+  color: ${props => (props.isSelected ? Palette.White : Palette.Gray4)};
   text-align: center;
-`
+`;
 
 export const ReviewInput = styled.TextInput`
   width: 100%;
@@ -107,7 +106,7 @@ export const IconAddPicture = styled.ImageBackground`
   height: 35px;
   align-self: center;
   margin-bottom: 10px;
-`
+`;
 
 export const TextB3 = styled(DefaultText)`
   font-size: ${Typo.B3.fontSize};
@@ -121,7 +120,7 @@ export const Button = styled.TouchableOpacity<{isValid: boolean}>`
   padding: 16px 30px;
   justify-content: center;
   align-items: center;
-  background: ${props => props.isValid ? Palette.Primary : Palette.Gray3};
+  background: ${props => (props.isValid ? Palette.Primary : Palette.Gray3)};
   border-radius: 10px;
   margin-bottom: 20px;
 `;
@@ -129,5 +128,11 @@ export const Button = styled.TouchableOpacity<{isValid: boolean}>`
 export const ButtonText = styled(DefaultText)<{isValid: boolean}>`
   font-size: ${Typo.Button1.fontSize};
   font-weight: ${Typo.Button1.fontWeight};
-  color: ${props => props.isValid ? Palette.White : Palette.Gray5};
+  color: ${props => (props.isValid ? Palette.White : Palette.Gray5)};
+`;
+
+export const AttachedImage = styled.Image`
+  width: 100%;
+  height: 200px;
+  border-radius: 8px;
 `;

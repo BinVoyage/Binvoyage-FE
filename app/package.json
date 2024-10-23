@@ -27,6 +27,7 @@
     "postinstall-postinstall": "^2.1.0",
     "react": "^18.2.0",
     "react-native": "0.74.3",
+    "react-native-blob-util": "^0.19.11",
     "react-native-dotenv": "^3.4.11",
     "react-native-fs": "^2.20.0",
     "react-native-geolocation-service": "^5.3.1",

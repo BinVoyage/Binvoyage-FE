@@ -55,5 +55,7 @@ target 'app' do
     'LocationAccuracy',
     'LocationAlways',
     'LocationWhenInUse',
+    'Camera',
+    'PhotoLibrary'
   ]);
 end

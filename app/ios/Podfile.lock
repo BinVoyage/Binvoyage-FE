@@ -1048,6 +1048,8 @@ PODS:
   - React-Mapbuffer (0.74.3):
     - glog
     - React-debug
+  - react-native-blob-util (0.19.11):
+    - React-Core
   - react-native-geolocation (3.3.0):
     - DoubleConversion
     - glog
@@ -1467,6 +1469,7 @@ DEPENDENCIES:
   - React-jsitracing (from `../node_modules/react-native/ReactCommon/hermes/executor/`)
   - React-logger (from `../node_modules/react-native/ReactCommon/logger`)
   - React-Mapbuffer (from `../node_modules/react-native/ReactCommon`)
+  - react-native-blob-util (from `../node_modules/react-native-blob-util`)
   - "react-native-geolocation (from `../node_modules/@react-native-community/geolocation`)"
   - react-native-geolocation-service (from `../node_modules/react-native-geolocation-service`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
@@ -1594,6 +1597,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/logger"
   React-Mapbuffer:
     :path: "../node_modules/react-native/ReactCommon"
+  react-native-blob-util:
+    :path: "../node_modules/react-native-blob-util"
   react-native-geolocation:
     :path: "../node_modules/@react-native-community/geolocation"
   react-native-geolocation-service:
@@ -1727,6 +1732,7 @@ SPEC CHECKSUMS:
   React-jsitracing: 1aa5681c353b41573b03e0e480a5adf5fa1c56d8
   React-logger: fa92ba4d3a5d39ac450f59be2a3cec7b099f0304
   React-Mapbuffer: 70da5955150a58732e9336a0c7e71cd49e909f25
+  react-native-blob-util: 39a20f2ef11556d958dc4beb0aa07d1ef2690745
   react-native-geolocation: 3d05370e569784e95cd8a4f75713c9ab42b0f038
   react-native-geolocation-service: 608e1da71a1ac31b4de64d9ef2815f697978c55b
   react-native-safe-area-context: 422017db8bcabbada9ad607d010996c56713234c
@@ -1765,7 +1771,7 @@ SPEC CHECKSUMS:
   RNGestureHandler: 5538c370587d7e757667b9283ca867dd7635f154
   RNGoogleSignin: 08dc4ba7eac2096c7fecfe109f0950fa4683c803
   RNImageCropPicker: 771e2ca319d2cf92e04ebf334ece892ee9a6728f
-  RNPermissions: a4c964f030841f35d918ab3248df9dec9db5f44d
+  RNPermissions: 4eb47e412214ddbc0fc5cc76fd441f456da95df7
   RNReanimated: f6b214732ff303cb815ac81b26bbfd2070b69f43
   RNScreens: fd2722bcc59f36a629205af8cc7b48e4bc0d09f5
   RNSVG: a48668fd382115bc89761ce291a81c4ca5f2fd2e
@@ -1774,6 +1780,6 @@ SPEC CHECKSUMS:
   VisionCamera: 104de00dce2e04dec51bfb6027eff0312fa3174e
   Yoga: bd92064a0d558be92786820514d74fc4dddd1233
 
-PODFILE CHECKSUM: 8444b305fd48907023caaa65f8064a5fd1f48083
+PODFILE CHECKSUM: 4ccac8d26f019c54d96b3dfe9031a617eb9c7744
 
 COCOAPODS: 1.15.2

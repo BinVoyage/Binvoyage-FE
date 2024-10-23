@@ -2,24 +2,25 @@ import {NavigationProp, RouteProp, useNavigation} from '@react-navigation/native
 import api from 'api/api';
 import CancelSvg from 'assets/images/CancelSvg';
 import LocationSvg from 'assets/images/LocationSvg';
-import axios from 'axios';
 import {Palette} from 'constants/palette';
 import useMediaPermissions from 'hooks/useMediaPermissions';
 import {useEffect, useState} from 'react';
-import {Alert, Image, ScrollView} from 'react-native';
+import {Alert, Image, Linking, Platform, ScrollView} from 'react-native';
 import ImagePicker from 'react-native-image-crop-picker';
 import Toast from 'react-native-toast-message';
+import ReactNativeBlobUtil from 'react-native-blob-util';
 import * as S from 'screens/reportNewBinDetail/ReportNewBinDetail.style';
+import {RESULTS} from 'react-native-permissions';
 
 type ReportNewBinProps = {
   route: RouteProp<RootReportNewBinParamList, 'ReportNewBinDetail'>;
-}
+};
 
 export default function ReportNewBinDetail({route}: ReportNewBinProps) {
   const {address, coordinate} = route.params;
   const navigation = useNavigation<NavigationProp<RootReportNewBinParamList>>();
   const navigation2 = useNavigation<NavigationProp<RootHomeParamList>>();
-  const {cameraPermission, requestCameraPermission} = useMediaPermissions();
+  const {checkCameraPermission, requestCameraPermission} = useMediaPermissions();
   const binTypeLabel = ['Trash', 'Recycling'];
   const locationDetailLabel = ['Subway Entrance', 'Bus/Taxi Stop', 'Roadside', 'Square/Park', 'Other'];
   const [selectedBinTypeLabel, setSelectedBinTypeLabel] = useState<number>(-1);
@@ -30,15 +31,39 @@ export default function ReportNewBinDetail({route}: ReportNewBinProps) {
   const [imageUrl, setImageUrl] = useState<string | null>(null);
 
   const handleUploadImage = async () => {
-    if (cameraPermission !== 'granted') {
-      const result = await requestCameraPermission();
-      if (result !== 'granted') {
-        Alert.alert('Permission required', 'Please allow camera or gallery access to upload an image.');
-        return;
+    try {
+      // 먼저 현재 권한 상태를 체크
+      const currentPermission = await checkCameraPermission();
+      console.log('Current permission in handler:', currentPermission);
+
+      if (currentPermission !== RESULTS.GRANTED) {
+        console.log('Permission not granted, requesting...');
+        const result = await requestCameraPermission();
+        console.log('Permission request result in handler:', result);
+
+        if (result !== RESULTS.GRANTED) {
+          console.log('Permission denied by user');
+          Alert.alert('Permission Required', 'Camera access is required to take photos. Please enable it in your device settings.', [
+            {
+              text: 'Cancel',
+              style: 'cancel',
+            },
+            {
+              text: 'Open Settings',
+              onPress: () => Linking.openSettings(),
+            },
+          ]);
+          return;
+        }
       }
+
+      console.log('Permission granted, proceeding with camera...');
+      await uploadByCamera();
+    } catch (error) {
+      console.error('Error in handleUploadImage:', error);
+      Alert.alert('Error', 'Failed to handle image upload.');
     }
-    uploadByCamera();
-  }
+  };
 
   const getImageUrl = async () => {
     try {
@@ -64,30 +89,29 @@ export default function ReportNewBinDetail({route}: ReportNewBinProps) {
     if (image) {
       uploadImageToS3(image);
     }
-  }
+  };
 
   const uploadImageToS3 = async (image: any) => {
     const presignedUrl = await getImageUrl();
+    console.log(presignedUrl);
     if (!presignedUrl) {
       return;
     }
 
-    const formData = new FormData();
-    formData.append('file', {
-      uri: image.path, // 이미지의 URI
-      type: image.mime, // 이미지 MIME 타입
-      name: image.filename || 'image.jpg', // 이미지 이름
-    });
-
     try {
-      // axios를 사용하여 S3에 업로드
-      const response = await axios.put(presignedUrl, formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
+      const imagePath = Platform.OS === 'ios' ? image.path.replace('file://', '') : image.path;
 
-      if (response.status === 200) {
+      // react-native-blob-util을 사용하여 파일 업로드
+      const response = await ReactNativeBlobUtil.fetch(
+        'PUT',
+        presignedUrl,
+        {
+          'Content-Type': image.mime,
+        },
+        ReactNativeBlobUtil.wrap(imagePath),
+      );
+
+      if (response.respInfo.status === 200) {
         console.log('Image uploaded successfully');
         setImageUrl(presignedUrl); // 업로드 후 URL을 state에 저장
       } else {
@@ -98,7 +122,7 @@ export default function ReportNewBinDetail({route}: ReportNewBinProps) {
       console.error('Error uploading image:', error);
       Alert.alert('Error', 'An error occurred while uploading the image.');
     }
-  }
+  };
 
   const handleSubmit = async () => {
     try {
@@ -109,15 +133,15 @@ export default function ReportNewBinDetail({route}: ReportNewBinProps) {
         detail: content,
         type_no: selectedBinTypeLabel === 0 ? 1 : 2,
         location_type_no: selectedLocationDetailLabel + 1,
-        image: 'https://test.test/123',
+        image: imageUrl,
       });
       if (response.data.success) {
         Toast.show({
           type: 'success',
-            text1: 'Thank you for letting us know!',
-            position: 'bottom',
-            bottomOffset: 100,
-            visibilityTime: 2000,
+          text1: 'Thank you for letting us know!',
+          position: 'bottom',
+          bottomOffset: 100,
+          visibilityTime: 2000,
         });
         navigation2.navigate('Home');
       } else {
@@ -139,7 +163,7 @@ export default function ReportNewBinDetail({route}: ReportNewBinProps) {
         visibilityTime: 2000,
       });
     }
-  }
+  };
 
   useEffect(() => {
     if (selectedBinTypeLabel !== -1 && selectedLocationDetailLabel !== -1) {
@@ -148,10 +172,6 @@ export default function ReportNewBinDetail({route}: ReportNewBinProps) {
     }
     setIsValid(false);
   }, [selectedBinTypeLabel, selectedLocationDetailLabel]);
-
-  useEffect(() => {
-    console.log(imageUrl);
-  }, [imageUrl])
 
   return (
     <S.Container>
@@ -188,19 +208,15 @@ export default function ReportNewBinDetail({route}: ReportNewBinProps) {
           multiline
           textAlignVertical="top"
         />
-        <S.AddPicture onPress={handleUploadImage}>
-          <S.IconAddPicture source={require('assets/images/AddImage.png')} />
-          <S.SubTitle style={{textAlign: 'center', marginBottom: 0}}>Upload a photo of the bin (Optional)</S.SubTitle>
-          <S.TextB3>You can upload only one photo!</S.TextB3>
-        </S.AddPicture>
-        {imageUrl && (
-        <Image
-          source={{uri: imageUrl}} // presigned URL을 사용하여 이미지 표시
-          style={{width: 200, height: 200}} // 적절한 스타일 설정
-          resizeMode="contain" // 이미지 비율 유지
-        />
-      )}
-
+        {imageUrl ? (
+          <S.AttachedImage source={{uri: imageUrl}} resizeMode="cover" />
+        ) : (
+          <S.AddPicture onPress={handleUploadImage}>
+            <S.IconAddPicture source={require('assets/images/AddImage.png')} />
+            <S.SubTitle style={{textAlign: 'center', marginBottom: 0}}>Upload a photo of the bin (Optional)</S.SubTitle>
+            <S.TextB3>You can upload only one photo!</S.TextB3>
+          </S.AddPicture>
+        )}
       </ScrollView>
       <S.Button disabled={!isValid} isValid={isValid} onPress={handleSubmit}>
         <S.ButtonText isValid={isValid}>Submit</S.ButtonText>

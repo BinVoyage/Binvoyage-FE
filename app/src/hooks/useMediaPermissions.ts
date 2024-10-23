@@ -10,6 +10,7 @@ export default function useMediaPermissions() {
     try {
       const status = await check(Platform.OS === 'ios' ? PERMISSIONS.IOS.CAMERA : PERMISSIONS.ANDROID.CAMERA);
       setCameraPermission(status);
+      return status;
     } catch (error) {
       console.log(error);
     }
@@ -19,6 +20,7 @@ export default function useMediaPermissions() {
     try {
       const status = await check(Platform.OS === 'ios' ? PERMISSIONS.IOS.PHOTO_LIBRARY : PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE);
       setGalleryPermission(status);
+      return status;
     } catch (error) {
       console.log(error);
     }
@@ -52,6 +54,8 @@ export default function useMediaPermissions() {
   return {
     cameraPermission,
     galleryPermission,
+    checkCameraPermission,
+    checkGalleryPermission,
     requestCameraPermission,
     requestGalleryPermission,
   };
