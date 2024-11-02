@@ -30,6 +30,7 @@ type RootHomeParamList = {
   Home: undefined;
   PassPort: undefined;
   ReportNewBin: undefined;
+  LoginInProcess: undefined;
 };
 
 type RootBinDetailParamList = {
@@ -62,7 +63,7 @@ type RootReportNewBinParamList = {
     address: string;
     coordinate: [number, number] | null; // [lat, lng]
   };
-}
+};
 
 type RootMyParamList = {
   MyPage: undefined;

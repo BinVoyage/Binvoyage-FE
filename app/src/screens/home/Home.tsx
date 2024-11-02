@@ -32,9 +32,13 @@ export default function Home() {
     setIsLoading(false);
   }, [isLoggedIn]);
 
-  useEffect(() => {
-    console.log(userInfo);
-  }, [userInfo, isLoggedIn]);
+  const handleBtnReportNewBin = () => {
+    if (isLoggedIn) {
+      navigation3.navigate('ReportNewBinNavigator');
+      return;
+    }
+    navigation2.navigate('LoginInProcess');
+  };
 
   return (
     <S.Container>
@@ -72,7 +76,7 @@ export default function Home() {
               <S.IconPassPort source={require('assets/images/icon-passport.png')} resizeMode="contain" />
             </S.PassPort>
           </S.PassPortBg>
-          <S.Button onPress={() => navigation3.navigate('ReportNewBinNavigator')}>
+          <S.Button onPress={handleBtnReportNewBin}>
             <S.ButtonText>Find any new bin? Let us know!</S.ButtonText>
           </S.Button>
         </S.Body>
