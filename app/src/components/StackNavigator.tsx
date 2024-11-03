@@ -3,7 +3,7 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import BottomNavigator from 'components/BottomNavigator';
 import UserInput from 'screens/UserInput';
 import Login from 'screens/login/Login';
-import Onboarding from 'screens/OnBoarding';
+import Onboarding from 'screens/onBoarding/OnBoarding';
 import BinDetailNavigator from './BinDetailNavigator';
 import ReportNewBinNavigator from './ReportNewBinNavigator';
 
@@ -16,7 +16,7 @@ export default function StackNavigator({isLoggedIn}: StackNavigatorProps) {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName={isLoggedIn ? 'BottomNavigator' : 'Login'} screenOptions={{headerShown: false}}>
+      <Stack.Navigator initialRouteName={isLoggedIn ? 'OnBoarding' : 'Login'} screenOptions={{headerShown: false}}>
         <Stack.Screen name="BottomNavigator" component={BottomNavigator} />
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="OnBoarding" component={Onboarding} />
