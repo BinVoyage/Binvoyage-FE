@@ -10,15 +10,14 @@ const screenHeight = Dimensions.get('window').height;
 const widthRatio = 219 / 375;
 const heightRatio = 474 / 812;
 
-export const Container = styled.ScrollView`
+export const Container = styled.View`
   position: relative;
   flex: 1;
-  padding: 0px ${Math.round((screenWidth * 78) / 375)}px;
 `;
 
 export const BgImg = styled.Image`
-  width: 100%;
-  height: ${Math.round(screenHeight * heightRatio)}px;
+  width: ${screenWidth}px;
+  height: 100%;
 `;
 
 export const Modal = styled.View`

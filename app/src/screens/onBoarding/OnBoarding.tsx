@@ -7,20 +7,19 @@ import {useRef, useState} from 'react';
 type RenderItemProps = {
   text: string;
   src: ImageSourcePropType;
-  paddingTop: number;
 };
 
 export default function Onboarding() {
-  const {width, height} = Dimensions.get('window');
+  const {width} = Dimensions.get('window');
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const [step, setStep] = useState<number>(0);
   const carouselRef = useRef<Carousel<RenderItemProps>>(null);
   const data: RenderItemProps[] = [
-    {text: `Find the nearest bin\nwith BinVoyage`, src: require('assets/images/img-onboarding1.png'), paddingTop: Math.round((height * 39) / 812)},
-    {text: 'Navigate to your nearest bin', src: require('assets/images/img-onboarding2.png'), paddingTop: Math.round((height * 94) / 812)},
-    {text: `Verify your visit\nand collect stamps!`, src: require('assets/images/img-onboarding3.png'), paddingTop: Math.round((height * 94) / 812)},
-    {text: `Check out your\nstamp collection`, src: require('assets/images/img-onboarding4.png'), paddingTop: Math.round((height * 39) / 812)},
-    {text: 'Report and let us fix!', src: require('assets/images/img-onboarding5.png'), paddingTop: Math.round((height * 39) / 812)},
+    {text: `Find the nearest bin\nwith BinVoyage`, src: require('assets/images/img-onboarding1.jpg')},
+    {text: 'Navigate to your nearest bin', src: require('assets/images/img-onboarding2.jpg')},
+    {text: `Verify your visit\nand collect stamps!`, src: require('assets/images/img-onboarding3.jpg')},
+    {text: `Check out your\nstamp collection`, src: require('assets/images/img-onboarding4.jpg')},
+    {text: 'Report and let us fix!', src: require('assets/images/img-onboarding5.jpg')},
   ];
 
   const goNext = () => {
@@ -34,8 +33,8 @@ export default function Onboarding() {
   };
 
   const renderItem = ({item}: {item: RenderItemProps}) => (
-    <S.Container style={{paddingTop: item.paddingTop}}>
-      <S.BgImg source={item.src} resizeMode="contain" />
+    <S.Container>
+      <S.BgImg source={item.src} resizeMode="cover" />
     </S.Container>
   );
 
