@@ -7,6 +7,7 @@ import ArrowNextSvgXs from 'assets/images/ArrowNextSvgXs';
 import BinSvg from 'assets/images/BinSvg';
 import FootPrintSvg from 'assets/images/FootPrintSvg';
 import S_Recycling from 'assets/images/S_Recycling';
+import WrongInfoSvg from 'assets/images/WrongInfoSvg';
 import ModalOpenMap from 'components/modalOpenMap/ModalOpenMap';
 import ReviewItem from 'components/reviewItem/ReviewItem';
 import {Palette} from 'constants/palette';
@@ -165,6 +166,7 @@ export default function BinDetail({route}: BinDetailProps) {
                   })
                 }>
                 <S.RowWrapper style={{gap: 3}}>
+                  <WrongInfoSvg width={18} height={18}/>
                   <S.TextWrongInfo>Wrong Info?</S.TextWrongInfo>
                   <ArrowNextSvgXs width="7" height="12" fill={Palette.P400} />
                 </S.RowWrapper>
