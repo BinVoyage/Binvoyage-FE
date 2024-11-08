@@ -15,11 +15,6 @@ const guidelineBaseWidth = 375;
 // 너비 비율에 따른 폰트 크기 조정
 const scale = (size: number) => (screenWidth / guidelineBaseWidth) * size;
 
-export const Container = styled.View`
-  flex: 1;
-  background: ${Palette.Gray1};
-`;
-
 export const Inner = styled.ScrollView`
   flex: 1;
 `;
@@ -33,12 +28,11 @@ export const HeaderTitle = styled(DefaultText)`
   font-size: ${Typo.Title2.fontSize};
   font-weight: ${Typo.Title2.fontWeight};
   color: ${Palette.White};
-  padding: 0px 16px;
 `;
 
 export const Bridge = styled.TouchableOpacity`
   flex-direction: row;
-  margin: 12px 16px 26px;
+  margin: 12px 0px 26px;
   justify-content: center;
 `;
 
@@ -69,9 +63,9 @@ export const BridgeText = styled(DefaultText)`
 
 export const Body = styled.View`
   flex: 1;
-  border-radius: 12px 12px 0px 0px;
-  background: ${Palette.Gray1};
-  padding: 22px 20px 24px;
+  border-radius: 16px;
+  background: ${Palette.White};
+  padding: 16px 26px 22px;
 `;
 
 export const BodyTitle = styled(DefaultText)`
@@ -96,7 +90,7 @@ export const PassPortBg = styled.View`
   align-self: center;
 `;
 
-export const PassPort = styled.View`
+export const PassPort = styled.TouchableOpacity`
   width: ${Math.round(widthPassport)};
   height: ${Math.round(heightPassport)};
   background: ${Palette.Secondary};
