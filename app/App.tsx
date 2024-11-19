@@ -1,15 +1,18 @@
-import {SafeAreaView, StyleSheet, View} from 'react-native';
+import {AppState, AppStateStatus, SafeAreaView, StyleSheet, View} from 'react-native';
 import StackNavigator from 'components/StackNavigator';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import Toast from 'react-native-toast-message';
 import {CustomToastConfig} from 'components/CustomToastConfig';
-import {useEffect, useState} from 'react';
+import {useEffect, useRef, useState} from 'react';
 import SplashScreen from 'react-native-splash-screen';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import analytics from '@react-native-firebase/analytics';
 
 function App(): React.JSX.Element {
   const [isInitializing, setIsInitializing] = useState(true);
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+  const appStateRef = useRef<AppStateStatus>(AppState.currentState);
+  const sessionStartTimeRef = useRef<number>(Date.now());
 
   const checkLoginStatus = async () => {
     const token = await AsyncStorage.getItem('authToken');
@@ -18,11 +21,64 @@ function App(): React.JSX.Element {
   };
 
   useEffect(() => {
+    const logInitialSession = async () => {
+      try {
+        await analytics().logEvent('bv_session_start', {
+          timestamp: new Date().toISOString(),
+          is_logged_in: isLoggedIn,
+        });
+      } catch (error) {
+        console.error('Analytics error:', error);
+      }
+    };
+
+    const subscription = AppState.addEventListener('change', async (nextAppState) => {
+      try {
+        const currentState = appStateRef.current;
+        appStateRef.current = nextAppState;
+
+        if (
+          (currentState === 'inactive' || currentState === 'background') &&
+          nextAppState === 'active'
+        ) {
+          // 앱이 foreground로 돌아올 때
+          sessionStartTimeRef.current = Date.now();
+          await analytics().logEvent('bv_foreground', {
+            timestamp: new Date().toISOString(),
+            is_logged_in: isLoggedIn,
+          });
+        } 
+        
+        if (nextAppState === 'background') {
+          // 앱이 background로 갈 때 사용 시간 계산
+          const sessionDuration = Math.floor(
+            (Date.now() - sessionStartTimeRef.current) / 1000
+          ); // 초 단위
+
+          await analytics().logEvent('bv_background', {
+            timestamp: new Date().toISOString(),
+            session_duration_seconds: sessionDuration,
+            is_logged_in: isLoggedIn,
+          });
+        }
+      } catch (error) {
+        console.error('Analytics error:', error);
+      }
+    });
+
     // 3초 대기 시간과 로그인 상태 확인을 병렬로 처리
-    Promise.all([checkLoginStatus(), new Promise(resolve => setTimeout(resolve, 3000))]).finally(() => {
+    Promise.all([
+      checkLoginStatus(),
+      new Promise(resolve => setTimeout(resolve, 3000)),
+      logInitialSession(),
+    ]).finally(() => {
       setIsInitializing(false);
       SplashScreen.hide();
     });
+
+    return () => {
+      subscription.remove();
+    };
   }, []);
 
   if (isInitializing) {
