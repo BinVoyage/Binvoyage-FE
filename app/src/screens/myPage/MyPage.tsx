@@ -3,7 +3,7 @@ import * as S from 'screens/myPage/MyPage.style';
 import ArrowNextSvg from 'assets/images/ArrowNextSvg';
 import {NavigationProp, useFocusEffect, useNavigation} from '@react-navigation/native';
 import api from 'api/api';
-import {useCallback, useState} from 'react';
+import {useCallback, useEffect, useState} from 'react';
 import {userStore} from 'store/Store';
 import DeleteAccount from 'screens/deleteAccount/DeleteAccount';
 import {useBackHandler} from 'hooks/useBackHandler';
@@ -13,8 +13,12 @@ export default function MyPage() {
   useBackHandler();
   const commentNavigator = useNavigation<NavigationProp<RootMyParamList>>();
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
-  const {userInfo, setUserInfo, setIsLoggedIn} = userStore();
+  const {userInfo, setUserInfo, isLoggedIn, setIsLoggedIn} = userStore();
   const [deleteModal, setDeleteModal] = useState<boolean>(false);
+
+  useEffect(() => {
+    getMemberData();
+  }, [isLoggedIn])
 
   const getMemberData = async () => {
     try {
@@ -32,14 +36,6 @@ export default function MyPage() {
 
     return `Started BinVoyage ${formattedDate}`;
   }
-
-  useFocusEffect(
-    useCallback(() => {
-      if (userInfo) {
-        getMemberData();
-      }
-    }, []),
-  );
 
   const handleFeedback = () => {
     if (userInfo) {
@@ -63,6 +59,7 @@ export default function MyPage() {
           text: 'OK',
           onPress: async () => {
             try {
+              console.log('로그아웃');
               await api.delete('/login/logout');
               setUserInfo(null);
               setIsLoggedIn(false);
