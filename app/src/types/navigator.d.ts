@@ -1,6 +1,8 @@
 /* eslint-disable prettier/prettier */
 type RootTabParamList = {
-  HomeNavigator: undefined;
+  HomeNavigator: {
+    screen: 'Home' | 'PassPort' | 'LoginInProcess';
+  }
   FindBin: undefined;
   MyNavigator: undefined;
 };
@@ -29,7 +31,6 @@ type RootStackParamList = {
 type RootHomeParamList = {
   Home: undefined;
   PassPort: undefined;
-  ReportNewBin: undefined;
   LoginInProcess: undefined;
 };
 
@@ -55,6 +56,7 @@ type RootBinDetailParamList = {
     image: string;
     coordinate: [number, number];
   };
+  LoginInProcess: undefined;
 };
 
 type RootReportNewBinParamList = {

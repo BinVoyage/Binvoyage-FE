@@ -3,7 +3,7 @@ import * as S from 'components/modalVerifyVisit/ModalVerifyVisit.style';
 import {Image} from 'react-native';
 
 export default function ModalStamp() {
-  const navigation = useNavigation<NavigationProp<RootHomeParamList>>();
+  const navigation = useNavigation<NavigationProp<RootTabParamList>>();
   return (
     <S.Background>
       <S.Container>
@@ -11,7 +11,7 @@ export default function ModalStamp() {
         <S.TextAddress>New stamp added!</S.TextAddress>
         <Image source={require('assets/images/img-verify-stamp.png')} style={{width: 181, height: 176}} />
         <S.TextB1>Check your passport in HOME</S.TextB1>
-        <S.Button isPrimary onPress={() => navigation.navigate('Home')}>
+        <S.Button isPrimary onPress={() => navigation.navigate('HomeNavigator', {screen: 'Home'})}>
           <S.ButtonText isPrimary>Okay!</S.ButtonText>
         </S.Button>
       </S.Container>
