@@ -1,4 +1,4 @@
-import {NavigationProp, RouteProp, useIsFocused, useNavigation} from '@react-navigation/native';
+import {NavigationProp, RouteProp, useNavigation} from '@react-navigation/native';
 import api from 'api/api';
 import ArrowPrevSvg from 'assets/images/ArrowPrevSvg';
 import BinSvg from 'assets/images/BinSvg';
@@ -7,11 +7,14 @@ import ModalStamp from 'components/modalVerifyVisit/ModalStamp';
 import ModalSuccess from 'components/modalVerifyVisit/ModalSuccess';
 import {Palette} from 'constants/palette';
 import {useEffect, useRef, useState} from 'react';
-import {Alert, Platform, ScrollView} from 'react-native';
+import {Alert, ScrollView} from 'react-native';
 import WebView, {WebViewMessageEvent} from 'react-native-webview';
 import * as S from 'screens/verifyVisit/VerifyVisit.style';
 import {mapStore} from 'store/Store';
 import Toast from 'react-native-toast-message';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import analytics from '@react-native-firebase/analytics';
+
 
 type VerifyVisitProps = {
   route: RouteProp<RootBinDetailParamList, 'VerifyVisit'>;
@@ -70,6 +73,22 @@ export default function VerifyVisit({route}: VerifyVisitProps) {
 
   const handleFoundIt = async () => {
     try {
+      const storedTime = await AsyncStorage.getItem('navigationExitTime'); // 이전에 길찾기로 앱을 이탈했던 시각
+      if (storedTime) {
+        const exitTime = parseInt(storedTime, 10);
+        const currentTime = Date.now();
+        const diffInMinutes = (currentTime - exitTime) / 1000 / 60; // 분 단위로 계산
+
+        const returnedWithin30Minutes = diffInMinutes <= 30;
+        // Google Analytics 이벤트 로깅
+        await analytics().logEvent('visit_verification_success', {
+          returned_within_30_minutes: returnedWithin30Minutes,
+          duration_since_exit_minutes: Math.floor(diffInMinutes),
+        });
+
+        await AsyncStorage.removeItem('navigationExitTime'); // 길찾기로 앱 이탈했던 시각 초기화
+      }
+
       const response = await api.post(`/bin/visit/${bin_id}`, {
         lat: currentPosition?.latitude,
         lng: currentPosition?.longitude,
@@ -117,6 +136,20 @@ export default function VerifyVisit({route}: VerifyVisitProps) {
 
   const handleCantFoundIt = async () => {
     try {
+      const storedTime = await AsyncStorage.getItem('navigationExitTime'); // 이전에 길찾기로 앱을 이탈했던 시각
+      if (storedTime) {
+        const exitTime = parseInt(storedTime, 10);
+        const currentTime = Date.now();
+        const diffInMinutes = (currentTime - exitTime) / 1000 / 60; // 분 단위로 계산
+
+        const returnedWithin30Minutes = diffInMinutes <= 30;
+        // Google Analytics 이벤트 로깅
+        await analytics().logEvent('visit_verification_failed', {
+          returned_within_30_minutes: returnedWithin30Minutes,
+          duration_since_exit_minutes: diffInMinutes,
+        });
+      }
+
       const response = await api.post(`/bin/visit/${bin_id}`, {
         lat: currentPosition?.latitude,
         lng: currentPosition?.longitude,
@@ -256,3 +289,4 @@ export default function VerifyVisit({route}: VerifyVisitProps) {
     </>
   );
 }
+

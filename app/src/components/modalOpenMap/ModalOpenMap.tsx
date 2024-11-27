@@ -1,3 +1,4 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as S from 'components/modalOpenMap/ModalOpenMap.style';
 import {Alert, Image, Linking, Platform, TouchableOpacity} from 'react-native';
 
@@ -8,7 +9,10 @@ interface Props {
 }
 
 export default function ModalMap({setIsModalOpen, label, coords}: Props) {
-  const openNaverMap = () => {
+  const openNaverMap = async () => {
+    const currentTime = Date.now(); // 밀리초 단위
+    await AsyncStorage.setItem('navigationExitTime', currentTime.toString());
+
     const [longitude, latitude] = coords ?? [126.975584404, 37.563685889];
     const appname = 'com.binvoyage.app';
 
@@ -35,7 +39,10 @@ export default function ModalMap({setIsModalOpen, label, coords}: Props) {
       .catch(err => console.error('Error opening map:', err));
   };
 
-  const openKakaoMap = () => {
+  const openKakaoMap = async () => {
+    const currentTime = Date.now(); // 밀리초 단위
+    await AsyncStorage.setItem('navigationExitTime', currentTime.toString());
+
     const [longitude, latitude] = coords ?? [126.975584404, 37.563685889];
 
     // const url = `kakaomap://look?p=${latitude},${longitude}`;

@@ -2,9 +2,10 @@ import api from 'api/api';
 import * as S from 'components/modalVerifyVisit/ModalVerifyVisit.style';
 import {Palette} from 'constants/palette';
 import {useState} from 'react';
-import {Alert, Image, Keyboard, TouchableWithoutFeedback} from 'react-native';
+import {Image, Keyboard, TouchableWithoutFeedback} from 'react-native';
 import Toast from 'react-native-toast-message';
-import {mapStore, userStore} from 'store/Store';
+import {userStore} from 'store/Store';
+import analytics from '@react-native-firebase/analytics';
 
 interface Props {
   bin_id: number;
@@ -14,7 +15,7 @@ interface Props {
   setModalSuccess: (value: boolean) => void;
 }
 
-export default function ModalSuccess({bin_id, address, coordinate, handleStampModal, setModalSuccess}: Props) {
+export default function ModalSuccess({bin_id, address, handleStampModal}: Props) {
   const [reviewMode, setReviewMode] = useState<boolean>(false);
   const placeholder = `Got any tips for finding this bin?\nFeel like leaving a comment?`;
   const [content, setContent] = useState<string>('');
@@ -29,6 +30,11 @@ export default function ModalSuccess({bin_id, address, coordinate, handleStampMo
         });
 
         if (response.data.success) {
+          analytics().logEvent('is_submit_feedback', {
+            timestamp: new Date().toISOString(),
+            result: true
+          });
+
           Toast.show({
             type: 'success',
             text1: 'Thank you for letting us know!',
@@ -62,6 +68,14 @@ export default function ModalSuccess({bin_id, address, coordinate, handleStampMo
     }
   };
 
+  const handleSkipFeedback = () => {
+    analytics().logEvent('is_submit_feedback', {
+      timestamp: new Date().toISOString(),
+      result: false
+    });
+    handleStampModal();
+  }
+
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} style={{flex: 1}}>
       <S.Background>
@@ -87,7 +101,7 @@ export default function ModalSuccess({bin_id, address, coordinate, handleStampMo
               <S.Button isPrimary={content.length >= 5} disabled={content.length < 5} onPress={handleSubmit} style={{marginBottom: 10}}>
                 <S.ButtonText isPrimary={content.length >= 5}>Submit</S.ButtonText>
               </S.Button>
-              <S.Button onPress={handleStampModal}>
+              <S.Button onPress={handleSkipFeedback}>
                 <S.ButtonText>Cancel</S.ButtonText>
               </S.Button>
             </>
@@ -96,7 +110,7 @@ export default function ModalSuccess({bin_id, address, coordinate, handleStampMo
               <S.Button isPrimary onPress={() => setReviewMode(true)} style={{marginBottom: 10}}>
                 <S.ButtonText isPrimary> Sure! This bin is...</S.ButtonText>
               </S.Button>
-              <S.Button onPress={handleStampModal}>
+              <S.Button onPress={handleSkipFeedback}>
                 <S.ButtonText>Nope! Don’t bug me!</S.ButtonText>
               </S.Button>
             </>
