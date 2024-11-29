@@ -1,16 +1,16 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 import api from 'api/api';
 import ArrowPrevSvg from 'assets/images/ArrowPrevSvg';
 import PassPortPage from 'components/passPort/PassPortPage';
 import {Palette} from 'constants/palette';
-import {useEffect, useRef, useState} from 'react';
+import {useEffect, useState} from 'react';
 import {Dimensions} from 'react-native';
 import Carousel from 'react-native-snap-carousel';
-import Swiper from 'react-native-swiper';
 import * as S from 'screens/passport/PassPort.style';
+import analytics from '@react-native-firebase/analytics';
 
 export default function PassPort() {
-  // const swiperRef = useRef<Swiper>(null);
   const navigation = useNavigation<NavigationProp<RootHomeParamList>>();
   const [stampList, setStampList] = useState<StampInfo[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -18,18 +18,41 @@ export default function PassPort() {
   const {width: screenWidth} = Dimensions.get('window');
   const width = screenWidth - 32;
 
-  useEffect(() => {
-    const getData = async () => {
-      try {
-        const response = await api.get('/stamp');
-        setStampList(response.data.data.user_stamp_list);
-        setIsLoading(false);
-      } catch (error: any) {
-        console.log('error: ' + error.response);
-      }
-    };
+  const getData = async () => {
+    try {
+      const response = await api.get('/stamp');
+      setStampList(response.data.data.user_stamp_list);
+      setIsLoading(false);
+    } catch (error: any) {
+      console.log('error: ' + error.response);
+    }
+  };
 
+  const logAnalyticsAboutStamp = async () => {
+    try {
+      const latestStampTime = await AsyncStorage.getItem('latestStampTime');
+
+      if (latestStampTime) {
+        const lastStampTime = parseInt(latestStampTime, 10);
+        const currentTime = Date.now();
+        const diffInMinutes = (currentTime - lastStampTime) / 1000 / 60; // 분 단위로 변환
+
+        const isWithin30Minutes = diffInMinutes <= 30;
+
+        // Google Analytics 로그
+        await analytics().logEvent('stamp_revisit_check', {
+          is_within_30_minutes: isWithin30Minutes,
+          duration_since_last_stamp_minutes: Math.floor(diffInMinutes),
+        });
+      }
+    } catch (error) {
+      console.log('Analytics logging error:', error);
+    }
+  };
+
+  useEffect(() => {
     getData();
+    logAnalyticsAboutStamp();
   }, []);
 
   // const stampList = [{stamp_id: 1}, {stamp_id: 2}, {stamp_id: 3}, {stamp_id: 4}, {stamp_id: 5}, {stamp_id: 6}, {stamp_id: 6}, {stamp_id: 6}];

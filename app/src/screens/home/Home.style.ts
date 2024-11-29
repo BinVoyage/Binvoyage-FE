@@ -5,9 +5,8 @@ import {Dimensions} from 'react-native';
 import styled from 'styled-components/native';
 
 const screenWidth = Dimensions.get('window').width;
-const width = screenWidth - 40;
-const widthPassport = (width * 284) / 343;
-const heightPassport = (widthPassport * 363) / 264;
+const width = screenWidth - 30;
+const widthPassport = (width * 237) / 343;
 
 // 기준 너비 (디자인 시안의 너비)
 const guidelineBaseWidth = 375;
@@ -34,6 +33,12 @@ export const Bridge = styled.TouchableOpacity`
   flex-direction: row;
   margin: 12px 0px 26px;
   justify-content: center;
+  width: ${width};
+`;
+
+export const BridgeImg = styled.Image`
+  width: ${width};
+  aspect-ratio: 351 / 100;
 `;
 
 export const BridgeIconWrapper = styled.ImageBackground`
@@ -81,23 +86,27 @@ export const BodyDescription = styled(DefaultText)`
   margin: 6px 0px 22px;
 `;
 
-export const PassPortBg = styled.View`
-  position: relative;
-  width: ${width};
-  height: ${Math.round(heightPassport)};
-  background: ${Palette.White};
-  border-radius: 0px 18px 18px 0px;
-  align-self: center;
-`;
+// export const PassPortBg = styled.View`
+//   position: relative;
+//   width: ${width};
+//   height: ${Math.round(heightPassport)};
+//   background: ${Palette.White};
+//   border-radius: 0px 18px 18px 0px;
+//   align-self: center;
+// `;
 
 export const PassPort = styled.TouchableOpacity`
-  width: ${Math.round(widthPassport)};
-  height: ${Math.round(heightPassport)};
-  background: ${Palette.Secondary};
+  width: ${widthPassport};
+  aspect-ratio: ${237 / 303};
   border-radius: 0px 18px 18px 0px;
   align-items: center;
   padding: 32px 13px;
 `;
+
+export const PassPortImg = styled.Image`
+  width: ${widthPassport / 2};
+  aspect-ratio: ${237 / 303};
+`
 
 export const PassPortTitle = styled(DefaultText)`
   font-family: 'PTSerif-Bold';

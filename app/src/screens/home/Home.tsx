@@ -55,22 +55,19 @@ export default function Home() {
           <S.HeaderTitle>{`User, Start your BinVoyage!`}</S.HeaderTitle>
         )}
         <S.Bridge onPress={() => navigation1.navigate('FindBin')}>
-          <S.BridgeIconWrapper source={require('assets/images/icon-trash-wrapper.png')} resizeMode="contain">
-            {/* <HomeTrashSvg width="40" height="66" /> */}
-            <S.BridgeIcon source={require('assets/images/icon-home-trash2x.png')} resizeMode="contain" />
-          </S.BridgeIconWrapper>
-          <S.BridgeTextWrapper source={require('assets/images/icon-text-wrapper.png')} resizeMode="stretch">
-            <S.BridgeText>{`Struggling to find bins? 😓\nTouch here to explore!`}</S.BridgeText>
-          </S.BridgeTextWrapper>
+          <S.BridgeImg source={require('assets/images/home-bridge.png')} />
         </S.Bridge>
         <S.Body>
           <S.BodyTitle>{`Collect Seoul\nstamps during BinVoyage`}</S.BodyTitle>
           <S.BodyDescription>Stamp varies by the bin location.</S.BodyDescription>
-          <S.PassPort onPress={() => navigation2.navigate('PassPort')}>
+          {/* <S.PassPort onPress={() => navigation2.navigate('PassPort')}>
             <S.PassPortTitle>PASSPORT</S.PassPortTitle>
             <S.ImagePassPort source={require('assets/images/img-passport.png')} resizeMode="contain" />
             <S.PassPortSubTitle>{`TO THE BINVOYAGE\nIN SEOUL`}</S.PassPortSubTitle>
             <S.IconPassPort source={require('assets/images/icon-passport.png')} resizeMode="contain" />
+          </S.PassPort> */}
+          <S.PassPort onPress={() => navigation2.navigate('PassPort')} style={{alignSelf: 'center'}}>
+            <S.PassPortImg source={require('assets/images/home-passport.png')} />
           </S.PassPort>
           <S.Button onPress={handleBtnReportNewBin}>
             <S.ButtonText>Find any new bin? Let us know!</S.ButtonText>
