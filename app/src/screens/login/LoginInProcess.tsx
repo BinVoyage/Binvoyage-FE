@@ -41,7 +41,7 @@ export default function LoginInProcess() {
           if (hasAccount) {
             navigation.goBack();
           } else {
-            navigation.navigate('UserInput');
+            navigation.navigate('UserInput', {id_token: userInfo.idToken});
           }
         } else {
           Alert.alert('로그인 실패');
@@ -71,7 +71,7 @@ export default function LoginInProcess() {
           if (hasAccount) {
             navigation.goBack();
           } else {
-            navigation.navigate('UserInput');
+            navigation.navigate('UserInput', {id_token: identityToken});
           }
         } else {
           Alert.alert('로그인 실패');

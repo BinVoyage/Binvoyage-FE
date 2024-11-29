@@ -11,7 +11,7 @@ type RootStackParamList = {
   BottomNavigator: undefined;
   Login: undefined;
   OnBoarding: undefined;
-  UserInput: undefined;
+  UserInput: {id_token: string};
   NewTrashDetail: undefined;
   BinDetailNavigator: {
     screen: 'BinDetail' | 'FeedbackList' | 'ReportFeedback' | 'ReportWrongInfo' | 'VerifyVisit';

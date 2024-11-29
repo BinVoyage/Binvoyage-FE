@@ -1,11 +1,17 @@
-import {CommonActions, NavigationProp, useNavigation} from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {CommonActions, NavigationProp, RouteProp, useNavigation} from '@react-navigation/native';
 import api from 'api/api';
 import CountryInput from 'components/userInput/CountryInput';
 import NameInput from 'components/userInput/NameInput';
 import {useState} from 'react';
 import {Alert} from 'react-native';
 
-export default function UserInput() {
+type UserInputProps = {
+  route: RouteProp<RootStackParamList, 'UserInput'>;
+};
+
+export default function UserInput({route}: UserInputProps) {
+  const { id_token } = route.params;
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const [step, setStep] = useState<'name' | 'country'>('name');
   const [name, setName] = useState<string>('');
@@ -18,6 +24,8 @@ export default function UserInput() {
       });
 
       if (response.status === 200) {
+        // 회원가입 성공 시 로그인 정보 저장
+        await AsyncStorage.setItem('authToken', id_token);
         navigation.dispatch(
           CommonActions.reset({
             index: 0,
