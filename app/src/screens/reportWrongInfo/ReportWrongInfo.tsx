@@ -10,6 +10,7 @@ import {useEffect, useState} from 'react';
 import {ScrollView, TouchableOpacity} from 'react-native';
 import Toast from 'react-native-toast-message';
 import * as S from 'screens/reportWrongInfo/ReportWrongInfo.style';
+import analytics from '@react-native-firebase/analytics';
 
 type ReportWrongInfoProps = {
   route: RouteProp<RootBinDetailParamList, 'ReportWrongInfo'>;
@@ -42,21 +43,29 @@ export default function ReportWrongInfo({route}: ReportWrongInfoProps) {
       .map((isSelected, index) => (isSelected ? index + 1 : null)) // 선택된 항목의 인덱스 + 1
       .filter(index => index !== null) as number[]; // null을 제외하고 숫자 배열로 변환
     try {
-      await api.post(`/bin/report/${bin_id}`, {
+      const response = await api.post(`/bin/report/${bin_id}`, {
         report_type_list: selectedReportTypes,
       });
-      console.log(selectedReportTypes);
-      Toast.show({
-        type: 'success',
-        text1: 'Thank you for letting us know!',
-        position: 'bottom',
-        bottomOffset: 100,
-        visibilityTime: 2000,
-      });
-      if (isVerifyVisit) {
-        setModalStamp(true);
-      } else {
-        navigation2.navigate('BottomNavigator');
+      
+      if (response.data.success) {
+        Toast.show({
+          type: 'success',
+          text1: 'Thank you for letting us know!',
+          position: 'bottom',
+          bottomOffset: 100,
+          visibilityTime: 2000,
+        });
+
+        if (isVerifyVisit) {
+          /* 오류 제보 o 로깅 */
+          analytics().logEvent('is_report_issue', {
+            timestamp: new Date().toISOString(),
+            result: true
+          });
+          setModalStamp(true);
+        } else {
+          navigation2.navigate('BottomNavigator');
+        }
       }
     } catch (error) {
       console.log(error);

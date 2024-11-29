@@ -94,8 +94,10 @@ export default function VerifyVisit({route}: VerifyVisitProps) {
         lng: currentPosition?.longitude,
         is_visit: true,
       });
+
       if (response.data.success) {
         setModalSuccess(true);
+        await AsyncStorage.setItem('latestStampTime', Date.now().toString()); // 스탬프 획득 시각 기록
       } else {
         console.log('Response failed:', response.data);
         Toast.show({
@@ -157,6 +159,7 @@ export default function VerifyVisit({route}: VerifyVisitProps) {
       });
       if (response.data.success) {
         setModalFailed(true);
+        await AsyncStorage.setItem('latestStampTime', Date.now().toString()); // 스탬프 획득 시각 기록
       } else {
         console.log('Response failed:', response.data);
         Toast.show({

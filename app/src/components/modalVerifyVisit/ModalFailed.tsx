@@ -1,6 +1,6 @@
-import {NavigationProp, useNavigation} from '@react-navigation/native';
 import * as S from 'components/modalVerifyVisit/ModalVerifyVisit.style';
 import {Image} from 'react-native';
+import analytics from '@react-native-firebase/analytics';
 
 interface Props {
   handleReportIssue: () => void;
@@ -8,7 +8,15 @@ interface Props {
 }
 
 export default function ModalFailed({handleReportIssue, handleStampModal}: Props) {
-  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  const handleSkipReportIssue = () => {
+    /* 오류제보 x 로깅 */
+    analytics().logEvent('is_report_issue', {
+      timestamp: new Date().toISOString(),
+      result: false
+    });
+    handleStampModal();
+  }
+
   return (
     <S.Background>
       <S.Container>
@@ -18,7 +26,7 @@ export default function ModalFailed({handleReportIssue, handleStampModal}: Props
         <S.Button isPrimary style={{marginBottom: 10}} onPress={handleReportIssue}>
           <S.ButtonText isPrimary>Report issue</S.ButtonText>
         </S.Button>
-        <S.Button onPress={handleStampModal}>
+        <S.Button onPress={handleSkipReportIssue}>
           <S.ButtonText>Maybe next time</S.ButtonText>
         </S.Button>
       </S.Container>
