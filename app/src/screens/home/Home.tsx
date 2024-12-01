@@ -27,6 +27,7 @@ export default function Home() {
         console.log(error);
       }
     };
+    console.log(isLoggedIn, userInfo?.user_name);
     getData();
     setIsLoading(false);
   }, [isLoggedIn]);
@@ -67,7 +68,7 @@ export default function Home() {
             <S.IconPassPort source={require('assets/images/icon-passport.png')} resizeMode="contain" />
           </S.PassPort> */}
           <S.PassPort onPress={() => navigation2.navigate('PassPort')} style={{alignSelf: 'center'}}>
-            <S.PassPortImg source={require('assets/images/home-passport.png')} />
+            <S.PassPortImg source={require('assets/images/home-passport2.png')} resizeMode="contain" />
           </S.PassPort>
           <S.Button onPress={handleBtnReportNewBin}>
             <S.ButtonText>Find any new bin? Let us know!</S.ButtonText>

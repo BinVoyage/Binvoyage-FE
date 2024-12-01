@@ -86,27 +86,19 @@ export const BodyDescription = styled(DefaultText)`
   margin: 6px 0px 22px;
 `;
 
-// export const PassPortBg = styled.View`
-//   position: relative;
-//   width: ${width};
-//   height: ${Math.round(heightPassport)};
-//   background: ${Palette.White};
-//   border-radius: 0px 18px 18px 0px;
-//   align-self: center;
-// `;
-
 export const PassPort = styled.TouchableOpacity`
-  width: ${widthPassport};
-  aspect-ratio: ${237 / 303};
+  width: ${widthPassport}px;
+  aspect-ratio: 474 / 606;
   border-radius: 0px 18px 18px 0px;
   align-items: center;
-  padding: 32px 13px;
+  /* padding: 32px 13px; */
 `;
 
 export const PassPortImg = styled.Image`
-  width: ${widthPassport / 2};
-  aspect-ratio: ${237 / 303};
-`
+  width: 100%;
+  height: 100%;
+  resizemode: contain;
+`;
 
 export const PassPortTitle = styled(DefaultText)`
   font-family: 'PTSerif-Bold';

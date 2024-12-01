@@ -17,7 +17,7 @@ export const Container = styled.TouchableOpacity`
 `;
 
 export const TextAddress = styled(DefaultText)`
-  height: ${Math.round((height / 812) * 30)}px;
+  /* height: ${Math.round((height / 812) * 30)}px; */
   font-size: ${Typo.Label.fontSize};
   font-weight: ${Typo.Label.fontWeight};
   color: ${Palette.Gray4};
