@@ -7,10 +7,11 @@ import {useEffect, useRef, useState} from 'react';
 import SplashScreen from 'react-native-splash-screen';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import analytics from '@react-native-firebase/analytics';
+import {userStore} from 'store/Store';
 
 function App(): React.JSX.Element {
   const [isInitializing, setIsInitializing] = useState(true);
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+  const {isLoggedIn, setIsLoggedIn} = userStore();
   const appStateRef = useRef<AppStateStatus>(AppState.currentState);
   const sessionStartTimeRef = useRef<number>(Date.now());
 
@@ -20,61 +21,56 @@ function App(): React.JSX.Element {
     setIsInitializing(false);
   };
 
-  useEffect(() => {
-    const logInitialSession = async () => {
-      try {
-        await analytics().logEvent('bv_session_start', {
+  const logInitialSession = async () => {
+    try {
+      await analytics().logEvent('bv_session_start', {
+        timestamp: new Date().toISOString(),
+        is_logged_in: isLoggedIn,
+      });
+    } catch (error) {
+      console.error('Analytics error:', error);
+    }
+  };
+
+  const subscription = AppState.addEventListener('change', async nextAppState => {
+    try {
+      const currentState = appStateRef.current;
+      appStateRef.current = nextAppState;
+
+      if ((currentState === 'inactive' || currentState === 'background') && nextAppState === 'active') {
+        // 앱이 foreground로 돌아올 때
+        sessionStartTimeRef.current = Date.now();
+        await analytics().logEvent('bv_foreground', {
           timestamp: new Date().toISOString(),
           is_logged_in: isLoggedIn,
         });
-      } catch (error) {
-        console.error('Analytics error:', error);
       }
+
+      if (nextAppState === 'background') {
+        // 앱이 background로 갈 때 사용 시간 계산
+        const sessionDuration = Math.floor((Date.now() - sessionStartTimeRef.current) / 1000); // 초 단위
+
+        await analytics().logEvent('bv_background', {
+          timestamp: new Date().toISOString(),
+          session_duration_seconds: sessionDuration,
+          is_logged_in: isLoggedIn,
+        });
+      }
+    } catch (error) {
+      console.error('Analytics error:', error);
+    }
+  });
+
+  useEffect(() => {
+    const init = async () => {
+      await checkLoginStatus(); // 로그인 상태 확인 후
+      await logInitialSession(); // 세션 시작 로그
+
+      setIsInitializing(false); // 초기화 완료
+      SplashScreen.hide(); // 스플래시 화면 숨기기
     };
 
-    const subscription = AppState.addEventListener('change', async (nextAppState) => {
-      try {
-        const currentState = appStateRef.current;
-        appStateRef.current = nextAppState;
-
-        if (
-          (currentState === 'inactive' || currentState === 'background') &&
-          nextAppState === 'active'
-        ) {
-          // 앱이 foreground로 돌아올 때
-          sessionStartTimeRef.current = Date.now();
-          await analytics().logEvent('bv_foreground', {
-            timestamp: new Date().toISOString(),
-            is_logged_in: isLoggedIn,
-          });
-        } 
-        
-        if (nextAppState === 'background') {
-          // 앱이 background로 갈 때 사용 시간 계산
-          const sessionDuration = Math.floor(
-            (Date.now() - sessionStartTimeRef.current) / 1000
-          ); // 초 단위
-
-          await analytics().logEvent('bv_background', {
-            timestamp: new Date().toISOString(),
-            session_duration_seconds: sessionDuration,
-            is_logged_in: isLoggedIn,
-          });
-        }
-      } catch (error) {
-        console.error('Analytics error:', error);
-      }
-    });
-
-    // 3초 대기 시간과 로그인 상태 확인을 병렬로 처리
-    Promise.all([
-      checkLoginStatus(),
-      new Promise(resolve => setTimeout(resolve, 3000)),
-      logInitialSession(),
-    ]).finally(() => {
-      setIsInitializing(false);
-      SplashScreen.hide();
-    });
+    init();
 
     return () => {
       subscription.remove();
