@@ -14,7 +14,7 @@
 		16BB8FE47FEC4B57B78E7B1B /* Pretendard-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 026F8465D9A1443AB556A85A /* Pretendard-Bold.otf */; };
 		68E62FF4868848D3A1DE9B26 /* PTSerif-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8C82ECCA6D044356ABB80A4F /* PTSerif-Italic.ttf */; };
 		6B6FEAE2C82B4032BA8405D9 /* PTSerif-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B19616ABF0D14DAB85DCA65D /* PTSerif-Bold.ttf */; };
-		7863B0A82C3D8D5900D7EDC4 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 7863B0A72C3D8D5900D7EDC4 /* GoogleService-Info.plist */; };
+		78F228292CFC2EC0003A4948 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 78F228282CFC2EC0003A4948 /* GoogleService-Info.plist */; };
 		7E4A09B5F16D485B452D02F9 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 6896CCA0C7E80D6B43683820 /* PrivacyInfo.xcprivacy */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		C29513F9032D60C6A371DF84 /* Pods_app.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B785EB617F035909E5444D23 /* Pods_app.framework */; };
@@ -46,8 +46,8 @@
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = app/main.m; sourceTree = "<group>"; };
 		13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = PrivacyInfo.xcprivacy; path = app/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		6896CCA0C7E80D6B43683820 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xml; name = PrivacyInfo.xcprivacy; path = app/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
-		7863B0A72C3D8D5900D7EDC4 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		78DA9D2A2C67497A00D886B0 /* app.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = app.entitlements; path = app/app.entitlements; sourceTree = "<group>"; };
+		78F228282CFC2EC0003A4948 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = app/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		8C82ECCA6D044356ABB80A4F /* PTSerif-Italic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "PTSerif-Italic.ttf"; path = "../src/assets/fonts/PTSerif-Italic.ttf"; sourceTree = "<group>"; };
 		97B2C0E2DDBA471BA1CA7894 /* Pretendard-SemiBold.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Pretendard-SemiBold.otf"; path = "../src/assets/fonts/Pretendard-SemiBold.otf"; sourceTree = "<group>"; };
@@ -102,8 +102,8 @@
 		13B07FAE1A68108700A75B9A /* app */ = {
 			isa = PBXGroup;
 			children = (
+				78F228282CFC2EC0003A4948 /* GoogleService-Info.plist */,
 				78DA9D2A2C67497A00D886B0 /* app.entitlements */,
-				7863B0A72C3D8D5900D7EDC4 /* GoogleService-Info.plist */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.mm */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
@@ -276,8 +276,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
-				7863B0A82C3D8D5900D7EDC4 /* GoogleService-Info.plist in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
+				78F228292CFC2EC0003A4948 /* GoogleService-Info.plist in Resources */,
 				7E4A09B5F16D485B452D02F9 /* PrivacyInfo.xcprivacy in Resources */,
 				16BB8FE47FEC4B57B78E7B1B /* Pretendard-Bold.otf in Resources */,
 				E8798EADA5BE4739988DAA7F /* Pretendard-Medium.otf in Resources */,
