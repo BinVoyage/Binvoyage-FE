@@ -22,10 +22,11 @@ function App(): React.JSX.Element {
   };
 
   const logInitialSession = async () => {
+    const token = await AsyncStorage.getItem('authToken');
     try {
       await analytics().logEvent('bv_session_start', {
         timestamp: new Date().toISOString(),
-        is_logged_in: isLoggedIn,
+        is_logged_in: !!token,
       });
     } catch (error) {
       console.error('Analytics error:', error);
@@ -33,6 +34,7 @@ function App(): React.JSX.Element {
   };
 
   const subscription = AppState.addEventListener('change', async nextAppState => {
+    const token = await AsyncStorage.getItem('authToken');
     try {
       const currentState = appStateRef.current;
       appStateRef.current = nextAppState;
@@ -42,7 +44,7 @@ function App(): React.JSX.Element {
         sessionStartTimeRef.current = Date.now();
         await analytics().logEvent('bv_foreground', {
           timestamp: new Date().toISOString(),
-          is_logged_in: isLoggedIn,
+          is_logged_in: !!token,
         });
       }
 
@@ -53,7 +55,7 @@ function App(): React.JSX.Element {
         await analytics().logEvent('bv_background', {
           timestamp: new Date().toISOString(),
           session_duration_seconds: sessionDuration,
-          is_logged_in: isLoggedIn,
+          is_logged_in: !!token,
         });
       }
     } catch (error) {
