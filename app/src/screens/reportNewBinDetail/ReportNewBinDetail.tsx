@@ -127,15 +127,23 @@ export default function ReportNewBinDetail({route}: ReportNewBinProps) {
 
   const handleSubmit = async () => {
     try {
-      const response = await api.post(`/bin/new`, {
+      const requestData: any = {
         address: address,
         lat: coordinate![0],
         lng: coordinate![1],
         detail: content,
         type_no: selectedBinTypeLabel === 0 ? 1 : 2,
         location_type_no: selectedLocationDetailLabel + 1,
-        image: imageUrl,
-      });
+      };
+  
+      if (imageUrl) {
+        requestData.image = imageUrl; // imageUrl이 있을 때만 추가
+      }
+
+      console.log(requestData);
+  
+      const response = await api.post(`/bin/new`, requestData);
+
       if (response.data.success) {
         Toast.show({
           type: 'success',

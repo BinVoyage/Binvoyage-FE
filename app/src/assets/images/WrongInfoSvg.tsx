@@ -10,9 +10,9 @@ export default function WrongInfoSvg({width, height, fill}: SvgProps) {
       <Path
         d="M9.03867 6.2998V9.41212M9.07471 11.9998V12.0748L9 12.0745V11.9998H9.07471Z"
         stroke="white"
-        stroke-width="1.5"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeWidth={1.5}
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
     </Svg>
   );
