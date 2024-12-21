@@ -18,7 +18,7 @@ export default function MyPage() {
 
   useEffect(() => {
     getMemberData();
-  }, [isLoggedIn])
+  }, [isLoggedIn]);
 
   const getMemberData = async () => {
     try {
@@ -94,7 +94,7 @@ export default function MyPage() {
                   <S.Address>{formatRegistrationDate(userInfo.registration_dt)}</S.Address>
                 </>
               ) : (
-                <S.NickName style={{marginLeft: 13}}>로그인이 필요합니다.</S.NickName>
+                <S.NickName style={{marginLeft: 13}}>Login is required.</S.NickName>
               )}
             </View>
 
