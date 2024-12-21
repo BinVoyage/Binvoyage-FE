@@ -32,6 +32,14 @@ export default function Home() {
     setIsLoading(false);
   }, [isLoggedIn]);
 
+  const handlePassPort = () => {
+    if (isLoggedIn) {
+      navigation2.navigate('PassPort');
+      return;
+    }
+    navigation2.navigate('LoginInProcess');
+  };
+
   const handleBtnReportNewBin = () => {
     if (isLoggedIn) {
       navigation3.navigate('ReportNewBinNavigator');
@@ -61,13 +69,7 @@ export default function Home() {
         <S.Body>
           <S.BodyTitle>{`Collect Seoul\nstamps during BinVoyage`}</S.BodyTitle>
           <S.BodyDescription>Stamp varies by the bin location.</S.BodyDescription>
-          {/* <S.PassPort onPress={() => navigation2.navigate('PassPort')}>
-            <S.PassPortTitle>PASSPORT</S.PassPortTitle>
-            <S.ImagePassPort source={require('assets/images/img-passport.png')} resizeMode="contain" />
-            <S.PassPortSubTitle>{`TO THE BINVOYAGE\nIN SEOUL`}</S.PassPortSubTitle>
-            <S.IconPassPort source={require('assets/images/icon-passport.png')} resizeMode="contain" />
-          </S.PassPort> */}
-          <S.PassPort onPress={() => navigation2.navigate('PassPort')} style={{alignSelf: 'center'}}>
+          <S.PassPort onPress={handlePassPort} style={{alignSelf: 'center'}}>
             <S.PassPortImg source={require('assets/images/home-passport2.png')} resizeMode="contain" />
           </S.PassPort>
           <S.Button onPress={handleBtnReportNewBin}>
