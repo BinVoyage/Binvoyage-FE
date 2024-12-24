@@ -3,6 +3,18 @@ import { Palette } from "constants/palette";
 import { Typo } from "constants/typo";
 import styled from "styled-components/native";
 
+export const Header = styled.View`
+  background: ${Palette.White};
+  padding: 10px;
+`;
+
+export const ArrowPrevWrapper = styled.TouchableOpacity`
+  width: 24px;
+  height: 24px;
+  justify-content: center;
+  align-items: center;
+`;
+
 export const AddressWrapper = styled.View`
   flex-direction: row;
   align-items: center;

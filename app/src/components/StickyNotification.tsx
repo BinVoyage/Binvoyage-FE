@@ -11,7 +11,7 @@ const width = Dimensions.get('window').width;
 const Container = styled.View<{active: boolean}>`
   display: ${props => props.active ? 'flex' : 'none'};
   position: absolute;
-  top: 16px;
+  top: 52px;
   left: 16px;
   width: ${width - 32};
   padding: 14px 12px 14px 14px;

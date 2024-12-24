@@ -11,6 +11,7 @@ import LocationSvg from 'assets/images/LocationSvg';
 import {Palette} from 'constants/palette';
 import StickyNotification from 'components/StickyNotification';
 import api from 'api/api';
+import ArrowPrevSvg from 'assets/images/ArrowPrevSvg';
 
 export default function ReportNewBin() {
   const webViewRef = useRef<WebView>(null);
@@ -149,6 +150,11 @@ export default function ReportNewBin() {
   return (
     <View style={styles.container}>
       <StickyNotification content="The blue dots show where the bins already are!" />
+      <S.Header>
+        <S.ArrowPrevWrapper onPress={() => navigation.goBack()}>
+          <ArrowPrevSvg width="9" height="16" fill={Palette.Gray3} />
+        </S.ArrowPrevWrapper>
+      </S.Header>
       <WebView
         ref={webViewRef}
         style={styles.webview}
