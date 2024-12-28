@@ -68,8 +68,10 @@ function App(): React.JSX.Element {
       await checkLoginStatus(); // 로그인 상태 확인 후
       await logInitialSession(); // 세션 시작 로그
 
-      setIsInitializing(false); // 초기화 완료
-      SplashScreen.hide(); // 스플래시 화면 숨기기
+      setTimeout(() => {
+        setIsInitializing(false); // 초기화 완료
+        SplashScreen.hide(); // 스플래시 화면 숨기기
+      }, 3000); // 3초 지연
     };
 
     init();
