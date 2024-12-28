@@ -149,7 +149,7 @@ export default function ReportNewBin() {
 
   return (
     <View style={styles.container}>
-      <StickyNotification content="The blue dots show where the bins already are!" />
+      <StickyNotification content="The red dots show where the bins already are!" />
       <S.Header>
         <S.ArrowPrevWrapper onPress={() => navigation.goBack()}>
           <ArrowPrevSvg width="9" height="16" fill={Palette.Gray3} />
